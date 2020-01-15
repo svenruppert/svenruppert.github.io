@@ -5,13 +5,13 @@
     <link href="http://www.sven-ruppert.de"/>
     <link href="http://www.sven-ruppert.de/atom.xml" rel="self" type="application/rss+xml"/>
     <id>http://www.sven-ruppert.de</id>
-    <updated>2020-01-15T20:48:42.242652T00:00:00Z</updated>
+    <updated>2020-01-15T22:12:21.299821T00:00:00Z</updated>
     <entry>
         <id>http://www.sven-ruppert.de/blog/devops/2020/1/14/say-hello-to-devops</id>
         <link href="http://www.sven-ruppert.de/blog/devops/2020/1/14/say-hello-to-devops"/>
         <title>Say Hello to DevOps!</title>
         <summary>All about my ...</summary>
-        <updated>2020-01-15T20:48:42.242652T00:00:00Z</updated>
+        <updated>2020-01-15T22:12:21.299821T00:00:00Z</updated>
         <published>2020-01-14T00:00T00:00:00Z</published>
     </entry>
     <entry>
@@ -19,7 +19,7 @@
         <link href="http://www.sven-ruppert.de/blog/vaadin/2020/1/14/say-hello-to-vaadin"/>
         <title>Say Hello to Vaadin!</title>
         <summary>All about my ...</summary>
-        <updated>2020-01-15T20:48:42.240924T00:00:00Z</updated>
+        <updated>2020-01-15T22:12:21.294913T00:00:00Z</updated>
         <published>2020-01-14T00:00T00:00:00Z</published>
     </entry>
     <entry>
@@ -27,7 +27,7 @@
         <link href="http://www.sven-ruppert.de/blog/java/2020/1/14/say-hello-to-java"/>
         <title>Say Hello to Java!</title>
         <summary>All about my ...</summary>
-        <updated>2020-01-15T20:48:42.236591T00:00:00Z</updated>
+        <updated>2020-01-15T22:12:21.291456T00:00:00Z</updated>
         <published>2020-01-14T00:00T00:00:00Z</published>
     </entry>
     <entry>
@@ -35,7 +35,7 @@
         <link href="http://www.sven-ruppert.de/blog/kotlin/2020/1/14/say-hello-to-kotlin"/>
         <title>Say Hello to Kotlin!</title>
         <summary>All about my ...</summary>
-        <updated>2020-01-15T20:48:42.233024T00:00:00Z</updated>
+        <updated>2020-01-15T22:12:21.289428T00:00:00Z</updated>
         <published>2020-01-14T00:00T00:00:00Z</published>
     </entry>
     <entry>
@@ -43,8 +43,8 @@
         <link href="http://www.sven-ruppert.de/authors/sven-ruppert"/>
         <title>About Sven Ruppert</title>
         <summary></summary>
-        <updated>2020-01-15T20:48:42.223200T00:00:00Z</updated>
-        <published>2020-01-15T20:48:42.223164T00:00:00Z</published>
+        <updated>2020-01-15T22:12:21.282542T00:00:00Z</updated>
+        <published>2020-01-15T22:12:21.282492T00:00:00Z</published>
     </entry>
     
 </feed>
