@@ -1,0 +1,708 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 02</title>
+
+
+<meta name="description" content="In dem letzten Teil der Serie haben wir uns damit beschäftigt, einen Login Screen zu erstellen. Da dieses nun soweit in den Grundzügen vorhanden ist, kommen wir nun dazu das Grundgerüst einer vollständigen Anwendung zu erstellen. Hier werden wir uns in den nächsten Teilen verschiedene Wege ansehen die gegangen werden können. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-02-20-V10_Backend_Meets_Frontend_Reloaded_Part_002.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/2/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002"},"next":{"path":"blog/vaadin/2019/3/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_003","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003"},"previous":{"path":"blog/vaadin/2019/1/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001"},"description":"In dem letzten Teil der Serie haben wir uns damit beschäftigt, einen Login Screen zu erstellen. Da dieses nun soweit in den Grundzügen vorhanden ist, kommen wir nun dazu das Grundgerüst einer vollständigen Anwendung zu erstellen. Hier werden wir uns in den nächsten Teilen verschiedene Wege ansehen die gegangen werden können. ","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 02"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 02</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 02</h2>
+        <p class="subtitle is-4">In dem letzten Teil der Serie haben wir uns damit beschäftigt, einen Login Screen zu erstellen. Da dieses nun soweit in den Grundzügen vorhanden ist, kommen wir nun dazu das Grundgerüst einer vollständigen Anwendung zu erstellen. Hier werden wir uns in den nächsten Teilen verschiedene Wege ansehen die gegangen werden können. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 02</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-02-20">Februar 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>In dem letzten Teil der Serie haben wir uns damit beschäftigt, einen Login Screen zu erstellen.</p>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_008.png" alt="" /></p>
+<p>Da dieses nun soweit in den Grundzügen vorhanden ist, kommen wir nun dazu das Grundgerüst einer vollständigen Anwendung zu erstellen.
+Hier werden wir uns in den nächsten Teilen verschiedene Wege ansehen die gegangen werden können.</p>
+<h2 id="die-anforderungen"><a href="#die-anforderungen" id="die-anforderungen" class="anchor"></a>Die Anforderungen</h2>
+<p>Eine Anwendung hat in einem Unternehmen hat oftmals einen Satz an Anforderungen die man immer wieder vorfinden wird. Dazu zählt ja schon die erste Bedingung, das nur ein User die Anwendung verwenden soll, der über einen Satz passender Anmeldeinformationen verfügt.</p>
+<p>Wie man in dem ersten Screenshot sehen kann, fehlen zum Beispiel noch die Bezeichner an den Komponenten. Hier sind wir gleich bei der ersten Fragestellung, ob mehr als eine Sprache unterstützt werden soll. Sprich I18N ist hier das Schlüsselwort was einem entgegen springt.</p>
+<p>Größere Anwendungen haben bestimmte generische Elemente die das grundsätzliche Aussehen der Anwendung ergeben. Wir werden uns mit dem Thema Layout im Bereich der Strukturelemente, nicht mit dem styling der Farben und ähnliches Beschäftigen.</p>
+<p>Eine weitere Anforderung wird sich aus der Art und Weise ergeben mit der ein Benutzer sich in der Anwendung bewegen soll. Hier sprechen wir von der Definition einer Menüstruktur, wie auch immer diese visuell dargestellt werden soll. Als nächstes gibt es immer eine Art von Berechtigungssystem innerhalb einer Anwendung, da dann ebenfalls Auswirkungen auf die Navigationsstruktur und Navigationsmöglichkeiten haben wird. Diese Punkte sollen uns erst einmal reichen und werden uns noch ein wenig beschäftigen.</p>
+<p>Anforderungen</p>
+<ul>
+<li>I18N</li>
+<li>Layouting</li>
+<li>Menüstrukturen</li>
+<li>Berechtigungen</li>
+</ul>
+<h2 id="i18n---die-ersten-gedanken"><a href="#i18n---die-ersten-gedanken" id="i18n---die-ersten-gedanken" class="anchor"></a>I18N - Die ersten Gedanken</h2>
+<p>Beginne wir nun mit I18N, also der Art und Weise wie in der Anwendung mit mehr als einer Sprache umgegangen werden soll. Hierzu ein paar Grundüberlegungen.
+Alles was in menschen lesbarer Form an grafischen Elementen stehen soll, zum Beispiel die Beschriftung auf einem Button muss in einer neutralen Form definiert werden.
+Hier kommen Ressourcenschlüssel zum Einsatz. Diese müssen nun zu einem definierten Zeitpunkt in die jeweilige Zielsprache aufgelöst werden. Der Zeitpunkt ist ausschlaggebend, welche Informationen einem dann zur Verfügung stehen unm sich für eine Zielsprache zu entscheiden.
+Wenn die gewünschte Zielsprache nicht vorhanden oder unterstützt wird, muss auf eine  alternative Sprache umgeschaltet werden. Auch hier gibt es verschiedene Lösungsmöglichkeiten nicht nur das Umschalten auf eine allgemeine Default-Sprache.
+Wichtig für die Bereitstellung und Pflege der verschiedenen Sprachen ist ebenfalls,
+die Bereitstellung auf technischer Ebene der jeweiligen Sprachen. Nicht zu vergessen natürlich
+die Möglichkeit zur Laufzeit weitere Sprachen hinzuzufügen, besvorhandene Sprachen zu korrigieren und zu erweitern bzw. reduzieren, als auch die Möglichkeit Sprachen vollständig zu entfernen.</p>
+<p>Das sind schon jede Menge Anforderungen. Allerdings gibt es noch weitere Anforderungen auf die wir in diesem Teil nicht eingehen werden. Hierzu zählen die grafischen Auswirkungen die sich bei dem Wechsel einer Sprache ergeben können. Gemeint sind Sprachen die von oben nach unten orientiert sind oder von rechts nach links. Wir konzentrieren uns hier auf Sprachen die von links nach rechts orientiert sind.</p>
+<h2 id="i18n-und-vaadin"><a href="#i18n-und-vaadin" id="i18n-und-vaadin" class="anchor"></a>I18N und Vaadin</h2>
+<p>Vaadin hat in Flow einen grundlegenden Mechanismus integriert der es einem Entwickler sehr leicht ermöglicht den Mechanismus seinen Bedürfnissen anzupassen.
+Der Grundmechanismus ist definiert in dem Interface <code>I18NProvider</code> Dieses Interface besteht lediglich aus zwei Methoden.</p>
+<pre><code class="language-java">public interface I18NProvider extends Serializable {
+
+    List&lt;Locale&gt; getProvidedLocales();
+
+    String getTranslation(String key, Locale locale, Object... params);
+}
+</code></pre>
+<p>Die erste Methode gibt eine Liste von den derzeitig unterstützten Sprachen zurück.
+Bei der zweiten Methode handelt es sich um die Übersetzung selbst. Hier wird eine Übersetzung basierend auf einem Schlüssel, einer Zielsprache als auch einer beliebigen Menge an Zusatzattributen angefordert.</p>
+<h2 id="i18nprovider---helloworld"><a href="#i18nprovider---helloworld" id="i18nprovider---helloworld" class="anchor"></a>I18NProvider - HelloWorld</h2>
+<p>Kommen wir zu einem I18N HelloWorld. Der einfachste Fall ist demnach, das vorhandensein einer einzigen Sprache. Um diesen Mechanismus nun initial zu implementieren erstellen wir eine Klasse <code>I18NProviderImpl</code>.
+Die Implementierung ist nun sehr geradlinig. Nachdem ein <code>implements I18NProvider</code> hinzugefügt worden ist, können wir mit der Implementierung der beiden Methoden beginnen.
+Als erstes kommt die Methode <code>getProvidedLocales</code> drann. Hier liefern wir lediglich ein Set mit genau einem Element zurück, einem Locale <strong>ENGLISH</strong>.</p>
+<pre><code class="language-java">public class I18NProviderImpl implements I18NProvider {
+
+  @Override
+  public List&lt;Locale&gt; getProvidedLocales() {
+    return List.of(Locale.ENGLISH);
+  }
+
+  @Override
+  public String getTranslation(String s , Locale locale , Object... objects) {
+    return null;
+  }
+}
+</code></pre>
+<p>Kommen wir nun zu der Implementierung der Methode <strong>getTranslation</strong>.
+Für den ersten Test reicht hier eine interne <strong>Map&lt;String, String&gt;</strong> die mit
+den notwendigen Schlüssel/Wert - Paaren versehen wird.
+Der Zugriff erfolgt dann innerhalb der Methode <strong>getTranslation</strong>. Immer dann wenn es den angefragten Schlüssel nicht gibt, soll der Schlüssel selbst zurückgegeben werden.
+So erkennt man recht schnell, wenn noch Werte fehlen.</p>
+<pre><code class="language-java">public class I18NProviderImpl implements I18NProvider, HasLogger {
+
+  private static final Map&lt;String, String&gt; translations = new HashMap&lt;&gt;();
+
+  @Override
+  public List&lt;Locale&gt; getProvidedLocales() {
+    return List.of(Locale.ENGLISH);
+  }
+
+  @Override
+  public String getTranslation(String s , Locale locale , Object... objects) {
+    return translations.getOrDefault(s , s);
+  }
+}
+</code></pre>
+<p>Nun haben wir eine mögliche Implementierung für das Interface <code>I18NProvider</code>.
+Allerdings fehlen nun noch zwei grundlegende Dinge. Zum einen muss die Implementierung <em>aktiviert</em> werden und zum anderen muss die Verwendung des I18NProvider´s in der Anwendung erfolgen.</p>
+<p>Die Verwendung selbst ist schnell realisiert. Die Klasse Component bietet einem schon die Methode <strong>getTranslation(String key)</strong> und leitet diese Anfrage dann an den derzeitig aktivierten I18NProvider durch. Wenn nun dieses als Ausgangspunkt für weitere Nachforschungen nimmt, so gelangt man nach ein paar Klicks durch die Quelltexte von Flow zu der folgenden Methode in der Klasse <code>DefaultInstantiator</code>.</p>
+<pre><code class="language-java">    /**
+     * Get the I18NProvider property from the session configurator or try to
+     * load it from application.properties property file.
+     *
+     * @return I18NProvider parameter or null if not found
+     */
+    private String getI18NProviderProperty() {
+        DeploymentConfiguration deploymentConfiguration = service
+                .getDeploymentConfiguration();
+        if (deploymentConfiguration == null) {
+            return null;
+        }
+        return deploymentConfiguration
+                .getStringProperty(Constants.I18N_PROVIDER, null);
+    }
+</code></pre>
+<p>Die letzte Zeile gibt uns an, wie nach der aktiven Implementierung bei der Verwendung des
+<strong>DefaultInstantiator</strong> gesucht wird. Das Property <strong>vaadin.i18n.provider</strong> wird verwendet um den Klassennamen der Implementierung zu erhalten.
+Dieses Property kann man nun auf verschiedene Arten setzen.
+Zum Beispiel beim dem Aufruf der JVM selbst, oder in der <strong>web.xml</strong> als WebInit Parameter für das Servlet. Oder man geht den ganz einfachen Weg und setzt dieses Property schlicht und ergreifend beim Start der Anwendung in der main-Methode.</p>
+<pre><code class="language-java">System.setProperty(&quot;vaadin.i18n.provider&quot; , I18NProviderImpl.class.getName());
+</code></pre>
+<p>Nun kann auf die Implementierung zugegriffen werden.</p>
+<p>Kommen wir nun zu den Definitionen der Schlüssel/Wert Paare. In der ersten trivialen Implementierung setzen wir diese Wertepaare einfach innerhalb eines <strong>static</strong> Blocks
+in der Implementierung des I18NProviders und in der Implementierung unserer Login-View
+werden die jeweiligen Schlüssel dann beim dem setzen der Textinhalte verwendet.</p>
+<pre><code class="language-java">    //I18N
+    username.setPlaceholder(getTranslation(&quot;login.username.placeholder&quot;));
+    password.setPlaceholder(getTranslation(&quot;login.password.placeholder&quot;));
+    rememberMe.setLabel(getTranslation(&quot;login.rememberme.label&quot;));
+    btnLogin.setText(getTranslation(&quot;login.button.ok.text&quot;));
+    btnCancel.setText(getTranslation(&quot;login.button.cancel.text&quot;));
+</code></pre>
+<pre><code class="language-java">public class I18NProviderImpl implements I18NProvider, HasLogger {
+
+  private static final Map&lt;String, String&gt; translations = new HashMap&lt;&gt;();
+
+  static {
+    translations.put(&quot;login.username.placeholder&quot; , &quot;username&quot;);
+    translations.put(&quot;login.password.placeholder&quot; , &quot;password&quot;);
+    translations.put(&quot;login.rememberme.label&quot; , &quot;remember Me&quot;);
+    translations.put(&quot;login.button.ok.text&quot; , &quot;OK&quot;);
+    translations.put(&quot;login.button.cancel.text&quot; , &quot;OK&quot;);
+  }
+
+  @Override
+  public List&lt;Locale&gt; getProvidedLocales() {
+    return List.of(Locale.ENGLISH);
+  }
+
+  @Override
+  public String getTranslation(String s , Locale locale , Object... objects) {
+    return translations.getOrDefault(s , s);
+  }
+}
+</code></pre>
+<p><img src="" alt="" /></p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben nun eine erste Implementierung des I18NProviders aktiviert und verwendet.
+In dem nächsten Teil werden wir uns ansehen wie man dieses nun auf mehrere Sprachen ausweitet und uns dabei eine praxistaugliche Implementierung ansehen.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden.
+<a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-002">https://github.com/Java-Publications/backend-meets-frontend-reloaded-002</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 01
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003">
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 03
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

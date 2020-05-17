@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Die Auswirkungen des neuen JDK-Release-Zyklus 02</title>
+
+
+<meta name="description" content="Wie kann man sich auf die nun doch recht schnelle Abfolge neuer JDK´s in der Entwicklung einstellen? Mit welchen Ansätzen kann man sich die Arbeit erleichtern, welche Werkzeuge werden Erleichterung verschaffen? ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2018-09-10-New_JDK_Release_Cycle_Part_002.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2018/9/10","baseUrl":"http://www.sven-ruppert.de","fileName":"new_jdk_release_cycle_part_002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002"},"next":{"path":"blog/java/2018/12/10","baseUrl":"http://www.sven-ruppert.de","fileName":"typedconstructors","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors"},"previous":{"path":"blog/java/2018/8/10","baseUrl":"http://www.sven-ruppert.de","fileName":"new_jdk_release_cycle_part_001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001"},"description":"Wie kann man sich auf die nun doch recht schnelle Abfolge neuer JDK´s in der Entwicklung einstellen? Mit welchen Ansätzen kann man sich die Arbeit erleichtern, welche Werkzeuge werden Erleichterung verschaffen? ","title":"Die Auswirkungen des neuen JDK-Release-Zyklus 02"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002" aria-current="page">Die Auswirkungen des neuen JDK-Release-Zyklus 02</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Die Auswirkungen des neuen JDK-Release-Zyklus 02</h2>
+        <p class="subtitle is-4">Wie kann man sich auf die nun doch recht schnelle Abfolge neuer JDK´s in der Entwicklung einstellen? Mit welchen Ansätzen kann man sich die Arbeit erleichtern, welche Werkzeuge werden Erleichterung verschaffen? </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Die Auswirkungen des neuen JDK-Release-Zyklus 02</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2018-09-10">September 10, 2018</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/jvm">#JVM</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/jdk">#JDK</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>Wie kann man sich auf die nun doch recht schnelle Abfolge neuer JDK´s in der Entwicklung einstellen?
+Mit welchen Ansätzen kann man sich die Arbeit erleichtern, welche Werkzeuge werden Erleichterung verschaffen?</p>
+<h2 id="was-bisher-geschehen-ist"><a href="#was-bisher-geschehen-ist" id="was-bisher-geschehen-ist" class="anchor"></a>Was bisher geschehen ist</h2>
+<p>In dem letzten Teil haben wir uns angesehen wie wir ein lokales Projekt
+innerhalb eines Docker Containers übersetzen können und somit das Ziel JDK nicht zwingend auf der Entwicklungsplatform nativ vorhalten müssen.
+Allerdings hatte das bei der Verwendung von Maven den Nachteil, das der
+Prozess recht lange dauern kann, da alle notwendigen Abhängigkeiten
+in den jeweils frisch erzeugten Container geladen werden mussten.</p>
+<p>Heute werden wir uns verschiedene Wege ansehen wie man das beschleunigen kann.</p>
+<h2 id="und-so-wurde-es-das-letzte-mal-gemacht"><a href="#und-so-wurde-es-das-letzte-mal-gemacht" id="und-so-wurde-es-das-letzte-mal-gemacht" class="anchor"></a>Und so wurde es das letzte mal gemacht</h2>
+<p>Um nun in einem Docker Container das Projekt zu übersetzen,
+wurde der nachfolgende Befehl auf der Kommandzeili in dem Wurzelverzeichnis von dem Projekt ausgeführt.</p>
+<pre><code class="language-bash">docker run -it --rm --name compileJDK10 \
+        -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+        -w /usr/src/mymaven \
+        svenruppert/maven-3.5-jdk-zulu-10 \
+        mvn clean install
+</code></pre>
+<p>Hiermit wurde das Projektverzeichnis in dem Dockercontainer eingebunden und
+der gewünschte Maven Befehl ausgeführt.</p>
+<h2 id="der-einfache-weg"><a href="#der-einfache-weg" id="der-einfache-weg" class="anchor"></a>Der einfache Weg</h2>
+<p>Kommen wir zu dem einfachsten Weg. Wenn man nun die Abhängigkeiten die in einem Projekt verwendet werden nicht jedes mal neu aus dem Internet ziehen möchte, so kann man das lokale <strong>.m2</strong> Verzeichnis als eine Art Cache verwenden.
+Hierzu muss man lediglich das <strong>.m2</strong> Verzeichnis ebenfalls in den neu erzeugten Container mit einbinden. Der in dem Container laufende Maven-Prozess sieht dann dieses Verzeichnis und wird es verwenden.</p>
+<p>Um das zu erreichen, müssen wir lediglich den Befehl um die folgenden Zeile erweitern. <code>-v &quot;path/to/m2&quot;:/root/.m2/</code></p>
+<p>Alles zusammen ergibt dann:</p>
+<pre><code class="language-bash">docker run --rm --name compile \
+    -v &quot;path/to/m2&quot;:/root/.m2/ \ 
+    -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+    -w /usr/src/mymaven \
+    svenruppert/maven-3.5-jdk-openjdk-11 \
+    mvn clean install
+
+</code></pre>
+<p>Nun gibt es aber einige Nachteile bei dieser Lösung.  Gehen wir nun einmal davon aus, das wir zur selben Zeit auch lokal mit maven arbeiten werden, so kann es sein das sich die beiden Prozesse ins Gehege kommen.
+Das kann immer dann passieren wenn mit lokalen SNAPSHOTS gearbeitet wird.
+Diese Lösung kann also lediglich dann ohne Komplikationen verwendet werden, wenn man immer nur einen Prozess darauf laufen lässt.</p>
+<h2 id="cachen-von-release-versionen"><a href="#cachen-von-release-versionen" id="cachen-von-release-versionen" class="anchor"></a>Cachen von Release Versionen</h2>
+<p>Um nun die Möglichkeit zu bekommen, gleichzeitig mit verschiedenen Maven-Prozessen auf dem Rechner arbeiten zu können, muss also das <strong>.m2</strong> Verzeichnis
+jeweils für den Prozess exclusiv zur Verfügung stellen. Nun wollen wir nicht beginnen, das Verzeichnis abwechselnd zu sperren.
+Jedoch kann man den folgenden Weg gehen. Anstelle der einfachen Bereitstellung des selben Verzeichnisses kann man mit einer Kopie arbeiten.
+Das Verzeichnis wird also nicht in den Container eingebunden, sondern kopiert. Nun kann der in dem Container laufende Prozess sich frei in dem Repository bewegen und Manipulationen vornehmen.</p>
+<p><code>-v &quot;path/to/m2&quot;:/root/.m2/</code></p>
+<p>Alles zusammen ergibt dann:</p>
+<pre><code class="language-bash">docker run --rm --name compile \
+    -v &quot;path/to/m2&quot;:/root/.m2/ \ 
+    -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+    -w /usr/src/mymaven \
+    svenruppert/maven-3.5-jdk-openjdk-11 \
+    mvn clean install
+
+</code></pre>
+<p>Auch diese Methode hat einen Nachteil. Es wird immer die aktuelle Version von diesem Verzeichnis genommen. Ist es die selbe Version die auch bei der lokalen Entwicklung genommen wird, sind mit hoher Wahrscheinlichkeit auch SNAPSHOTS in dem Repository vorhanden. Das ist natürlich nicht gewünscht.</p>
+<h3 id="zentraler-nexus"><a href="#zentraler-nexus" id="zentraler-nexus" class="anchor"></a>zentraler Nexus</h3>
+<p>Um nun die SNAPSHOTS aus dem Repository zu entfernen, muss eine <strong>reine</strong> Version aufgebaut werden. Wenn man sich genau ansieht, was am längsten dauert, so wird es bei den meisten der Download aus dem Internet sein. Hier bietet es sich an, genau diese Artefakte in einem eigenen Repository vorzuhalten. In diesem Beispiel habe ich mich für den Nexus entschieden, da er frei verfügbar ist und keine großen Konfigurationen benötigt um in Betrieb genommen zu werden.</p>
+<p>Aber egal welches Repositorymanager zum Einsatz kommt, der Mirror muss in der
+Datei <strong>settings.xml</strong> definiert werden. Nun kann man genau den selben nehmen der für die lokale Entwicklung verwendet wird. Hierzu erzeut man eine <strong>settings.xml</strong> in der die sicherheitsrelevanten Elemente entfernt worden sind
+und fügt diese dem Projekt hinzu. Bei dem Bau des Containers kann man dann diese Datei anstelle des <strong>.m2</strong> Verzeichnisses hinzufügen.</p>
+<pre><code class="language-bash">docker run --rm --name compile \
+    -v &quot;$(pwd)/_data/nexus/settings.xml&quot;:/root/.m2/settings.xml \ 
+    -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+    -w /usr/src/mymaven \
+    svenruppert/maven-3.5-jdk-openjdk-11 \
+    mvn clean install
+
+</code></pre>
+<p>Nun werden alle Abhängigkeiten aus dem in dem lokalen Netzwerk vorhandenen Repository geholt. Allerdings im Vergleich zu der vorherigen Version nur die Abhängigkeiten die für diesen Build benötigt werden und ohne SNAPSHOTS. Letzteres natürlich nur wenn in dem Repository keine eingespielt worden sind.</p>
+<p>An der Stelle kann man nun davon ausgehen, dass der Build ausschließlich auf stabilen Versionen basiert. Die Geschwindigkeit ist abhängig von der lokalen Netzwerkgeschwindigkeit, die hoffentlich signifikant höher ist als die Internetgeschwindigkeit.</p>
+<h3 id="docker-based-nexus"><a href="#docker-based-nexus" id="docker-based-nexus" class="anchor"></a>Docker based Nexus</h3>
+<p>Allerdings kann auch das kopieren in dem eigenen Netzwerk noch zu längeren Wartezeiten führen. Um diese zu umgehen, muss man alles auf den eigenen Rechner verlagern. Das ist dank Docker auch ein sehr einfaches Unterfangen geworden.
+Hier wird lediglich der Nexus in einem lokalen Docker-Container vorgehalten, und die für den Build-Prozess eingesetzten Docker Container holen sich die
+Maven Artefakte nun von dieser Instanz. Der Vorgang ist dann nochmals schneller, hat jedoch zusätzlich die positiven Eigenschaften das keine SNAPSHOTS enthalten sind. Um nun einen Nexus im eigenen Docker-Host bereitzustellen ist lediglich ein kurzer Befehl notwendig.</p>
+<pre><code class="language-bash">docker run -d -p 8081:8081 --name nexus sonatype/nexus3
+</code></pre>
+<p>Der nun laufende Nexus hat standartmäßig einen Proxy für maven central definiert und kann sofort zum Einsatz kommen.
+Weitere Repositories die von dem Nexus vorgehalten werden sollen, müssen allerdings von Hand defniert werden. Nun kann man einen eigenen auf dem Rechner unabhängig laufenden Nexus zur Beschleunigung verwenden.</p>
+<h2 id="dependend-builds"><a href="#dependend-builds" id="dependend-builds" class="anchor"></a>Dependend Builds</h2>
+<p>Kommen wir nun zu der Anforderung, das mehr als ein Build vorhanden ist. Diese Builds allerdings in einer direkten SNAPSHOT-Abhängigkeit stehen. Nun soll also der erste Build einen SNAPSHOT erzeugen der für den darauf folgenden Build zur Verfügung gestellt werden muss. Auf jeden Fall kann/muss man nun sicherstellen, das die jeweiligen Abhängigkeiten sauber aufeinander aufbauen.</p>
+<h3 id="manueller-ansatz"><a href="#manueller-ansatz" id="manueller-ansatz" class="anchor"></a>manueller Ansatz</h3>
+<p>Kommen wir zuerst zu dem manuellen Ansatz. Hier wird ein <strong>.m2/repository/</strong> - Verzeichnis
+erzeugt, das dann bei den einzelnen Containern eingebunden wird. Ein <strong>mvn clean install</strong> wird nun die erzeugten Artefakte in diesem Verzeichnis ablegen. Wird genau dieses Verzeichnis wieder verwendet, stehen die SNAPSHOTS zur Verfügung. Letztendlich sind wir wieder bei einer der ersten Versionen die wir angedacht hatten, nur das diesmal ein frisches Verzeichnis pro Pipeline angelegt wird.</p>
+<h3 id="nexus-for-the-build"><a href="#nexus-for-the-build" id="nexus-for-the-build" class="anchor"></a>Nexus for the build</h3>
+<p>Wenn man an dieser Stelle die aufeinander aufbauenden Builds auf verschiedene Rechner verteilen möchte, muss man wieder mit einem Repository arbeiten das von allen beteiligten Knoten erreichbar ist. Es muss eine Nexus Instanz pro Pipeline erzeugt werden.</p>
+<h2 id="vorhandene-werkzeuge"><a href="#vorhandene-werkzeuge" id="vorhandene-werkzeuge" class="anchor"></a>vorhandene Werkzeuge</h2>
+<p>Relativ schnell erreicht man eine Stelle, an der klar wird, dass der manuelle Aufwand zu hoch sein wird. Hier stellt sich die Frage mit welchen Werkzeugen nun gearbeitet werden kann. Es gibt hier verschiedene Ansätze die wir in den nächsten Teilen betrachten werden.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben uns angesehen wie der Build-Prozess beschleunigt werden kann. Hier sind wir verschiedene Wege gegangangen. Manchmal reicht der einfache Weg aus um zum Ziel zu kommen.
+Nicht immer muss es eine große komplexe Infrastruktur sein. Aber selbst wenn verschiedene Teile benötigt werden, kann mittels Docker recht einfach und zügig so manche Konstruktion abgebildet werden. Auch hier gibt es wieder Potential zur Optimierung.
+Das werden wir in dem nächsten Teil weiter angehen.</p>
+<p>Für die ungeduldigen Leser sei hier schon mal auf die Sourcen verfügbar auf github verwiesen.</p>
+<p><a href="https://github.com/vaadin-developer/vaadin-dev-environment">https://github.com/vaadin-developer/vaadin-dev-environment</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter [<a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>](https://twitter.com/SvenRuppert).</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Die Auswirkungen des neuen JDK-Release-Zyklus 01
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors">
+    Typed Constructors
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

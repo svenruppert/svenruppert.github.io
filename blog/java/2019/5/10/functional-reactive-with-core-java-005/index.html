@@ -1,0 +1,851 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 05</title>
+
+
+<meta name="description" content="Im letzten Teil haben wir uns damit beschäftigt wie wir Funktionen definieren und wie wir das mit Streams ein wenig kombinieren können. Ausgelassen haben wir allerdings bisher immer das Thema Exceptions.
+Nur leider begegnen einem diese Exceptions in Java immer und immer wieder. Wie kann man nun damit umgehen und welche Möglichkeiten ergeben sich daraus? Genau das werden wir jetzt ein wenig genauer ansehen und ausprobieren.">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-05-10-functional-reactive-with-core-java-005.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/5/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-005","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005"},"next":{"path":"blog/java/2019/6/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-006","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006"},"previous":{"path":"blog/java/2019/4/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-004","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004"},"description":"Im letzten Teil haben wir uns damit beschäftigt wie wir Funktionen definieren und wie wir das mit Streams ein wenig kombinieren können. Ausgelassen haben wir allerdings bisher immer das Thema Exceptions.\nNur leider begegnen einem diese Exceptions in Java immer und immer wieder. Wie kann man nun damit umgehen und welche Möglichkeiten ergeben sich daraus? Genau das werden wir jetzt ein wenig genauer ansehen und ausprobieren.","title":"Functional Reactive mit Core Java 05"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005" aria-current="page">Functional Reactive mit Core Java 05</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 05</h2>
+        <p class="subtitle is-4">Im letzten Teil haben wir uns damit beschäftigt wie wir Funktionen definieren und wie wir das mit Streams ein wenig kombinieren können. Ausgelassen haben wir allerdings bisher immer das Thema Exceptions.
+Nur leider begegnen einem diese Exceptions in Java immer und immer wieder. Wie kann man nun damit umgehen und welche Möglichkeiten ergeben sich daraus? Genau das werden wir jetzt ein wenig genauer ansehen und ausprobieren.</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 05</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-05-10">Mai 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>Im letzten Teil haben wir uns damit beschäftigt wie wir Funktionen definieren und wie wir das mit Streams ein wenig kombinieren können.
+Ausgelassen haben wir allerdings bisher immer das Thema Exceptions.</p>
+<p>Nur leider begegnen einem diese Exceptions in Java immer und immer wieder.
+Wie kann man nun damit umgehen und welche Möglichkeiten ergeben sich daraus?
+Genau das werden wir jetzt ein wenig genauer ansehen und ausprobieren.</p>
+<blockquote>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+</blockquote>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="die-exception"><a href="#die-exception" id="die-exception" class="anchor"></a>Die Exception</h2>
+<p>Um nun ein wenig anzusehen wie es sich mit den Exceptions verhält gehen wir im folgenden von dem nachfolgend gelisteten Service - Interface aus. Es ist ein FunctionalInterface, jedoch leider mit der Definition einer Exception in der Methodensignatur.</p>
+<pre><code class="language-java">  public static interface Service {
+    String doWork(String txt) throws Exception;
+  }
+</code></pre>
+<p>Wenn wir diese nun verwenden wollen, dann kommen wir im klassischen Sinne zu einer einfachen Implementierung. (Die Implementierung selbst hat definitiv keinen tieferen Sinn)</p>
+<pre><code class="language-java">    try {
+      new Service() {
+        @Override
+        public String doWork(String txt) throws Exception {
+          return txt.toUpperCase() + &quot;-workedOn&quot;;
+        }
+      }.doWork(&quot;&quot;);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+</code></pre>
+<p>Listing: V001</p>
+<p>Wir können hier sehr schön den <strong>try-catch</strong> - Block erkennen der dazu führt, das wir uns überlegen müssen wie wir mit einer Exception umgehen möchten.
+Soll die Exception einfach weiter durchgereicht werden?
+Da es sich um ein FunctionInterface handelt können wir es natürlich auch als Lambda schreiben.</p>
+<pre><code class="language-java">    try {
+      ((Service) txt -&gt; txt.toUpperCase() + &quot;-workedOn&quot;).doWork(&quot;&quot;);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+</code></pre>
+<p>Listing: V001</p>
+<p>Wenn man diesen Lambda - Konstrukt auf Klassenebene definiert dann sieht es erst einmal recht einfach aus.</p>
+<pre><code class="language-java">  public static Service serviceA  = txt -&gt; txt.toUpperCase() + &quot;-workedOnA&quot;;
+  public static Service serviceB  = txt -&gt; txt.toUpperCase() + &quot;-workedOnB&quot;;
+</code></pre>
+<p>Listing: V001</p>
+<p>Nur leider bei der Verwendung kommen dann wieder die <strong>try-catch</strong> Blöcke zum Vorscheinen.</p>
+<pre><code class="language-java">    try {
+      final String helloA = serviceA.doWork(&quot;Hello A&quot;);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try {
+      final String helloB = serviceB.doWork(&quot;Hello B&quot;);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+</code></pre>
+<p>Listing: V001</p>
+<p>Was aber ist nun eigentlich mit dem Rückgabewert? Darüber haben wir noch nicht nachgedacht... Da gibt es nun zwei Wege. Der eine bedeutet, dass man die restliche Logik mit in den <strong>try-catch</strong> Block schreibt. Kann man so machen, unhandlich wird es nur, wenn nun weitere Methoden mit Exceptions verwendet werden. Beginnt man nun die Blöcke ineinander zu verschachteln? Oder gibt es einen großen <strong>catch</strong> Block am Ende aller Anweisungen? Alles recht unschön.</p>
+<p>Die zweite Möglichkeit besteht darin, den <strong>try-catch</strong> Block zu kurz wie möglich zu halten. Der Ergebniswert wird dann in einer Varaiblen gespeichert, die vor dem <strong>try-catch</strong> Block definiert wurde. Hier habe ich mich dafür endschieden, gleich mit einem <code>Optional&lt;T&gt;</code> zu arbeiten da es im JDK auf jeden Fall vorhanden ist.</p>
+<pre><code class="language-java">    Optional&lt;String&gt; optional;
+    try {
+      final String result = ((Service) txt -&gt; txt.toUpperCase() 
+                                              + &quot;-workedOn&quot;).doWork(&quot;&quot;);
+      optional = Optional.of(result);
+    } catch (Exception e) {
+      e.printStackTrace();
+      optional = Optional.empty();
+    }
+
+    optional.ifPresent((result)-&gt; System.out.println(&quot;result = &quot; + result));
+</code></pre>
+<p>Listing: V002</p>
+<p>Wie wäre es, wenn man nun diesen <strong>try-catch</strong> Block ganz weg bekommen würde?
+Immerhin ist es immer das Selbe Stück Quelltext.</p>
+<p>Um diesem Punkt näher zu kommen definieren wir uns erst einmal eine Funktion
+die mit Methodensignaturen umgehen kann die eine <code>Exception</code> definieren.
+Damit es wieder ein FunctionalInterface wird, müssen wir uns überlegen wie wir
+den Aufruf der Methode mit der definierten <code>Exception</code> ummanteln können.</p>
+<p>Ebenfalls gehe ich hier davon aus, das ein möglicher Ergebniswert in einem Optional
+verpackt ausgeliefert werden wird.</p>
+<p>Damit erhalten wir als erstes eine Funktion von <strong>T</strong> auf <strong>Optional<T></strong>
+Da der Eingangstyp nicht gleich dem Ausgangstyp sein muss, definieren wir es ein wenig allgemeiner. <code>CheckedFunction&lt;T, R&gt; extends Function&lt;T, Optional&lt;R&gt;&gt;</code>.</p>
+<p>Wir fügen nun eine Methode ein, die ebenfalls eine Exception in der Signatur definiert hat. <code>R applyWithException(T t) throws Exception;</code>.</p>
+<p>Der Ablauf in beiden Fällen, also mit und ohne dem Auftreten einer <code>Exception</code> ist klar definiert. Diese Implementierung kann man nun als <strong>default</strong> Implementierung
+für die Methodensignatur <code>default Optional&lt;R&gt; apply(T t)</code> nehmen.</p>
+<pre><code class="language-java">  @FunctionalInterface
+  public interface CheckedFunction&lt;T, R&gt; extends Function&lt;T, Optional&lt;R&gt;&gt; {
+    @Override
+    default Optional&lt;R&gt; apply(T t) {
+      try {
+        return Optional.ofNullable(applyWithException(t));
+      } catch (Exception e) {
+        return Optional.empty();
+      }
+    }
+
+    R applyWithException(T t) throws Exception;
+
+  }
+</code></pre>
+<p>Listing: V003</p>
+<p>Eine klassische Implementierung von diesem Interface sieht dann wie folgt aus, wenn wir die vorherige Implementierung von dem Interface Service als Grudlage nehmen.</p>
+<pre><code class="language-java">    final CheckedFunction&lt;String, String&gt; checkedFunction
+        = new CheckedFunction&lt;String, String&gt;() {
+      @Override
+      public String applyWithException(String s) throws Exception {
+        return ((Service) txt -&gt; txt.toUpperCase() + &quot;-workedOn&quot;).doWork(s);
+      }
+    };
+</code></pre>
+<p>Listing: V003</p>
+<p>Wenn nun diese <code>CheckedFunction</code> verwendet wird, so sieht man noch die selbst definierte Methodensignatur. <code>applyWithException</code>. Um dieses nun wieder los zu werden, und damit die IDE nur noch das gewohnte <code>apply</code> anbietet, kann man es wieder auf eine Funktion casten.</p>
+<pre><code class="language-java">    final Function&lt;String, Optional&lt;String&gt;&gt; f = checkedFunction;
+</code></pre>
+<p>Listing: V003</p>
+<p>Die Verwendung kann nun auf die jeweiligen Fälle Bezug nehmen, da wir wie gewohnt
+mit einem Optional arbeiten.</p>
+<pre><code class="language-java">    f.apply(&quot;Hello&quot;)
+     .ifPresent((result) -&gt; System.out.println(&quot;result = &quot; + result));
+</code></pre>
+<p>Listing: V003</p>
+<p>Was hier allerdings noch fehlt, ist der Zugriff auf die <code>Exception</code> bzw
+die Fehlermeldung die im Fehlerfall geliefert worden ist.</p>
+<p>Hierzu modifizieren wir nun die <code>CheckedFunction</code>, dass wir nicht das <code>Optional&lt;T&gt;</code> verwenden, sondern die in dem vorherigen Artikeln vorgestellte Klasse <code>Result&lt;T&gt;</code>.</p>
+<pre><code class="language-java">  @FunctionalInterface
+  public interface CheckedFunction&lt;T, R&gt; extends Function&lt;T, Result&lt;R&gt;&gt; {
+    @Override
+    default Result&lt;R&gt; apply(T t) {
+      try {
+        return Result.success(applyWithException(t));
+      } catch (Exception e) {
+        final String message = e.getMessage();
+        return Result.failure((message != null) 
+               ? message 
+               : e.getClass().getSimpleName());
+      }
+    }
+
+    R applyWithException(T t) throws Exception;
+
+  }
+</code></pre>
+<p>In der Verwendung kann man nun auf die erweiterten Möglichkeiten die uns das Result liefert zugreifen.</p>
+<pre><code class="language-java">    final Consumer&lt;String&gt; print = System.out::println;
+    
+    final Function&lt;String, Result&lt;String&gt;&gt; checkedFunction
+        = (CheckedFunction&lt;String, String&gt;)
+          ((Service) txt -&gt; txt.toUpperCase() + &quot;-workedOn&quot;)::doWork;
+
+    checkedFunction.apply(&quot;Hello&quot;)
+                   .ifPresentOrElse(
+                       (result) -&gt; print.accept(&quot;result = &quot; + result),
+                       (failed) -&gt; print.accept(&quot;failed = &quot; + failed)
+                   );
+</code></pre>
+<p>Listing: V004</p>
+<p>In dem OpenSource Projekt Functional-Reactive <a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a> auf GitHub sind die CheckFunctions implementiert und ich werde im Folgenden
+darauf zugreifen. Ebenfalls gibt es dort auch <code>CheckedConsumer</code>, <code>CheckedSupplier</code>, <code>CheckedBiFunction</code>,...</p>
+<p>Kommen wir nun zu einem Beispiel in dem wir die <code>CheckedFunction</code>
+in der Kombination mit einem Stream verwenden. Hier sieht man schon wie kompakt
+die Implementierungen bei der Verwendung werden kann. Denn auch wenn man Streams verwendet, ist man immer wieder mit dem Umgang von Exceptions konfrontiert.</p>
+<pre><code class="language-Java">  public static interface Service {
+    String doWork(String txt) throws Exception;
+  }
+
+  private static IntConsumer print = System.out::println;
+
+  public static void main(String[] args) {
+    //from now on using functional-reactive lib
+    //https://github.com/functional-reactive/functional-reactive-lib
+
+    final Function&lt;String, Result&lt;Integer&gt;&gt; f 
+          = (CheckedFunction&lt;String, Integer&gt;) Integer::valueOf;
+
+    Stream
+        .of(&quot;1&quot; , &quot;2&quot; , &quot;Hi&quot; , &quot;3&quot;)
+        .parallel()
+        .map(f)
+        .filter(Result::isPresent)
+        .mapToInt(Result::get)
+        .reduce((left , right) -&gt; left + right)
+        .ifPresent(print);
+        
+    //alternative way
+    Stream
+        .of(&quot;1&quot; , &quot;2&quot; , &quot;Hi&quot; , &quot;3&quot;)
+        .map((CheckedFunction&lt;String, Integer&gt;) Integer::valueOf)
+        .flatMap(Result::stream)
+        .reduce((left , right) -&gt; left + right)
+        .ifPresent(System.out::println);
+  }
+</code></pre>
+<p>Listing: V005</p>
+<p>Hier wurde nur der Deutlichkeit halber die Definition der <code>CheckedFunction</code> ausserhalb des Streams realisiert. Natürlich kann man das auch direkt in dem Mapping
+schreiben.</p>
+<p><code>.map((CheckedFunction&lt;String, Integer&gt;) Integer::valueOf))</code></p>
+<p>Nun kann es sein, dass einige Methoden nacheinander aufgerufen werden müssen, die jedoch alle eine Exception werfen können.
+Als Beispiel kann man sich vorstellen, das mehrere Systemkomponenten heruntergefahren werden müssen nach einem jUnit-Test.</p>
+<p>Um nun sicherzustellen, das alle Methoden aufgerufen werden muss man im klassischen
+Fall um jeden Methodenaufruf einen <strong>try-catch</strong> Block legen.</p>
+<pre><code class="language-java">  public static interface Service {
+    String doWork(String txt) throws Exception;
+  }
+
+  public static Service serviceA  = txt -&gt; txt.toUpperCase() + &quot;-workedOnA&quot;;
+  public static Service serviceB  = txt -&gt; txt.toUpperCase() + &quot;-workedOnB&quot;;
+
+    //both must be executed, even if first one fails
+    try {
+      final String resultA = serviceA.doWork(null);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      final String resultB = serviceB.doWork(&quot;Hello&quot;);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+</code></pre>
+<p>Listing: V006</p>
+<p>Bei der Verwendung von der <code>CheckedFunction</code> wird die Quelltextstelle doch wesentlich kompakter.</p>
+<pre><code class="language-java">    final Function&lt;String, Result&lt;String&gt;&gt; fA 
+            = (CheckedFunction&lt;String, String&gt;) (txt) -&gt; serviceA.doWork(txt);
+    final Function&lt;String, Result&lt;String&gt;&gt; fB 
+            = (CheckedFunction&lt;String, String&gt;) (txt) -&gt; serviceB.doWork(txt);
+
+    final Result&lt;String&gt; resultFA = fA.apply(null);
+    final Result&lt;String&gt; resultFB = fB.apply(&quot;Hello&quot;);
+</code></pre>
+<p>Listing: V006</p>
+<p>Nun kann man das in verschiedenen Varianten in einem Projekt verwenden. Zum einen kannm an die Funktion zum Umsetzen der CheckedFunction auf eine Function selbst wieder als Funktion anbieten. Hier ist die Funktion <code>tryIt</code>genannt worden. Dann kann man mittels Lambda oder Methodenreferenz die Transformation angeben.
+Es kann allerdings auch als statische Methode angeboten werden. Hier ebenfalls <code>tryIt</code>genannt.</p>
+<p>Im nachfolgenden Listing kann man beide Versionen im Vergleich sehen.</p>
+<pre><code class="language-java">  public static interface Service {
+    String doWork(String txt) throws Exception;
+  }
+
+  public static Service serviceA
+      = txt -&gt; txt.toUpperCase();
+
+  public static Function&lt;CheckedFunction&lt;String, String&gt;,
+                         Function&lt;String, Result&lt;String&gt;&gt;&gt;
+      tryIt = (f) -&gt; f;
+
+  public static Function&lt;String, Result&lt;String&gt;&gt; 
+                tryIt(CheckedFunction&lt;String, String&gt; function) {
+    Objects.requireNonNull(function);
+    return function;
+  }
+
+  public static void main(String[] args) {
+
+    Function&lt;String, Result&lt;String&gt;&gt; fA = tryIt.apply(serviceA::doWork);
+    Function&lt;String, Result&lt;String&gt;&gt; fB = tryIt.apply(txt -&gt; txt.toUpperCase());
+
+    Function&lt;String, Result&lt;String&gt;&gt; fC = tryIt(serviceA::doWork);
+    Function&lt;String, Result&lt;String&gt;&gt; fD = tryIt(txt -&gt; txt.toUpperCase());
+
+    out.println(&quot;fA = &quot; + fA.apply(null));
+    out.println(&quot;fB = &quot; + fB.apply(null));
+    out.println(&quot;fC = &quot; + fC.apply(null));
+    out.println(&quot;fD = &quot; + fD.apply(null));
+  }
+</code></pre>
+<p>Listing: V007</p>
+<p>Nun haben wir nicht immer Funktionen von dem Typ String auf String. Was nun noch ansteht ist die generische Formulierung des gerade gelernten.</p>
+<p>Hier gehen wir wieder den Weg das wir eine statische Methode für die Erzeugung der Funktion anbieten.</p>
+<pre><code class="language-java">  public static &lt;T,R&gt; Function&lt;CheckedFunction&lt;T, R&gt;, Function&lt;T, Result&lt;R&gt;&gt;&gt; tryIt(){
+    return (f) -&gt; f;    
+  }
+</code></pre>
+<p>Listing: V008</p>
+<p>Eine nette Besonderheit möchte ich hier nochmals erwähnen. Bisher habe ich das FunctionalInterface implementiert und dann eine Methodenreferenz von der Instanz <strong>serviceA</strong> gebildet. Das kann man natürlich von jeder Objektinstanz gewinnen.
+Das einzige was hier von Bedeutung ist, ist die Besonderheit das ein String der Eingabewert gewesen ist und ein String der Ausgabewert. Dadurch kann man es auf eine <code>Function&lt;String, String&gt;</code> mappen. Da geht aber ebenso mit einer Methode die zwei Eingangswerte hat und einen Ausgangswert. Dann bekommen wir eine <code>BiFunction&lt;X,Y,R&gt;</code>.
+Und so weiter und so weiter. Hier lohnt es sich ein wenig zu experimentieren.</p>
+<p>Somit kann man neue Funktionalität mittels Funktionen realisieren und doch weiterhin
+die alten Implementierungen verwenden. Die Typsicherheit ist gegeben und die IDE wird einen
+weiterhin voll unterstützen können.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben uns in diesem Teil damit beschäftigt wie wir mit Exceptions umgehen können.
+Wir sind hiermit einiges an Quelltext losgeworden und können so auch solche Methoden
+elegant in der Kombination mit Streams verwenden. Auch hier hat sich gezeigt, das
+die Integration von Legacy-Quelltext mittels Methodenreferenzen gut möglich ist.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-005.git">https://github.com/Java-Publications/functional-reactive-with-core-java-005.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 04
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006">
+    Functional Reactive mit Core Java 06
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

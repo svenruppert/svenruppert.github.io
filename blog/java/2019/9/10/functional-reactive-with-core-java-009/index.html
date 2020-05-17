@@ -1,0 +1,918 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 09</title>
+
+
+<meta name="description" content="In dem letzten Teil dieser Serie haben wir uns angesehen wie ein minimaler Ansatz mittels Observer Pattern realisiert werden kann. Dabei wurde deutlich, dass es einiges an Implementierung bedarf um die Beschränkungen der ersten Version aufzuheben. Das JDK selber bietet seit Java8 eine sehr komfortable Implementierung. Genau diese werden wir uns nun ansehen.">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-09-10-functional-reactive-with-core-java-009.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/9/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-009","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009"},"next":{"path":"blog/java/2019/10/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-010","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010"},"previous":{"path":"blog/java/2019/8/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-008","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008"},"description":"In dem letzten Teil dieser Serie haben wir uns angesehen wie ein minimaler Ansatz mittels Observer Pattern realisiert werden kann. Dabei wurde deutlich, dass es einiges an Implementierung bedarf um die Beschränkungen der ersten Version aufzuheben. Das JDK selber bietet seit Java8 eine sehr komfortable Implementierung. Genau diese werden wir uns nun ansehen.","title":"Functional Reactive mit Core Java 09"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009" aria-current="page">Functional Reactive mit Core Java 09</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 09</h2>
+        <p class="subtitle is-4">In dem letzten Teil dieser Serie haben wir uns angesehen wie ein minimaler Ansatz mittels Observer Pattern realisiert werden kann. Dabei wurde deutlich, dass es einiges an Implementierung bedarf um die Beschränkungen der ersten Version aufzuheben. Das JDK selber bietet seit Java8 eine sehr komfortable Implementierung. Genau diese werden wir uns nun ansehen.</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 09</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-09-10">September 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In dem letzten Teil dieser Serie haben wir uns angesehen wie ein minimaler Ansatz mittels Observer Pattern realisiert werden kann.
+Dabei wurde deutlich, dass es einiges an Implementierung bedarf um die Beschränkungen der ersten Version
+aufzuheben. Das JDK selber bietet seit Java8 eine sehr komfortable Implementierung.
+Genau diese werden wir uns nun ansehen.</p>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="process-thread-fiber-"><a href="#process-thread-fiber-" id="process-thread-fiber-" class="anchor"></a>Process, Thread, Fiber, ..</h2>
+<p>Es gibt verschiedene Dinge mittels denen es einem Entwickler ermöglicht wird Abläufe konkurrierend ablaufen zu lassen. Diese Möglichkeiten haben unterschiedliche Isolationsstufen und Ressourcen die dafür in Anspruch genommen werden.
+Auf Betriebssystemebene zum Beispiel sind wir in der Lage verschiedene Dinge in unterschiedliche Prozesse auszulagern. Innerhalb einer Anwendung kennt man den Thread, mittels dem das Programm, bzw die Laufzeitumgebung
+Dinge auf verschiedene Prozessoren verteilen kann. Ich lasse an dieser Stelle aus, das es unterschiedliche Mappings gibt und nehme vereinfachend an das ein Thread auf ein Betriebssystemthread gemappt wird.
+Jedoch gibt es auch hier noch etwas leichtgewichtigeres. Hier kommt der Begriff Fiber ins Spiel.
+Wer mehr zu der Begriffsdefinition lesen möchte den verweise ich als Anfangslektüre auf Wikipedia.
+<a href="https://de.wikipedia.org/wiki/User-Thread">https://de.wikipedia.org/wiki/User-Thread</a>
+An dieser Stelle möchte ich nicht im Detail die Unterschiede erläutern, sondern als Gedankenstütze formulieren, das ein Fiber etwas kleineres als ein Thread ist. Ganz vereinfachend ausgedrückt, ein Thread kann mehrere Fiber verarbeiten.</p>
+<p>Wir werden uns nun das <code>CompletableFuture</code> genauer ansehen. Ich nehme nun vereinfachend an, das ein <code>CompletableFuture</code> auf der Ebene eines Fibers zu verorten ist. Das bedeutet, das wir einen Pool von Threads haben der dafür verwendet wird eine beliebige Menge an Aufgaben mittels <code>CompletableFuture</code> abzuarbeiten.</p>
+<h2 id="die-aufgabe"><a href="#die-aufgabe" id="die-aufgabe" class="anchor"></a>Die Aufgabe</h2>
+<p>Als Beispiel wird an dieser Stelle angenommen, das zwei Werte aus verschiedenen Quellen entnommen werden müssen und mittels Operator zu einem Ergebnis verarbeitet werden. Dieses Ergebnis und ein weiterer Wert aus einer dritten Quelle wird mit einem weiteren Operator zu einem finalen Ergebnis verarbeitet.</p>
+<p>Hier ist es von Bedeutung, das die Quellen mit unterschiedlichen Zeiten antworten. Das bedeutet, das immer auf einen der jeweils beiden Eingangswerte gewartet werden muss. Die Wahrscheinlichkeit das beide Werte gleichzeitig zur Verfügung stehen ist sehr gering.</p>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/java/2019-09-10/JaxEnter-FRP-009_001.png" alt="" /></p>
+<p>Es lässt sich leicht vorstellen, das es hier zu blockierenden Aufrufen kommen wird.
+Das wollen wir nun in reaktiver Manier vermeiden.
+Wie nun können wir dieses mittels <code>CompletableFuture</code> abbilden?</p>
+<h2 id="completablefuture---der-anfang"><a href="#completablefuture---der-anfang" id="completablefuture---der-anfang" class="anchor"></a>CompletableFuture - Der Anfang</h2>
+<p>Die Klasse <code>CompletableFuture</code> gibt einem prinzipiell zwei Wege eine Aufgabe zu formulieren.
+Dabei werden zwei Fälle unterscheiden. Die Aufgabe liefert ein Ergebnis zurück und es wird kein Ergebnis zurückgeliefert.</p>
+<p>Aufgaben die kein Ergebnis zurückliefern werden mittels <code>Runnable</code> formuliert. Dieses Interface ist schon aus der klassischen Javaprogrammierung mit Threads bekannt.
+Das es sich um ein <code>FunctionalInterface</code> handelt, kann zur Formulierung auf Lambdas zurückgegriffen werden.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;Void&gt; cfRunnableA = CompletableFuture.runAsync(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println(&quot;Hello reactive World&quot;);
+      }
+    });
+
+    final CompletableFuture&lt;Void&gt; cfRunnableB = CompletableFuture
+        .runAsync(() -&gt; System.out.println(&quot;Hello reactive World&quot;));
+</code></pre>
+<p>Wird nun ein Ergebnis erwartet, so kann man die Methode <code>supplyAsync</code> verwenden. Hier wird ein
+<code>Supplier&lt;T&gt;</code> übergeben. Der Supplier soll es dem <code>CompletableFuture</code> ermöglichen, zu dem Zeitpunkt wenn der Wert für die Verarbeitung benötigt wird, diesen mittels dem übergebenen <code>Supplier&lt;T&gt;</code> anzufordern.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;String&gt; cfCallableA = CompletableFuture
+        .supplyAsync(new Supplier&lt;String&gt;() {
+          @Override
+          public String get() {
+            return &quot;Hello reactive World&quot;;
+          }
+        });
+
+    final CompletableFuture&lt;String&gt; cfCallableB = CompletableFuture
+        .supplyAsync(() -&gt; &quot;Hello reactive World&quot;);
+</code></pre>
+<p>In den gerade gezeigten Beispielen erhalten wir jeweils eine Instanz der Klasse <code>CompletableFuture</code>
+In dem ersten Beispiel ein <code>CompletableFuture&lt;Void&gt;</code> und im zweiten Beispiel ein <code>CompletableFuture&lt;String&gt;</code>.</p>
+<h2 id="completablefuture---das-ende"><a href="#completablefuture---das-ende" id="completablefuture---das-ende" class="anchor"></a>CompletableFuture - Das Ende</h2>
+<p>Mittels dieser Instanzen kann man nun auf die Verarbeitung warten. Hier gibt es verschiedene Möglichkeiten.
+Die nachfolgend aufgezeigten Methoden sind alle blockierend, es wird also gewartet bis das Ergebnis eingetroffen oder eine Ausnhamesituation aufgetreten ist.</p>
+<h3 id="join"><a href="#join" id="join" class="anchor"></a>join()</h3>
+<p>Mit der Methode <code>join()</code>kann gewartet werden bis das Ergebnis vorhanden ist. Die Methode liefert das Value direkt, ohne es evtl nochmals in ein <code>Optional&lt;T&gt;</code> zu verpacken. Es kann hier natürlich dazu kommen, das ewig gewartet werden wird. Sobald ein Fehler in der Verarbeitung in Form einer Exception auftritt, wird diese als <code>RuntimeException</code> verpackt geworfen.</p>
+<h3 id="get"><a href="#get" id="get" class="anchor"></a>get()</h3>
+<p>Die Methode  <code>get()</code> die es in den zwei Ausprägungen mit und ohne Angabe eines Timeouts gibt, kann ebenfalls auf das Ergebnis gewartet werden.
+Die Methoden enthalten im Unterschied zu der Methode <code>join()</code> zwei bzw drei Exceptions in der Signatur, (<code>InterruptedException</code>, <code>TimeoutException</code>, <code>ExecutionException</code>)</p>
+<pre><code class="language-java">    final CompletableFuture&lt;Void&gt; cfRunnableB = CompletableFuture
+        .runAsync(() -&gt; System.out.println(&quot;Hello reactive World&quot;));
+
+    try {
+      final Void aVoidA = cfRunnableB.get();
+    } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      final Void aVoidB = cfRunnableB.get(1_000 , MILLISECONDS);
+    } catch (InterruptedException | TimeoutException | ExecutionException e) {
+      e.printStackTrace();
+</code></pre>
+<h3 id="getnow"><a href="#getnow" id="getnow" class="anchor"></a>getNow()</h3>
+<p>Wenn zu einem definierten Zeitpunkt ein Ergebnis geholten werden soll kann die Methode <code>getNow()</code> in Anspruch genommen werden. Allerdings ist hier auch immer ein alternativer Wert anzugeben, da es nicht garantiert ist das der finale Wert schon erzeugt worden ist. Dafür hat diese Methode keine Exception in der Signatur.
+Ob und wann diese Methode eingesetzt werden kann, muss der Entwickler selbst endscheiden.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;String&gt; cfCallableB = CompletableFuture
+        .supplyAsync(() -&gt; &quot;Hello reactive World&quot;);
+
+    final String now = cfCallableB.getNow(&quot;alternative&quot;);
+</code></pre>
+<h3 id="thenaccept"><a href="#thenaccept" id="thenaccept" class="anchor"></a>thenAccept()</h3>
+<p>Es gibt jedoch auch die Möglichkeit zu definieren was passieren soll wenn die Verarbeitung bis zu diesem Punkt gekommen ist und dieses ohne auf das Ergebnis blockierend zu warten. Der Rückgabewert ist wiederum eine Instanz vom Typ <code>CompletableFuture&lt;Void&gt;</code>. Um das zu erreichen wird mittels der Methode <code>thenAccept(..)</code> ein <code>Consumer&lt;T&gt;</code> übergeben, der das bis dahin erzeugte Ergebnis final verarbeiten soll.</p>
+<pre><code class="language-java">    final Supplier&lt;String&gt; task = ()-&gt; &quot;Hello reactive World&quot;;
+
+    final CompletableFuture&lt;String&gt; cf = CompletableFuture.supplyAsync(task);
+
+    final CompletableFuture&lt;Void&gt; acceptA = cf.thenAccept(System.out::println);
+</code></pre>
+<h2 id="completablefuture----async-und-threadpools"><a href="#completablefuture----async-und-threadpools" id="completablefuture----async-und-threadpools" class="anchor"></a>CompletableFuture -  Async und ThreadPools</h2>
+<p>Nun gibt es zum BEispiel die Methode <code>thenAcccept()</code> auch in der Geschmacksrichtung asynchron und nennt sich
+<code>thenAcceptAsync()</code>. Diese namentliche Unterscheidung gibt es in der Klasse <code>CompletableFuture</code> öfter und kennzeiochnet immer die asynchrone Variante. Eine weitere Besonderheit ist es, das diese Methode ebenfalls mit der Möglichkeit ausgestattet worden ist einen dedizierten <code>Executor</code> mit zu übergeben. Dadurch kann nun der für diesen Schritt zur Verfügungstehende Ressourcenpool expliziet angegeben werden. Wenn dem nicht so ist, wird immer der CommonForkJoinPool verwendet.</p>
+<pre><code class="language-java">    final Supplier&lt;String&gt; task = () -&gt; &quot;Hello reactive World&quot;;
+
+    final CompletableFuture&lt;String&gt; cf = CompletableFuture.supplyAsync(task);
+
+    final CompletableFuture&lt;Void&gt; acceptA = cf.thenAcceptAsync(System.out::println);
+
+
+    final ExecutorService fixedThreadPool = Executors
+        .newFixedThreadPool(Runtime.getRuntime()
+                                   .availableProcessors());
+
+    final CompletableFuture&lt;Void&gt; acceptB = cf.thenAcceptAsync(System.out::println, fixedThreadPool);
+</code></pre>
+<p>Spätestens jetzt stellt sich die Frage wie man all das ein wenig kompakter schreiben kann.
+Zum Glück ist das API sehr freundlich zu uns und wie können hier mit dem FluentAPI recht einfach zum Ziel kommen.
+Nachfolgend drei verschiedene Möglichkeiten bzw Varianten.</p>
+<pre><code class="language-java">    final ExecutorService fixedThreadPool = Executors
+        .newFixedThreadPool(Runtime.getRuntime()
+                                   .availableProcessors());
+
+    final Supplier&lt;String&gt; task = () -&gt; &quot;Hello reactive World&quot;;
+    final Consumer&lt;String&gt; consumer = System.out::println;
+
+    final CompletableFuture&lt;Void&gt; cfA = CompletableFuture
+        .supplyAsync(task)
+        .thenAcceptAsync(consumer , fixedThreadPool);
+
+
+    final CompletableFuture&lt;Void&gt; cfB = CompletableFuture
+        .supplyAsync(() -&gt; &quot;Hello reactive World&quot;)
+        .thenAcceptAsync(System.out::println , fixedThreadPool);
+
+    final CompletableFuture&lt;Void&gt; cfC = CompletableFuture
+        .supplyAsync(() -&gt; &quot;Hello reactive World&quot;)
+        .thenAcceptAsync(System.out::println);
+</code></pre>
+<h2 id="zurück-zu-der-aufgabe"><a href="#zurück-zu-der-aufgabe" id="zurück-zu-der-aufgabe" class="anchor"></a>Zurück zu der Aufgabe</h2>
+<p>Kommen wir nun zurück zu der am Beginn gestellten Aufgabe.
+Hier gilt es einen Pfad abzubilden der aus mehr als nur einem Arbeitsschritt besteht.</p>
+<p><img src="_images/JaxEnter-FRP-009_001.png" alt="_images/JaxEnter-FRP-009_001.png" /></p>
+<p>Hier zu sehen ist, das es mehrere Zwischenergebnisse gibt. Jedes Zwischenergebnis kann von einem unterschiedlichen Typ sein. Der erste Schritt besteht hier in diesem Beispiel darin einen Wert aus der Quelle A zu holen. Die Quelle steht sinnbildlich für eine belibige Quelle, kann also ein Wert aus einer Datenbank,aus einer REST-Ressource oder was auch immer sein. Eines haben alle unsere hier angedeuteten Quellen gemeinsam, die Werte kommen mit einer nicht
+genau definierbaren Zeitverzögerung.</p>
+<p>Als erstes definieren wir für unser Beispiel die drei Eingangstypen. Diese sind alle gleich aufgebaut und
+bestehen aus einem pseudo-Wert vom Typ String und einer Instanz vom Typ <code>LocalDateTime</code>.</p>
+<pre><code class="language-java">  public class InputA extends Pair&lt;String, LocalDateTime&gt; {
+    public InputA(String value , LocalDateTime timeStamp) {
+      super(value , timeStamp);
+    }
+    public String value(){return getT1();}
+    public LocalDateTime timestamp(){return getT2();}
+  }
+
+  public class InputB extends Pair&lt;String, LocalDateTime&gt; {
+    public InputB(String value , LocalDateTime timeStamp) {
+      super(value , timeStamp);
+    }
+    public String value(){return getT1();}
+    public LocalDateTime timestamp(){return getT2();}
+  }
+
+  public class InputC extends Pair&lt;String, LocalDateTime&gt; {
+    public InputC(String value , LocalDateTime timeStamp) {
+      super(value , timeStamp);
+    }
+    public String value(){return getT1();}
+    public LocalDateTime timestamp(){return getT2();}
+  }
+</code></pre>
+<p>Starten wir hier nun mit der Anforderung den Wert aus der Quelle A, B und C zu holen.
+Hier werden keine zeitlichen Verzögerungen simuliert und der Zugriff auf die jeweilige Quelle ist
+der Einfachheit wegen gleich realisiert.</p>
+<pre><code class="language-java">  private static Supplier&lt;InputA&gt; supplierA() {
+    return () -&gt; {
+      //some time consuming stuff
+      final int nextInt = new Random().nextInt(10);
+      return new InputA(String.valueOf(nextInt) , LocalDateTime.now());
+    };
+  }
+
+  private static Supplier&lt;InputB&gt; supplierB() {
+    return () -&gt; {
+      //some time consuming stuff
+      final int nextInt = new Random().nextInt(10);
+      return new InputB(String.valueOf(nextInt) , LocalDateTime.now());
+    };
+  }
+
+  private static Supplier&lt;InputC&gt; supplierC() {
+    return () -&gt; {
+      //some time consuming stuff
+      final int nextInt = new Random().nextInt(10);
+      return new InputC(String.valueOf(nextInt) , LocalDateTime.now());
+    };
+  }
+</code></pre>
+<p>Unter der Annahme das die jeweiligen Quellen Verzögerungen im System produzieren, werden die
+Anfragen in dafür extra einzelen definierten und dimensionierten Ressourcen abgearbeitet.
+Bitte unbedingt bei dem Einsatz in realen System beachten, dass die Dimensionierung der Ressourcen ein nicht triviales Problem darstellen kann. Hier werden wir auch dieses der Einfachheit halber wieder gleichförmig darstellen.</p>
+<pre><code class="language-java">  private static final int nThreads = Runtime.getRuntime()
+                                             .availableProcessors();
+  private static final ExecutorService poolInputA = Executors
+      .newFixedThreadPool(nThreads);
+  private static final ExecutorService poolInputB = Executors
+      .newFixedThreadPool(nThreads);
+  private static final ExecutorService poolInputC = Executors
+      .newFixedThreadPool(nThreads);
+</code></pre>
+<p>Nun haben wir die Supplier um den technischen Vorgang abzubilden wie die Daten aus der Quelle geholt werden und die dafür vorgesehenen Ressourcen definiert. Der nächste Schritt besteht nun darin die Instanzen vom Typ <code>CompletableFuture</code> zu erzeugen.</p>
+<pre><code class="language-java">  public static CompletableFuture&lt;InputA&gt; sourceA(){
+    return CompletableFuture.supplyAsync(supplierA(), poolInputA);
+  }  
+  public static CompletableFuture&lt;InputB&gt; sourceB(){
+    return CompletableFuture.supplyAsync(supplierB(), poolInputB);
+  }  
+  public static CompletableFuture&lt;InputC&gt; sourceC(){
+    return CompletableFuture.supplyAsync(supplierC(), poolInputC);
+  }
+</code></pre>
+<h3 id="arbeitsschritte-verbinden"><a href="#arbeitsschritte-verbinden" id="arbeitsschritte-verbinden" class="anchor"></a>Arbeitsschritte verbinden</h3>
+<p>An dieser Stelle angekommen können nun alle Werte geholt werden. Es beginnt also jetzt die Definition der Verarbeitung selbst. Auch hier kann wieder bei jedem Schritt der Ergebnistyp ein anderer sein, was hier
+zur Demonstrationszwecken gemacht worden ist.</p>
+<p>Demnanch erst einmal die Definition des ersten Ergebnistypen und die Definition der zu verwendenden Ressource.</p>
+<pre><code class="language-java">  public static class ResultOne extends Pair&lt;String, LocalDateTime&gt; {
+    public ResultOne(String value , LocalDateTime timeStamp) {
+      super(value , timeStamp);
+    }
+
+    public String value() {return getT1();}
+    public LocalDateTime timestamp() {return getT2();}
+  }
+
+  private static final ExecutorService poolOperatorA = Executors
+      .newSingleThreadExecutor();
+</code></pre>
+<p>Soweit ist alles schon bekannt, fehlt nun noch die Definition des Operators an sich. Es können
+Instanzen vom Typ <code>CompletableFuture</code> mittels Methode <code>thenCombine(..)</code> oder auch wieder asynchron
+mittels Methode <code>thenCombineAsync(..)</code> kombiniert werden. Dazu wird eine <code>BiFunction</code> benötigt, die in der Lage ist, die beiden Ergebniswerte der beiden beteiligten <code>CompletableFuture</code> zu einem neuen Ergebniswert zu verarbeiten.</p>
+<pre><code class="language-java">  private static BiFunction&lt;InputA, InputB, ResultOne&gt; operatorOne() {
+    return (a , b) -&gt; {
+      //for Demo
+      System.out.println(&quot;operatorOne.a = &quot; + a);
+      System.out.println(&quot;operatorOne.b = &quot; + b);
+      return new ResultOne(a.value() + &quot; + &quot; + b.value() , LocalDateTime.now());
+    };
+  }
+</code></pre>
+<p>An dieser Stelle angekommen kann man die Verarbeitungskette wie folgt formulieren.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;ResultOne&gt; combineAsync = sourceA()
+        .thenCombineAsync(sourceB() , operatorOne() , poolOperatorA);
+</code></pre>
+<p>Und wieder erhalten wir ein e Instanz vom Typ <code>CompletableFuture&lt;ResultOne&gt;</code>. Um nun den letzten Arbeitsschritt abzubilden wird analog vorgegangen.
+Es wird der Ergebnistyp, der Operator und die zu verwendende Ressource definiert.</p>
+<pre><code class="language-java">  public static class ResultTwo extends Pair&lt;String, LocalDateTime&gt; {
+    public ResultTwo(String value , LocalDateTime timeStamp) {
+      super(value , timeStamp);
+    }
+
+    public String value() {return getT1();}
+    public LocalDateTime timestamp() {return getT2();}
+  }
+
+  private static final ExecutorService poolOperatorB = Executors
+      .newSingleThreadExecutor();
+
+  private static BiFunction&lt;ResultOne, InputC, ResultTwo&gt; operatorTwo() {
+    return (a , b) -&gt; {
+      //for Demo
+      System.out.println(&quot;operatorTwo.a = &quot; + a);
+      System.out.println(&quot;operatorTwo.b = &quot; + b);
+      return new ResultTwo(a.value() + &quot; - &quot; + b.value() , LocalDateTime.now() );
+    };
+  }
+</code></pre>
+<p>Nun haben wir alle Schritte zusammen und können final den gesamten Ablauf formulieren.</p>
+<pre><code class="language-java">    sourceA()
+        .thenCombineAsync(sourceB() , operatorOne() , poolOperatorA)
+        .thenCombineAsync(sourceC() , operatorTwo() , poolOperatorB)
+        .thenAcceptAsync(System.out::println)
+        .join();
+</code></pre>
+<p>Was man hier meiner Meinung nach sehr schön erkennen kann, ist die Tatsache das die
+funktionalen Aspekte sehr schön zu der Verwendung der <code>CompletableFuture</code>s passen.
+Funktionen definieren die Operatoren, die technischen Aspekte der Dimensionierung
+ist in der Definition der Ressourcen extrahiert und der Ablauf ist recht linear formulierbar.</p>
+<p>Nun sehen wir uns noch an, wie dieser Ablauf n mal parallel zum Einsatz kommen kann.</p>
+<h2 id="multiple-pipelines"><a href="#multiple-pipelines" id="multiple-pipelines" class="anchor"></a>Multiple Pipelines</h2>
+<p>Sobald eine Instanz vom Typ <code>CompletableFuture</code> erzeugt worden ist, beginnt die Abarbeitung.
+Demnach stellt sich zum einen die Frage wie nun Pipelines definiert werden können ohne diese direkt in die Verwendung führen zu müssen. Und wie kann man nun eine Menge von diesen Instanzen komfortabel
+handhaben.</p>
+<p>Hier kommen wir zu der Kombination von Streams und dem <code>CompletableFuture</code>.</p>
+<p>Der Grundgedanke ist recht simpel. Sobald wir in der Lage sind die Quelle zu definieren, können wir diese
+zur Erzeugung einer Streamquelle verwenden. Daraus lassen sich Streams erzeugen die entweder unendlich die Verarbeitung multipler Datenquellen repräsentieren oder fest definierte Arbeitspakete verarbeiten.</p>
+<p>Hier wird der Einfachheit halber erst einmal angenommen, dass eine feste Menge von 1000 Ergebnissen produziert werden muss. Dazu kann man zum Beispiel den IntStream verwenden.</p>
+<pre><code class="language-java">    IntStream
+        .range(0,1_000)
+        .parallel()
+        .mapToObj(value -&gt; new Pair&lt;&gt;(value , sourceA()
+            .thenCombineAsync(sourceB() , operatorOne() , poolOperatorA)
+            .thenCombineAsync(sourceC() , operatorTwo() , poolOperatorB)
+            .thenAcceptAsync(System.out::println)))
+        .map(p -&gt; {
+          final Void join = p.getT2().join();
+          return p.getT1();
+        })
+        .forEach(System.out::println);
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>In diesem Beispiel werden 1000 Elemente aus den jeweiligen Quellen genommen und verarbeitet.
+Wenn man nun die selbe Lösung mittel Threads realisieren möchte ist einiges mehr an Aufwand zu erwarten.
+Zumal der Entwickler dann ebenfalls mit den Idiomen der verwendeten Synchronisationsmechanismen
+wie zum Beispiel dem <code>StampedLock</code> umgehen muss.</p>
+<p>Hier wurde für jede Stufe ein eigener Ressourcenpool definiert, und jeweils ein eigener Ergebnistyp definiert.
+Wenn wir all das nun ein wenig kompakter schreiben kommen wir auf wesentlich weniger Zeilen Quelltext.
+In jeden Projekt wird es Vereinfachungen bzw Annahmen geben die einzelne Element wegfallen lassen.
+Zum Beispiel kann man lediglich einen ThreadPool zum warten auf die Eingangswerte definieren und einen für die Durchführung der Operatoren.
+Die Anzahl der Typen für die jeweiliehgen Zwischenergebnisse werden evtl nicht so zahlreich sein.
+Und einige der Operatoren können gleich an Ort und Stelle fomruliert werden.
+Alles zusammen könnte dann zu dem nachfolgenden Beispiel führen.</p>
+<pre><code class="language-java">  private static final int nThreads = Runtime.getRuntime()
+                                             .availableProcessors();
+
+
+  private static final ExecutorService poolToWait = Executors
+      .newFixedThreadPool(nThreads * 10);
+
+  private static final ExecutorService poolToWork = Executors
+      .newFixedThreadPool(nThreads);
+
+  private static CompletableFuture&lt;Void&gt; createCF() {
+    return supplyAsync(() -&gt; valueOf(new Random().nextInt(10)) , poolToWait)
+        .thenCombineAsync(supplyAsync(() -&gt; valueOf(new Random().nextInt(10)) , poolToWait) ,
+                          (a , b) -&gt; a + &quot; + &quot; + b ,
+                          poolToWork)
+        .thenCombineAsync(supplyAsync(() -&gt; valueOf(new Random().nextInt(10)) , poolToWait) ,
+                          (a , b) -&gt; a + &quot; - &quot; + b ,
+                          poolToWork)
+        .thenAcceptAsync(System.out::println);
+  }
+
+  
+  public static void main(String[] args) {
+
+    IntStream
+        .range(0 , 1_000)
+        .parallel()
+        .mapToObj(value -&gt; new Pair&lt;&gt;(value , createCF()))
+        .map(p -&gt; {
+               p.getT2().join();
+               return p.getT1();
+             }
+        )
+        .forEach(System.out::println);
+
+    poolToWait.shutdown();
+    poolToWork.shutdown();
+  }
+</code></pre>
+<p>Allerdings ist hier sehr schnell ein Punkt erreicht bei dem der zu wartende Quelltext recht unübersichtlich werden wird. Demnach bin ich persönlich eher dazu geneigt, eine etwas ausführlichere Version zu realisieren.</p>
+<p>Alles zusammen allerdings ist das <code>CompletableFuture</code> ein sehr mächtiges und dabei doch einfaches Werkzeug
+um reaktive Aspekte in einer Anwendung zu realisieren.</p>
+<p>In den nächsten Teilen werden diese gerade gezeigten Elemente erweitert werden um die neuen Möglichkeiten die uns das Java9 gegeben hat.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-009.git">https://github.com/Java-Publications/functional-reactive-with-core-java-009.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 08
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010">
+    Functional Reactive mit Core Java 10
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 07</title>
+
+
+<meta name="description" content="Wenn man sich mit den funktionalen Aspekten der Programmierung auseinandersetzt, so kommt man irgendwann zu dem Begriff des **Memoizing**. Was genau soll das sein und wie können wir das in Core Java Abbilden? ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-07-10-functional-reactive-with-core-java-007.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/7/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-007","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007"},"next":{"path":"blog/java/2019/8/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-008","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008"},"previous":{"path":"blog/java/2019/6/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-006","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006"},"description":"Wenn man sich mit den funktionalen Aspekten der Programmierung auseinandersetzt, so kommt man irgendwann zu dem Begriff des **Memoizing**. Was genau soll das sein und wie können wir das in Core Java Abbilden? ","title":"Functional Reactive mit Core Java 07"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007" aria-current="page">Functional Reactive mit Core Java 07</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 07</h2>
+        <p class="subtitle is-4">Wenn man sich mit den funktionalen Aspekten der Programmierung auseinandersetzt, so kommt man irgendwann zu dem Begriff des **Memoizing**. Was genau soll das sein und wie können wir das in Core Java Abbilden? </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 07</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-07-10">Juli 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>Wenn man sich mit den funktionalen Aspekten der Programmierung auseinandersetzt, so kommt man irgendwann zu dem Begriff
+des <strong>Memoizing</strong>. Was genau soll das sein und wie können wir das in Core Java Abbilden?</p>
+<blockquote>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+</blockquote>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="memoizing"><a href="#memoizing" id="memoizing" class="anchor"></a>Memoizing</h2>
+<p>In der Funktionalen Programmierung spricht man davon, das eine Funktion zu einem bestimmten Eingangswert immer den selben Ausgangswert liefert. Genau den selben? Ja, genau den selben soll die Funktion liefern. Wenn der Rückgabewert vom Typ <strong>int</strong> ist, stellt das kein Problem dar. Wie aber sieht es aus, wenn der Rückgabewert eine Instanz vom Typ <strong>Gummibärchen</strong> ist?</p>
+<p>Hier ist also darauf zu achten was der Unterschied zwischen dem selben Wert und dem gleichen Wert ist.</p>
+<p>Beginnen wir mit einem einfachen Beispiel und verwenden folgende Funktion.</p>
+<pre><code class="language-java">  private static Function&lt;Integer, Integer&gt; squareFunction = x -&gt; {
+    System.out.println(&quot;In function&quot;);
+    return x * x;
+  };
+</code></pre>
+<p>In diesem Beispiel verwende ich das <code>System.out</code> um zu zeigen wie oft die Funktion aufgerufen worden ist. Selbstverständlich ist das nichts für den produktiven Einsatz.</p>
+<p>Wenn nun diese Funktion zweimal aufgerufen wird, so kann amn auf der Konsole sehen, das dem so ist. Es erscheint zweimal <strong>In action</strong></p>
+<pre><code class="language-java">    final Integer a = squareFunction.apply(2);
+    final Integer b = squareFunction.apply(2);
+</code></pre>
+<p>Definieren wir uns nun eine Methode um das Memoizing auf eine Funktion anzuwenden.</p>
+<pre><code class="language-java">Function&lt;Integer, Integer&gt; memoizationFunction =  
+                           Memoizer.memoize(squareFunction);
+</code></pre>
+<p>Ziel dieser Methode ist es, das danach die gelieferte Funktion bei zweimaligem Aufruf mit dem selben Weert, nur einmal eine Meldung
+auf der Konsole zu sehen ist. Oder besser gesagt, das ein Ergebnis nur einmalig berechnet wird. Die Funktion soll sich also merken, das sie dieses Ergebnis schon einmal produziert hat.</p>
+<h2 id="concurrenthashmap"><a href="#concurrenthashmap" id="concurrenthashmap" class="anchor"></a>ConcurrentHashMap</h2>
+<p>Um sich Werte zu merken kann man sich einer Map bediehnen.
+Hier werden zu den jeweiligen Einganswerten die berechneten Ausgangswerte gehalten. Wird wieder ein Ergebnis angefordert, so wird erst in der Map nachgesehen, ob es dazu schon ein Ergebnis gibt. Wenn dem so ist, wird dieses Ergebnis verwendet, ansonsten wird es berechnet und ebenfalls in der Map abgelegt. Als Implementierung der Map empfiehlt sich die <code>ConcurrentHashMap</code>, da wir nicht ausschließen können, dass multiple Zugriffe zur selben Zeit erfolgen.</p>
+<p>Seit Java8 gibt es die Methode <code>computeIfAbsent</code> mit der zum einen der Schlüssel als auch zum anderen die Berechnung des Wertes als Funktion übergeben werden kann.
+Die Implementierung der Funktionalität <strong>Memoizing</strong> ist nun nichts anderes als eine Ummantelung der Funktion.</p>
+<pre><code class="language-java">  private static Function&lt;Integer, Integer&gt; squareFunction = x -&gt; {
+    System.out.println(&quot;In function&quot;);
+    return x * x;
+  };
+
+  public static class Memoizer&lt;T,U&gt; {
+    private final Map&lt;T,U&gt; memoizationCache 
+                           = new ConcurrentHashMap&lt;&gt;();
+
+    private Function&lt;T, U&gt; doMemoize(final Function&lt;T,U&gt; function) {
+      return input -&gt; memoizationCache
+                          .computeIfAbsent(input, function);
+    }
+    public static &lt;T, U&gt; Function&lt;T, U&gt; 
+           memoize(final Function&lt;T, U&gt; function) {
+      return new Memoizer&lt;T, U&gt;().doMemoize(function);
+    }
+
+  }
+
+
+  public static void main(String[] args) {
+    final Function&lt;Integer, Integer&gt; f = 
+          Memoizer.memoize(squareFunction);
+    final Integer a = f.apply(2);
+    final Integer b = f.apply(2);
+  }
+</code></pre>
+<p>Wenn man nun die Funktion verwendet, die einem von dem Aufruf der Methode <strong>memoize(..)</strong> zurückgeliefert worden ist, so stellt man fest, dass bei mehrfacher Verwendung des selben Eingansgwertes nur einmal die Meldung auf der Konsole erscheint.
+Nun sind wir in der Lage eine <code>Function&lt;A,B&gt;</code> mit der Eigenschaft des <strong>memoizing</strong> auszustatten. Wie aber sieht es nun bei einer <code>BiFunction&lt;A,B,R&gt;</code> aus?</p>
+<h2 id="bifunction"><a href="#bifunction" id="bifunction" class="anchor"></a>BiFunction</h2>
+<p>Bei einer <code>BiFunction</code> handelt es sich um eine Funktion mit zwei Eingangswerten. Das bedeutet, das ein Ergebniswert nun von zwei Werten abhängt. Soweit ist alles recht einfach, nur wie werden wir uns nun die Funktion des <strong>Memoizing</strong> aufbauen?</p>
+<p>Hierzu spielen wir ein wenig mit der <code>BiFunction</code> an sich herum und versuchen diese umzuformen. Hierzu verwenden wir folgende Beispielfunktion.</p>
+<pre><code class="language-Java">BiFunction&lt;Integer,Integer,Integer&gt; biFunctionA = (x,y) -&gt; x * y;
+</code></pre>
+<p>Diese Funktion kann man auch umformen in eine Funktion die zweistufig aufgebaut ist.</p>
+<pre><code class="language-java">Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; biFunctionB 
+         = x -&gt; y -&gt; x * y;
+</code></pre>
+<p>Den Vorgang an sich nennt man <strong>Currying</strong>. Wer ein wenig mehr Theorie dazu lesen möchte, der kann bei Wikipedia beginnen <a href="https://de.wikipedia.org/wiki/Currying">https://de.wikipedia.org/wiki/Currying</a></p>
+<p>Um nun das Memoizing zu realisieren, kann man nun mit der vorher gezeigten
+Variante auf der jeweiligen Stufe ansetzen.</p>
+<pre><code class="language-java">    Function&lt;Integer, Function&lt;Integer,Integer&gt;&gt; memoizationFunction
+        = Memoizer.memoize(x -&gt; Memoizer.memoize(y -&gt; x * y));
+</code></pre>
+<p>Die Verwendung ist aber so noch alles andere als komfortabel. Das Ziel sollte sein, das eine <code>BiFunction</code> übergeben wird und eine <code>BiFunction</code> mit der Eigenschaft des Memoizing wieder zurückgeliefert werden wird. Aber eines nach dem anderen.</p>
+<h2 id="create"><a href="#create" id="create" class="anchor"></a>create</h2>
+<p>Der erste Schritt ist die Umformung von der <code>BiFunction&lt;A,B,R&gt;</code> in eine <code>Function&lt;A, Fuction&lt;B,R&gt;&gt;</code>. Hierzu definieren wir eine Methode die uns genau diese Transformation
+abbildet.</p>
+<pre><code class="language-java">  private static final BiFunction&lt;Integer, Integer, Integer&gt; biFunctionA = (x , y) -&gt; x * y;
+
+  public static Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; create(
+      BiFunction&lt;Integer, Integer, Integer&gt; biFunction) {
+    return Memoizer.memoize(x -&gt; Memoizer.memoize(y -&gt; biFunction.apply(x , y)));
+  }
+
+  public static void main(String[] args) {
+    final Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; function = create(biFunctionA);
+    System.out.println(&quot;memoizationFunction = &quot; + function.apply(2).apply(3));
+    System.out.println(&quot;memoizationFunction = &quot; + function.apply(2).apply(3));
+  }
+</code></pre>
+<h2 id="transform"><a href="#transform" id="transform" class="anchor"></a>transform</h2>
+<p>Der erste Schritt ist vollbracht, fehlt nun noch die Rücktransformation auf eine <code>BiFunction</code>. Auch hier kann man recht einfach den Aufruf delegieren.</p>
+<pre><code class="language-java">  public static BiFunction&lt;Integer, Integer, Integer&gt; transform(
+      Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; function) {
+    return (a,b) -&gt; function.apply(a).apply(b);
+  }
+</code></pre>
+<p>Beides zusammen ergibt dann folgende Methode.</p>
+<pre><code class="language-java">  public static Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; create(
+      BiFunction&lt;Integer, Integer, Integer&gt; biFunction) {
+    return Memoizer.memoize(x -&gt; Memoizer.memoize(y -&gt; biFunction.apply(x , y)));
+  }
+
+  public static BiFunction&lt;Integer, Integer, Integer&gt; transform(
+      Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; function) {
+    return (a,b) -&gt; function.apply(a).apply(b);
+  }
+
+  public static BiFunction&lt;Integer, Integer, Integer&gt; memoize(
+                BiFunction&lt;Integer, Integer, Integer&gt; f){
+    return transform(create(biFunctionA));
+  }
+</code></pre>
+<p>Oder wenn man beides ineinander überführt.</p>
+<pre><code class="language-java">  public static BiFunction&lt;Integer, Integer, Integer&gt; memoize(
+                BiFunction&lt;Integer, Integer, Integer&gt; f){
+    Function&lt;Integer, Function&lt;Integer, Integer&gt;&gt; cf
+        = Memoizer.memoize(x -&gt; Memoizer.memoize(y -&gt; f.apply(x , y)));
+    return (a,b) -&gt; cf.apply(a).apply(b);
+  }
+</code></pre>
+<p>Bisher haben wir alles auf eine bestimmte Funktion bezogen. Das kann man dank Generics allerdings allgemeiner formulieren.</p>
+<h2 id="generische-version"><a href="#generische-version" id="generische-version" class="anchor"></a>generische Version</h2>
+<p>Hierfür definieren wir die Typen A,B und R.</p>
+<pre><code class="language-java">  public static &lt;A,B,R&gt; BiFunction&lt;A, B, R&gt; memoize(BiFunction&lt;A, B, R&gt; f) {
+    Function&lt;A, Function&lt;B, R&gt;&gt; cf
+        = Memoizer.memoize(x -&gt; Memoizer.memoize(y -&gt; f.apply(x , y)));
+    return (a , b) -&gt; cf.apply(a).apply(b);
+  }
+  
+  public static void main(String[] args) {
+    Main.&lt;Integer,Integer,Integer&gt;memoize((x , y) -&gt; x * y).apply(2 , 3);
+    Main.&lt;String, String, Integer&gt;memoize((x,y) -&gt; Integer.valueOf(a) * Integer.valueOf(b));
+  }
+</code></pre>
+<h2 id="trifunction-to-n-function"><a href="#trifunction-to-n-function" id="trifunction-to-n-function" class="anchor"></a>TriFunction to n-Function</h2>
+<p>Wenn man an der Stelle hier angekommen ist, so kann man nun darüber nachdenken wie das mit einer <code>TriFunction</code> nun aussehen möge. Nur leider gibt es keine <code>TriFunction</code> im JDK.
+Wenn man diese jedoch benötigt, so sollte man sich davon aber nicht abhalten lassen.</p>
+<p>Eine <code>TriFunction</code> ist schnell definiert, wenn man dann noch die <code>BiFunction</code> aus dem JDK als Vorbild nimmt, ist es für die Entwickler die diese verwenden sehr intuitiv.</p>
+<pre><code class="language-java">  @FunctionalInterface
+  public interface TriFunction&lt;T1, T2,T3, R&gt; {
+    R apply(T1 t1, T2 t2, T3 t3);
+    default &lt;V&gt; TriFunction&lt;T1, T2,T3, V&gt; andThen(Function&lt;? super R, ? extends V&gt; after) {
+      Objects.requireNonNull(after);
+      return (T1 t1, T2 t2, T3 t3) -&gt; after.apply(apply(t1, t2, t3));
+    }
+  }
+</code></pre>
+<p>Auch hier kann man den selben Weg wie bei der <code>BiFunction</code>gehen.</p>
+<pre><code class="language-java">  public static &lt;A, B, C, R&gt; TriFunction&lt;A, B, C, R&gt; memoize(TriFunction&lt;A, B, C, R&gt; f) {
+    Function&lt;A, Function&lt;B, Function&lt;C,R&gt;&gt;&gt; cf
+        = Memoizer.memoize(
+        x -&gt; Memoizer.memoize(
+            y -&gt; Memoizer.memoize(
+                z -&gt; f.apply(x , y , z))));
+    return (a , b, c) -&gt; cf.apply(a).apply(b).apply(c);
+  }
+
+</code></pre>
+<p>Hierbei sieht man deutlich das wir dieses bis zu einer beliebigen Größenordnung
+so weiter definieren können. Der Weg zur NFunction ist also frei.</p>
+<h2 id="und-da-gab-es-noch-legacy-code"><a href="#und-da-gab-es-noch-legacy-code" id="und-da-gab-es-noch-legacy-code" class="anchor"></a>Und da gab es noch legacy Code</h2>
+<p>Der ein oder andere Entwickler wird hin und wieder doch einmal mit etwas älterem Quelltext konfrontiert werden. Hier ist es meist so, das dort natürlich der Umbau
+auf neue Interfaces meist nicht abbildbar ist. Was aber kann an nun machen um
+zum beispiel von dieser Art des partiellen caching zu profitieren?</p>
+<p>Stellen wir uns hier einmal ein klassisches Stück Java vor.</p>
+<pre><code class="language-java">  public static class MyLegacyClass {
+    public Value doWorkA(int a, int b){
+      return new Value();
+    }
+    public Value doWorkB(int a, int b){
+      return new Value();
+    }
+  }
+</code></pre>
+<p>Um nun diese Methoden von einer Instanz der Klasse <code>MyLegacyClass</code> zu verwenden
+gibt es unter anderem die folgende Möglichkeit. Es wird sich eine Methodenreferenz auf die
+Methode <strong>doWork</strong> von dieser Instanz geholt. Diese Methodenreferenz entspricht der Signatur einer <code>BiFunction</code> da sie zwei Parameter hat und einen Rückgabewert.</p>
+<pre><code class="language-java">    final MyLegacyClass myLegacyClass = new MyLegacyClass();
+    final BiFunction&lt;Integer, Integer, Value&gt; doWork = myLegacyClass::doWorkA;
+    final BiFunction&lt;Integer, Integer, Value&gt; memoize = Memoizer.memoize(doWork);
+
+</code></pre>
+<p>Diese <code>BiFunction</code> kann nun mittels Memoizing mit der Eigenschaft des partiellen cachings
+ausgestattet werden. Die ursprüngliche Methode bleibt davon unberührt und kann weiterhin wie
+vorher auch verwendet werden.</p>
+<p>Nun kommt es vor, das alter Quelltext auch Methoden mit mehr als 2 Parametern besitzt. Hier kann man dann mit den selbst definierten <code>TriFunction</code> arbeiten.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben hier gesehen, das es manchmal recht einfach ist, generische Muster in Java abzubilden. Ebenfalls haben wir nun eine Brücke zwischen alten und neuen Quelltext
+dank MethodHandles.
+Somit steht ein recht komfortabler Weg zur Verfügung alten Quelltext ohne Bytecodemanipulation
+oder größerem Refactoring mit unseren neuen Konzepten zu kombinieren.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-007.git">https://github.com/Java-Publications/functional-reactive-with-core-java-007.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 06
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008">
+    Functional Reactive mit Core Java 08
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

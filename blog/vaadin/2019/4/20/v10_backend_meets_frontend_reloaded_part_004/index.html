@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 04</title>
+
+
+<meta name="description" content="In dem letzten Teil haben wir uns angesehen wie man mit einem ResourceBundle umgehen kann, bzw wie man mit einer eigenen Implementierung beginnt. Das Thema ist auf der einen Seite schon recht alt, aber auf der anderen Seite top aktuell im Bereich von Webanwendungen. Heute werden wir uns damit beschäftigen wie man aus dem Teil 2 und dem Teil 3 eine praxistaugliche Implementierung eines I18NProviders für den Einsatz in Vaadin Flow implementieren kann. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-04-20-V10_Backend_Meets_Frontend_Reloaded_Part_004.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/4/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_004","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004"},"next":{"path":"blog/vaadin/2019/5/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_005","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005"},"previous":{"path":"blog/vaadin/2019/3/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_003","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003"},"description":"In dem letzten Teil haben wir uns angesehen wie man mit einem ResourceBundle umgehen kann, bzw wie man mit einer eigenen Implementierung beginnt. Das Thema ist auf der einen Seite schon recht alt, aber auf der anderen Seite top aktuell im Bereich von Webanwendungen. Heute werden wir uns damit beschäftigen wie man aus dem Teil 2 und dem Teil 3 eine praxistaugliche Implementierung eines I18NProviders für den Einsatz in Vaadin Flow implementieren kann. ","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 04"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 04</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 04</h2>
+        <p class="subtitle is-4">In dem letzten Teil haben wir uns angesehen wie man mit einem ResourceBundle umgehen kann, bzw wie man mit einer eigenen Implementierung beginnt. Das Thema ist auf der einen Seite schon recht alt, aber auf der anderen Seite top aktuell im Bereich von Webanwendungen. Heute werden wir uns damit beschäftigen wie man aus dem Teil 2 und dem Teil 3 eine praxistaugliche Implementierung eines I18NProviders für den Einsatz in Vaadin Flow implementieren kann. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 04</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-04-20">April 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>In dem letzten Teil haben wir uns angesehen wie man mit einem ResourceBundle umgehen kann, bzw wie man mit einer eigenen Implementierung beginnt. Das Thema ist auf der einen Seite schon recht alt, aber auf der anderen Seite top aktuell im Bereich von Webanwendungen.</p>
+<p>Heute werden wir uns damit beschäftigen wie man aus dem Teil 2 und dem Teil 3 eine
+praxistaugliche Implementierung eines I18NProviders für den Einsatz in Vaadin Flow
+implementieren kann.</p>
+<h2 id="die-anforderungen"><a href="#die-anforderungen" id="die-anforderungen" class="anchor"></a>Die Anforderungen</h2>
+<p>Als kurze WIederholung hier nochmals das Interface <code>I18NProvider</code> das für die
+Integration in eine Vaadin Flow Anwendung eingesetzt werden wird.</p>
+<pre><code class="language-java">public interface I18NProvider extends Serializable {
+  List&lt;Locale&gt; getProvidedLocales();
+
+  String getTranslation(String var1, Locale var2, Object... var3);
+}
+</code></pre>
+<p>Die Aktivierung der jeweiligen Implementierung hatten wir in dem voherigen Teil mittels des System-Properties
+<strong>vaadin.i18n.provider</strong> durchgeführt. Hierzu hatten wir in der main-Methode die zum Starten des
+Servlet-Containers verwendet wird folgende Zeile hinzugefügt.</p>
+<p><code>setProperty(&quot;vaadin.i18n.provider&quot; , I18NProviderImpl.class.getName());</code></p>
+<p>Heute werden wir uns die Implementierung des <strong>I18NProviders</strong> nochmals im Detail ansehen
+und um einige Eigenschaften erweitern die in einem produktiven Einsatz von vorteil sein werden.
+Zu allererst tragen wir nochmals die Eigenschaften zusammen die für einen effizienten Einsatz
+die Grundlage sein werden. Hierzu zählt zum einen, dass zur Laufzeit die Resourcen nachgeladen werden können.
+Die Behandlung von Fehlerfällen, wenn zum Beispiel eine Sprache angefordert wird, die von der Anwendung
+nicht direkt unterstützt wird als auch das Hinzufügen, Entfernen und Modifizieren von Sprachen zur Laufzeit
+sind wichtige Elemente für einen produktiven Betrieb.</p>
+<p>Als Erinnerung hier nochmals die Implementierung aus dem vorherigen Teil.</p>
+<pre><code class="language-java">public class I18NProviderImpl implements I18NProvider, HasLogger {
+
+  private static final Map&lt;String, String&gt; translations = new HashMap&lt;&gt;();
+
+  static {
+    translations.put(&quot;login.username.placeholder&quot; , &quot;username&quot;);
+    translations.put(&quot;login.password.placeholder&quot; , &quot;password&quot;);
+    translations.put(&quot;login.rememberme.label&quot; , &quot;remember Me&quot;);
+    translations.put(&quot;login.button.ok.text&quot; , &quot;OK&quot;);
+    translations.put(&quot;login.button.cancel.text&quot; , &quot;Cancel&quot;);
+  }
+
+  @Override
+  public List&lt;Locale&gt; getProvidedLocales() {
+    return List.of(Locale.ENGLISH);
+  }
+
+  @Override
+  public String getTranslation(String s , Locale locale , Object... objects) {
+    return translations.getOrDefault(s , s);
+  }
+}
+</code></pre>
+<h2 id="die-implementierung---gettranslation"><a href="#die-implementierung---gettranslation" id="die-implementierung---gettranslation" class="anchor"></a>Die Implementierung - getTranslation</h2>
+<p>Die erste Implementierung die wir hier als Basis nehmen, hat einen sehr begrenzent Funktionsumfang.
+Jedoch wollen wir nun mit der Methode <strong>getTranslation</strong> beginnen und diese schrittweise erweitern.</p>
+<h3 id="sprache-nicht-unterstützt"><a href="#sprache-nicht-unterstützt" id="sprache-nicht-unterstützt" class="anchor"></a>Sprache nicht unterstützt</h3>
+<p>Der Fall das eine Sprache die angefordert worden ist, nicht unterstützt wird ist sehr wahrscheinlich.
+Das System könnte nun mit einer Exception reagieren, was allerdings weniger hilfreich aus der Sicht eines Benutzers sein wird. Wenn wir davon ausgehen, das die englische Sprache eine allgemein konsumierbare Lösung darstellt,
+so macht dieses als Fallback Sinn. In manchen geographischen Bereichen werden andere Sprachen sicherlich sinnvoll sein.</p>
+<p>Wir gehen inm Folgenden davon aus, das wir deutsch und englisch in unserer Anwendung unterstützen möchten/müssen.
+Somit könnte die erste Implementierung wie folgt aussehen.</p>
+<pre><code class="language-java">
+  public static final String RESOURCE_BUNDLE_NAME = &quot;labels&quot;;
+
+  private static final ResourceBundle RESOURCE_BUNDLE_EN = getBundle(RESOURCE_BUNDLE_NAME , ENGLISH);
+  private static final ResourceBundle RESOURCE_BUNDLE_DE = getBundle(RESOURCE_BUNDLE_NAME , GERMAN);
+
+  @Override
+  public String getTranslation(String key , Locale locale , Object... params) {
+    logger().info(&quot;VaadinI18NProvider getTranslation.. key : &quot; + key + &quot; - &quot; + locale);
+
+    ResourceBundle bundleToUse = (GERMAN.equals(locale)) 
+        ? RESOURCE_BUNDLE_DE : RESOURCE_BUNDLE_EN;
+    
+    return bundleToUse.getString(key);
+  }
+</code></pre>
+<p>Es liegt auf der Hand, das es nun ein einfaches ist, dieses zum einen auf eine Anzahl beliebiger
+Sprachen zu erweitern. Ebenfalls wird die impliziet als Root Locale verwendete englische Sprache auch als dieses
+definiert.</p>
+<blockquote>
+</blockquote>
+<p>In der Implementierung der Klasse Locale gibt es ebenfalls
+eine Implementierung mit dem Namen Cache. Man muss also im Hinterkopf behalten, das hier ebenfalls
+Dinge vorgehalten werden, die man selber nicht nochamls cachen sollte. Im JDK gibt es immer wieder
+Implementierungen von Caches, die nur erkennbar werden wenn man sich den Quelltext genauer ansieht.
+In unserem konkrekten Fall bedeutet dieses, das vermieden werden muss, das der Cache der Implementierung Locale
+noch Ergebnisse liefert, die in unserem Persistenlayer nicht mehr vorhanden sind.
+Also alle Anfragen nach existierenden bzw unterstützten Locales, müssen in dem System an die eigene Anbindung
+delegiert werden.</p>
+<blockquote>
+</blockquote>
+<p>Alles was den Umgang mit den ResourceBundles betrifft, lagern wir als nächstes in eine Klasse mit dem Namen
+<em>ResourceBundleService</em>* aus.</p>
+<p>Da wir an dieser Stelle noch keinen Persistencelayer haben, definieren wir die verfügbaren
+ResourceBundles im Moment noch direkt als statische Attribute.</p>
+<pre><code class="language-java">  public static final String RESOURCE_BUNDLE_NAME = &quot;labels&quot;;
+
+  private static final ResourceBundle RESOURCE_BUNDLE_ROOT = getBundle(RESOURCE_BUNDLE_NAME , ROOT);
+  private static final ResourceBundle RESOURCE_BUNDLE_EN = getBundle(RESOURCE_BUNDLE_NAME , ENGLISH);
+  private static final ResourceBundle RESOURCE_BUNDLE_DE = getBundle(RESOURCE_BUNDLE_NAME , GERMAN);
+
+  private static Map&lt;Locale, ResourceBundle&gt; persistenceStorage = new ConcurrentHashMap&lt;&gt;();
+
+  public ResourceBundleService() {
+    postProcess();
+  }
+  
+    //LifeCycle dependent
+  private void postProcess() {
+    persistenceStorage.put(ROOT , RESOURCE_BUNDLE_ROOT);
+    persistenceStorage.put(ENGLISH , RESOURCE_BUNDLE_EN);
+    persistenceStorage.put(GERMAN , RESOURCE_BUNDLE_DE);
+  }
+</code></pre>
+<p>Als nächstes definieren wir das Verhalten, dass bei einem nicht direkt unterstützten Locale
+auf das Root-Locale verwiesen wird. Hier wird aus der Menge an verfügbaren Locales entweder das gesuchte herausgefiltert, oder das Root Bundle zurückgegeben.
+In diesem Schritt wird noch nicht der Fall abgefangen, dass es spezialisierte Locales geben kann. Hier ist derzetig
+nur ein direkter Treffer möglich.</p>
+<pre><code class="language-java">  private BiFunction&lt;Stream&lt;Locale&gt;, Locale, Locale&gt; selectLocaleToUse() {
+    return (availableLocales , requestedLocale) -&gt; availableLocales
+        .filter((l) -&gt; l.equals(requestedLocale))
+        .findFirst()
+        .orElse(ROOT);
+  }
+</code></pre>
+<p>Die Verwendung dieser BiFunction ist in unserem Fall zur Hälfte immer vorgegeben, da
+der Parameter <strong>availableLocales</strong> immer aus der selben Quelle bezogen werden wird.
+Hier lohnt es sich die <strong>BiFunction</strong> zurück zu führen auf eine <strong>Function</strong>.</p>
+<pre><code class="language-java">  private Function&lt;Locale, Locale&gt; convertLocale() {
+    return Transformations
+        .&lt;Stream&lt;Locale&gt;, Locale, Locale&gt;curryBiFunction()
+        .apply(selectLocaleToUse())
+        .apply(providedLocalesAsStream());
+  }
+</code></pre>
+<p>Die Funktion <strong>curryBiFunction</strong> ist in der Serie <strong>CheckPoint Java - Functional Reactive mit Core Java</strong> beschrieben. In Kurzform, wir setzen den ersten Parameter innerhalb dieser Funktion und können somit in der weiteren Verwendung auasschließlich das angefragte Locale betrachten.</p>
+<p>Der Persistencelayer verfügt über die aktuell verwendbaren Locales. In unserem Fall handelt es sich
+noch um eine <strong>ConcurrentHashMap</strong>. Demnach enthält das KeySet alle Locales. Da ein modifizieren der Elemente im KeySet Auswirkungen auf die Map ansich hat, werden wir immer die Elemente entnehmen und in einer
+neu erzeugten Datenstruktur anbieten. Des Koforts wegen gibt es verschiedene Varianten der Methode.</p>
+<pre><code class="language-java">  //don´t remove from the Set itself -&gt; will be reflected to the map
+  public Supplier&lt;Stream&lt;Locale&gt;&gt; providedLocalesAsSupplier() {
+    return this::providedLocalesAsStream;
+  }
+
+  public Stream&lt;Locale&gt; providedLocalesAsStream() {
+    return persistenceStorage
+        .keySet()
+        .stream()
+        .filter((l) -&gt; ! l.equals(ROOT));
+  }
+
+  public List&lt;Locale&gt; providedLocalesAsList() {
+    return providedLocalesAsStream()
+        .collect(toList());
+  }
+</code></pre>
+<p>Der Ladevorgang eines definierten Locales ist ein einfacher Delegate zur Map die hier noch zum Einsatz kommt.</p>
+<pre><code class="language-java">  private Function&lt;Locale, ResourceBundle&gt; loadResourceBundle() {
+    return (locale) -&gt; persistenceStorage.get(locale);
+  }
+</code></pre>
+<p>Alles zusammen erhalten wir nun folgenden Ablauf.
+Überprüfe ob der geforderte Locale in der Menge der unterstützten Locelas vorhanden ist und liefere diesen zurück.
+Wenn dem nicht so ist, verwende den Fallback, in unserem Fall den ROOT Locale.</p>
+<p>Basierend auf diesem Schritt wird nachfolgend aus dem Persistencelayer das korrespondierende ResourceBundle geladen.</p>
+<pre><code class="language-java">  public Function&lt;Locale, ResourceBundle&gt; resourceBundleToUse() {
+    return (locale) -&gt; convertLocale()
+        .andThen(loadResourceBundle())
+        .apply(locale);
+  }
+</code></pre>
+<p>Damit wird die Implementierung des **I18NProvider*´s sehr übersichtlich.</p>
+<pre><code class="language-java">public class I18NProviderImpl02 implements I18NProvider, HasLogger {
+
+  private final ResourceBundleService resourceBundleService = new ResourceBundleService();
+
+  @Override
+  public List&lt;Locale&gt; getProvidedLocales() {
+    logger().info(&quot;VaadinI18NProvider getProvidedLocales.. &quot;);
+    return resourceBundleService
+        .providedLocalesAsList();
+  }
+
+  @Override
+  public String getTranslation(String key , Locale locale , Object... params) {
+    logger().info(&quot;VaadinI18NProvider getTranslation.. key : &quot; + key + &quot; - &quot; + locale);
+    return resourceBundleService
+        .resourceBundleToUse()
+        .apply(locale)
+        .getString(key);
+  }
+}
+</code></pre>
+<h3 id="key-not-found"><a href="#key-not-found" id="key-not-found" class="anchor"></a>Key not found</h3>
+<p>Was soll eigentlich passieren wenn sich der angeforderte Schlüssel nicht in dem ResourceBundle befindet?
+Diese Frage muss muss beantwortet werden, wenn man nicht mit einer <strong>MissingKeyException</strong> konfrontiert werden möchte.</p>
+<p>Es gibt nur einige Fälle die abgefangen werden sollten.
+Der erste ist eine Anfrage bei der ein Schlüssel <strong>null</strong> oder leer ist.
+Ob man diese beiden Fälle gesondert behandeln möchte, muss in dem jeweiligen Projekt entschieden werden.
+In diesem Beispielprojekt wird es unterschieden werden, allerdings gleich behandelt.</p>
+<pre><code class="language-java">  public String getTranslation(String key , Locale locale , Object... params) {
+    logger().info(&quot;VaadinI18NProvider getTranslation.. key : &quot; + key + &quot; - &quot; + locale);
+
+    final ResourceBundle resourceBundle = resourceBundleService
+        .resourceBundleToUse()
+        .apply(locale != null ? locale : ROOT);
+
+    return match(
+        matchCase(() -&gt; failure(&quot;###-&quot; + key + &quot;-###-&quot; + locale)) ,
+        matchCase(() -&gt; isNull(key) , () -&gt; failure(NULL_KEY)) ,
+        matchCase(key::isEmpty , () -&gt; failure(EMPTY_KEY)) ,
+        matchCase(() -&gt; resourceBundle.containsKey(key) , () -&gt; success(resourceBundle.getString(key)))
+    )
+        .ifFailed(msg -&gt; logger().warning(msg))
+        .getOrElse(() -&gt; &quot;###-KEY_NOT_FOUND-&quot; + key + &quot; - &quot; + locale + &quot;-###&quot;);
+  }
+</code></pre>
+<p>Hiermit wird jeder Schlüssel aufgelöst, wobei fehlende Schlüssel entsprechend markiert werden.
+In der Obefläche wird sofort ersichtlich welche Schlüssel / Sprach Kombination nicht vorhanden ist.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben nun eine für viele Fälle ausreichende Implementierung eines <strong>I18NProvider</strong>´s.
+Was wir uns hier noch nicht angesehen haben, ist der Persistence-Layer in dem diese Elemente gespeichert werden.
+Hier kann man sich an den Mechanismen die in dem jeweiligen Projekt zum Einsatz kommen orientieren.
+Der Zugriff kann dann in der Klasse <strong>ResourceBundleService</strong> realisiert werden.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden.
+<a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-003">https://github.com/Java-Publications/backend-meets-frontend-reloaded-003</a></p>
+<p>Gibt es bestimmte Themen die angegangen werden sollen, dann kann man mich einfach per Twitter oder email erreichen.</p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 03
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005">
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 05
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

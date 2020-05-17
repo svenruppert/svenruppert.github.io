@@ -1,0 +1,1044 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 01</title>
+
+
+<meta name="description" content="In dieser Serie werden wir uns dem Thema Functional Reactive mit Core Java zuwenden. Das bedeutet, das wir die Bereiche Funktionale Programmierung und Reaktive Systeme nach und nach unter die Lupe nehmen werden. Hier gibt es schon viele Systeme und Bibliotheken die dieses Thema (versuchen ? ) voll und ganz abzudecken. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-01-10-functional-reactive-with-core-java-001.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/1/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001"},"next":{"path":"blog/java/2019/2/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002"},"previous":{"path":"blog/java/2018/12/10","baseUrl":"http://www.sven-ruppert.de","fileName":"typedconstructors","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors"},"description":"In dieser Serie werden wir uns dem Thema Functional Reactive mit Core Java zuwenden. Das bedeutet, das wir die Bereiche Funktionale Programmierung und Reaktive Systeme nach und nach unter die Lupe nehmen werden. Hier gibt es schon viele Systeme und Bibliotheken die dieses Thema (versuchen ? ) voll und ganz abzudecken. ","title":"Functional Reactive mit Core Java 01"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001" aria-current="page">Functional Reactive mit Core Java 01</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 01</h2>
+        <p class="subtitle is-4">In dieser Serie werden wir uns dem Thema Functional Reactive mit Core Java zuwenden. Das bedeutet, das wir die Bereiche Funktionale Programmierung und Reaktive Systeme nach und nach unter die Lupe nehmen werden. Hier gibt es schon viele Systeme und Bibliotheken die dieses Thema (versuchen ? ) voll und ganz abzudecken. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 01</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-01-10">Januar 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In dieser Serie werden wir uns dem Thema Functional Reactive mit Core Java zuwenden. Das bedeutet, das wir die
+Bereiche Funktionale Programmierung und Reaktive Systeme nach und nach unter die Lupe nehmen werden.
+Hier gibt es schon viele Systeme und Bibliotheken die dieses Thema (versuchen ? ) voll und ganz abzudecken.</p>
+<p>Zum einen gibt es die Ansätze die sich ausschließlich mit den funktionalen Aspekten beschäftigen
+(ich meine hiermit nicht die Entwicklung neuer Sprachen)  und zum anderen die reinen reaktiven Ansätze. Meistens sind diese
+Ansätze/Frameworks schon sehr weit entwickelt und demnach sehr mächtig und umfangreich.</p>
+<p>Wir werden uns zu Beginn mit den funktionalen Aspekten beschäftigen und diese dann mit den reaktiven kombinieren.
+Ziel ist es, die grundsätzlichen Gedanken dabei zu beleuchten und minimalistische Lösungen basierend auf dem JDK zu bieten.</p>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="wann-ist-etwas-objekt-orientiert-und-wann-funktional-"><a href="#wann-ist-etwas-objekt-orientiert-und-wann-funktional-" id="wann-ist-etwas-objekt-orientiert-und-wann-funktional-" class="anchor"></a>Wann ist etwas objekt-orientiert und wann funktional ?</h2>
+<p>Ganz zu Beginn stellt sich somit die Frage aller Fragen. Ab wann sprechen wir von objekt-orientiert und ab wann von funktional?
+Diese Frage kann einen doch schon recht lange beschäftigen, wenn man Java als Grundlage verwendet. Beginnen wir mit ein paar Beispielen.</p>
+<p>Seit Java 8 gibt es die <code>FunctionalInterfaces</code>. Diese werden gerne zusammen mit den Lambdas zusammen verwendet. Bzw um Lambdas verwenden zu können muss man ein <code>FunctionalInterface</code> als &quot;Ziel&quot; haben. Gehen wir also davon aus, das wir einen <code>CalculationService</code> haben.</p>
+<p>Wer hier mehr über die Anwendung selbst erfahren möchte die hier angesprochen ist, der schaut sich bitte den Vaadin Stream <a href="https://jaxenter.de/tag/backend-meets-frontend">Backend Meets Frontend</a> von mir an.
+Dort entwicklen wir eine WebAnwendung für Kinder mit der wir unter anderem Matheaufgaben stellen und auswerten.</p>
+<p>Also unser <code>CalculationService</code> muss in der Lage sein Matheaufgaben zu stellen und zu überprüfen ob das Ergebnis von dem Benutzer richtig berechnet worden ist. Starten wir hier mit einer einfachen Definition und schauen uns einmal den dazugehörigen Screenshot an.</p>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/java/2019-01-10/functional-reactive-with-core-java-001.png" alt="" /></p>
+<p>Was wir hier für den ersten Entwurf benötigen ist eine Methode die uns eine Aufgabe liefert und ein Ergebnis. Also erwarten wir drei
+Werte die zusammengehören. Nennen wir diese Klasse <code>MathTask</code>. Diese könnte wie folgt aussehen.</p>
+<p>Quelltexte : <a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001/tree/master/src/main/java/org/rapidpm/frp/v001">v001</a></p>
+<pre><code class="language-java">public class MathTask {
+  
+  private int first;
+  private int second;
+  private int result;
+
+  public MathTask(int first , int second , int result) {
+    this.first = first;
+    this.second = second;
+    this.result = result;
+  }
+
+  @Override
+  public String toString() {
+    return &quot;MathTask{&quot; +
+           &quot;first=&quot; + first +
+           &quot;, second=&quot; + second +
+           &quot;, result=&quot; + result +
+           '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (! (o instanceof MathTask)) return false;
+
+    MathTask mathTask = (MathTask) o;
+
+    if (first != mathTask.first) return false;
+    if (second != mathTask.second) return false;
+    return result == mathTask.result;
+  }
+
+  @Override
+  public int hashCode() {
+    int result1 = first;
+    result1 = 31 * result1 + second;
+    result1 = 31 * result1 + result;
+    return result1;
+  }
+
+  public int getFirst() {
+    return first;
+  }
+
+  public int getSecond() {
+    return second;
+  }
+
+  public int getResult() {
+    return result;
+  }
+}
+</code></pre>
+<p>Das ist jede Menge Quelltext um lediglich drei Werte zu halten. Man beachte, das es keine <strong>set</strong>-Methoden für die Attribute gibt.
+Aber gehen wir erst einmal weiter.
+Die Methode die dieses Ergebnis liefert könnte im ersten Entwurf recht einfach aussehen. <code>public MathTask nextMathTask()</code>
+Bisher ist alles rein objekt-orientiert. Wirklich? Sagen wir erst einmal ja, es ist rein objekt-orientiert.</p>
+<pre><code class="language-java">public class MathService {
+  public MathTask nextMathTask() {
+    int first = 0;
+    int second = 0;
+    // create task values...
+    return new MathTask(first , second , (first + second));
+  }
+}
+</code></pre>
+<p>So nun haben wir soweit alles zusammen um eine Aufgabe stellen zu können. Wie sieht es nun mit der Ergebnis aus?
+Hier wollen wir entweder rein transient das Ergebnis mit dem von dem Benutzer vergleichen und dann ein Feedback geben
+ob es gleich ist, oder das Ergebnis (der Vergleich) wird weiter verarbeitet. Wenn wir das zum Beispiel
+speichern möchten um später eine Auswertung zu erstellen, dann benötigen wir noch das Ergebnis das von dem Benutzer eingegeben worden ist.</p>
+<p>Nun können wir zwei Wege gehen. Der erste besteht darin das Ergebnis von dem Benutzer zusätzlich in dem Objekt also in der Instanz der
+Klasse <code>MathTask</code> zu halten. Das bedeutet, das wir den Zustand dieser Instanz modifizieren. Der zweite Lösungsweg besteht darin, eine weitere
+Klasse zu erzeugen, die aus dem Ergebnis des Benutzers besteht und aus der dazu gehörigen Aufgabe.
+Der Leser möge geneigt sein, eine dritte Version mit ins Rennen zu bringen. Diese recht oft genannte Lösung besteht darin, dass
+die Klasse <code>MathTask</code> das Attribut <code>humanResult</code> bekommt. Wenn das Ergebnis vorliegt, wird eine weitere
+Instanz der Klasse <code>MathTask</code> erzeugt und dann der Wert zusätzlich zu den schon aus dem ersten Schritt bekannten Werten gesetzt. Dann wird die erste Instanz nicht modifiziert und verworfen.</p>
+<p>Ich lasse diese Lösung raus, da es sich hierbei (meiner Ansicht nach) um eine hybride Lösung handelt, ohne diese weiter bewerten zu wollen.</p>
+<p>Das Thema der Unveränderbarkeit (immutability) ist ein Teil von der funktionalen Betrachtungsweise. Es kann aber genausogut
+in der objekt-orientierten Welt Anwendung finden. Ich entscheide mich hier für die zweite Lösung und erzeuge eine weitere Klasse
+<code>MathTaskResult</code> mit den Attributen <strong>mathTask</strong> vom Typ <code>MathTask</code>und einem weiteren Attribut <strong>humanResult</strong> vom Typ <code>int</code>.</p>
+<pre><code class="language-java">public class MathTaskResult {
+
+  private MathTask mathTask;
+  private int humanResult;
+
+  public MathTaskResult(MathTask mathTask , int humanResult) {
+    this.mathTask = mathTask;
+    this.humanResult = humanResult;
+  }
+
+  public MathTask getMathTask() {
+    return mathTask;
+  }
+
+  public int getHumanResult() {
+    return humanResult;
+  }
+  //SNIPP toString / hashcode / equals ..
+}
+</code></pre>
+<p>Nun haben wir beide Ergebnisse, aber wo wird der Vergleich gemacht ob die beiden Werte (vom Benutzer und der berechnete Wert) gleich sind. Also, ob die Aufgabe richtig gelöst worden ist?</p>
+<p>Sicherlich, diese Ausgabe ist trivial das es lediglich um einen Vergleich handelt. Jedoch, wo genau gehört dieser Vergleich hin?</p>
+<p>In der UI kann man auf die Eingabe des Benutzers reagieren und dann einen visuellen Effekt geben der den Vergleich darstellt.
+Aber ist das ein Teil der UI? Oder ist das Ergebnis des Vergleiches ein Attribut der Klasse <code>MathTaskResult</code>? Oder
+ist es das Ergebnis einer Methode von dem <code>MathService</code>? Es ist auf jeden Fall kein Bestandteil der UI, da es eine logische Operation ist.
+Lediglich die grafische Repräsentation von dem Ergebnis (Ja/Nein) ist Teil der UI. Nun stellt sich nur noch die Frage ob es Teil der Klasse
+<code>MathTaskResult</code> oder <code>MathService</code> wird.</p>
+<p>Rein objekt-orientiert würde ich es in der Klasse <code>MathTaskResult</code> verorten. Dort würde die Lösung auch eher so aussehen, das
+der Boolean-Wert <strong>on the fly</strong> berechnet werden würde. Auch wenn man über das Speichern der Ergebnisse nachdenken würde,
+wäre es eher ein zu berechnender Wert anstelle eines persistenten Attributes.</p>
+<p>Also extrahieren wir die Validation in eine Methode des <code>MathService</code>. <code>public boolean validate(MathTaskResult result);</code></p>
+<h2 id="erstes-refactoring---dataholder"><a href="#erstes-refactoring---dataholder" id="erstes-refactoring---dataholder" class="anchor"></a>erstes Refactoring - Dataholder</h2>
+<p>Quelltexte : <a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001/tree/master/src/main/java/org/rapidpm/frp/v002">v002</a></p>
+<p>Wenn man nun ein wenig abstrakter formulieren möchte, so haben wir nicht nur Integer Werte die wir zu einer Aufgabe formulieren.
+Wir werden ebenfalls nicht nur eine einfache Addition erstellen wollen. Wenn wir uns die vier Grundrechenarten
+als erste Realisierung für unseren <code>MathService</code>zum Ziel setzen können wir zum Beispiel unser MathTask wie folgt
+verändern.
+Als erstes beschreiben wir generisch ein Tripel an Werte beliebigen Typs. Wir nennen diese Klasse auch <code>Tripel</code>.
+Die Implementierung ist zu finden unter <a href="https://github.com/functional-reactive/functional-reactive-lib/blob/develop/functional-reactive/src/main/java/org/rapidpm/frp/model/Tripel.java">FRP Lib - Tripel</a></p>
+<pre><code class="language-java">public class Tripel&lt;T1, T2, T3&gt; {
+  private T1 t1;
+  private T2 t2;
+  private T3 t3;
+
+  public Tripel(final T1 t1, final T2 t2, final T3 t3) {
+    this.t1 = t1;
+    this.t2 = t2;
+    this.t3 = t3;
+  }
+
+  public T3 getT3() {
+    return t3;
+  }
+
+  public T1 getT1() {
+    return t1;
+  }
+
+  public T2 getT2() {
+    return t2;
+  }
+  //SNIP hashcode / equals / toString..
+}
+</code></pre>
+<p>Wir wollen lediglich drei Werte zusammen halten, deren Typ wir noch nicht genau definiert haben. Zur Laufzeit
+allerdings wollen wir Typsicherheit erlangen. Ebenfalls können wir das mit unserem <code>MathTaskResult</code> so generisch formulieren.</p>
+<pre><code class="language-java">public class Pair&lt;T1, T2&gt; {
+  private T1 t1;
+  private T2 t2;
+
+  public Pair(final T1 t1, final T2 t2) {
+    this.t1 = t1;
+    this.t2 = t2;
+  }
+
+  public T1 getT1() {
+    return t1;
+  }
+
+  public T2 getT2() {
+    return t2;
+  }
+  //SNIP hashcode / equals / toString..
+}
+</code></pre>
+<p>Was wir an dieser Stelle verloren haben, sind die ausdrucksstarken Attributnamen.
+Aber mit ein klein wenig Aufwand bekommen wir dieses wieder.</p>
+<pre><code class="language-java">public class MathTask extends Tripel&lt;Integer, Integer, Integer&gt; {
+
+  public MathTask(Integer first , Integer second , Integer result) {
+    super(first , second , result);
+  }
+  public int getFirst() {
+    return getT1();
+  }
+
+  public int getSecond() {
+    return getT2();
+  }
+
+  public int getResult() {
+    return getT3();
+  }
+  
+  @Override //optional 
+  public String toString() {
+    return &quot;MathTask{&quot; +
+           &quot;first=&quot; + getT1() +
+           &quot;, second=&quot; + getT2() +
+           &quot;, result=&quot; + getT3() +
+           '}';
+  }
+}
+</code></pre>
+<p>Genauso verfahren wir mit der Klasse <code>MathTaskResult</code>.</p>
+<pre><code class="language-java"> public class MathTaskResult extends Pair&lt;MathTask, Integer&gt; {
+
+  public MathTaskResult(MathTask mathTask , Integer integer) {
+    super(mathTask , integer);
+  }
+
+  public MathTask getMathTask() {
+    return getT1();
+  }
+
+  public int getHumanResult() {
+    return getT2();
+  }
+
+  @Override //optional
+  public String toString() {
+    return &quot;MathTaskResult{&quot; +
+           &quot;mathTask=&quot; + getT1() +
+           &quot;, humanResult=&quot; + getT2() +
+           '}';
+  }
+}
+</code></pre>
+<p>Nun haben wir den generischen Teil der Datenholder extrahiert und uns für die Verwendung in der fachlichen Logik aber die
+Bezüge zur fachlichen Semantik erhalten.</p>
+<p>Sehen wir uns nun den <code>MathService</code> an.</p>
+<h2 id="zweites-refactoring---mathservice"><a href="#zweites-refactoring---mathservice" id="zweites-refactoring---mathservice" class="anchor"></a>zweites Refactoring - MathService</h2>
+<p>Quelltexte : <a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001/tree/master/src/main/java/org/rapidpm/frp/v003">v003</a></p>
+<p>Nun gehen wir den <code>MathService</code> an. Hier haben wir bisher zwei Methoden. Einmal zum erzeugen einer Aufgabe
+und zum anderen zum verfifizieren ob die Aufgabe richtig gelöst worden ist.</p>
+<p>Gehen wir erst einmal zum erzeugen der Aufgabe. Wenn man mit Kindern die ersten Matehaufgaben löst,
+so beginnt man erst in einem Bereich von zum Beispiel null bis zehn. Das bedeutet, dass wir verschiedene
+Anforderungen an die Aufgabe selbst haben.</p>
+<ul>
+<li>Das Ergebnis darf nicht größer als 10 sein.</li>
+<li>Das Ergebnis darf nicht kleiner als 0 sein.</li>
+<li>Evtl darf 0 nicht als Ergebnis enthalten sein</li>
+<li>Keiner der Parameter darf 0 sein. ( später aber doch ;-))</li>
+<li>es soll nicht die selbe Aufgabe direkt hintereinander nochmal gestellt werden</li>
+</ul>
+<p>Das sind schon recht viele Anforderungen die es zu berücksichtigen gibt. Wenn man nun noch alle Grundrechenarten
+berücksichtigt, so kommen moch spezifische Anforderungen hinzu. Zum Beispiel bei der Division, dass nur ganzzahlige Ergebnisse
+berücksichtigt werden sollen. Und vieles mehr, was einem dann auch auf einmal bewusst wird, wenn das Kind zum ersten mal
+die Anwendung verwendet. was ich hier bewusst auslasse sind die möglichen Validationen bei der Eingabe selbst.</p>
+<p>Als erstes sehen wir nur die Addition vor. Die Grundrechenart selbst als Auswahlmöglichkeit ist demnach kein Parameter der Methode zum erzeugen der nächsten Aufgabe.</p>
+<p>Eine erste Realisierung könnte demnach wie folgt aussehen.</p>
+<pre><code class="language-java">public class MathService {
+  
+  public MathTask nextMathTask(int paramBoundFirst , int paramBoundSecond) {
+    final Random random = new Random(System.nanoTime());
+    int first = random.nextInt(paramBoundFirst);
+    int second = random.nextInt(paramBoundSecond);
+    return new MathTask(first , second , (first + second));
+  }
+
+  public boolean validate(MathTaskResult mathTaskResult){
+    return mathTaskResult.getHumanResult() ==
+           mathTaskResult.getMathTask().getResult();
+  }
+}
+</code></pre>
+<p>Nun stellt sich mir die Frage, ob wir für diese beiden Methoden wirklich eine Instanz einer Klase benötigen.
+Jede Methode wird einmal aufgerufen ohne das es einen Zustand gibt, der über mehr als einen Methodenaufruf erhalten bleiben muss.
+Auch dieses ist ein Merkmal von funktionaler Programmierung. Also die Zustandslosigkeit selbst. Lediglich innerhalb einer Methode
+darf ein Zustand solange gehalten werden, bis die Methode terminiert. Wie sieht es nun aus, wenn wir dieses
+nun weiter extrahieren, damit wir keine Instanz der Klasse <code>MathService</code> halten müssen. Diese stallt ja selbst einen Zustand
+dar.</p>
+<p>Verlagern wir erst einmal alles in ein Interface, so das auch nicht aus Versehen ein Attribut auf Klassenebene der Klasse
+<code>MathService</code> entsteht mit der Zeit. Aus der Klasse wird ein Interface und die Methoden selbst werden <strong>static</strong> definiert.</p>
+<p>Quelltexte : <a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001/tree/master/src/main/java/org/rapidpm/frp/v004">v004</a></p>
+<pre><code class="language-java">public interface MathService {
+  public static MathTask nextMathTask(int paramBoundFirst , int paramBoundSecond) {
+    final Random random = new Random(System.nanoTime());
+    int first = random.nextInt(paramBoundFirst);
+    int second = random.nextInt(paramBoundSecond);
+    return new MathTask(first , second , (first + second));
+  }
+
+  public static boolean validate(MathTaskResult mathTaskResult){
+    return mathTaskResult.getHumanResult() ==
+           mathTaskResult.getMathTask().getResult();
+  }
+}
+</code></pre>
+<p>Damit reduziert sich der Quelltext bei der Verwendung auf das nachfolgende.</p>
+<pre><code class="language-java">public class Main {
+  public static void main(String[] args) {
+    final MathTask mathTask = MathService.nextMathTask(5,5);
+
+    int humanResult = 0;
+    MathTaskResult mathTaskResult = new MathTaskResult(mathTask , humanResult);
+
+    boolean validate = MathService.validate(mathTaskResult);
+
+    System.out.println(&quot;mathTask = &quot; + mathTask);
+    System.out.println(&quot;mathTaskResult = &quot; + mathTaskResult);
+    System.out.println(&quot;validate = &quot; + validate);
+  }
+}
+</code></pre>
+<p>Nun noch <strong>static</strong> Imports und wir erhalten:</p>
+<pre><code class="language-java">public class Main {
+  public static void main(String[] args) {
+    final MathTask mathTask = nextMathTask(5,5);
+
+    int humanResult = 0;
+    MathTaskResult mathTaskResult = new MathTaskResult(mathTask , humanResult);
+
+    boolean validate = validate(mathTaskResult);
+
+    System.out.println(&quot;mathTask = &quot; + mathTask);
+    System.out.println(&quot;mathTaskResult = &quot; + mathTaskResult);
+    System.out.println(&quot;validate = &quot; + validate);
+  }
+}
+</code></pre>
+<p>Wir haben nun in einem Interface zwei statische Methoden ohne haltende Objektreferenz.
+Wenn wir uns die Implementierung ansehen, können wir aber eine Sache sehr einfach korrigieren.
+Bisher wurde davon ausgegangen, dass ein Ergebnis nicht den Wert 10 überschreiten darf, das demnach die Eingangswerte
+selbst nicht den Wert fünf überschreiten.</p>
+<p>Um das für den Benutzer der Methode einfacher zu gestallten, werden wir die Signatur nun ändern.
+Es wird nur noch der Maximal-Ergebniswert angegeben. Die Werte für die jeweiligen Parameter bestimmt dann die Methode intern selbst.
+Wir erhöhen damit die Kapselung in der Art, das wir weniger Wissen über die interne Funktion der Methode besitzen müssen.</p>
+<pre><code class="language-java">  public static MathTask nextMathTask(int maxResultValue) {
+    final Random random = new Random(System.nanoTime());
+    int bound = maxResultValue / 2;
+    int first = random.nextInt(bound);
+    int second = random.nextInt(bound);
+    return new MathTask(first , second , (first + second));
+  }
+</code></pre>
+<p>Was wir nun haben ist eine Transformation von dem Max-Ergebniswert auf eine Instanz der Klasse <code>MathTask</code>.
+Das können wir nun auch wie folgt fomrmulieren. <code>Function&lt;Integer,MathTask&gt;</code> mit der Bedingung das der Integer nicht größer dem
+maximalen Ergebniswert sein darf. Und nicht vergessen, es soll auch nicht negativ werden und...</p>
+<p>Aber schreiben wir das nun erst einmal als Funktion auf. Hier gibt es seit Java8 das FunctionalInterface <code>Function&lt;A,B&gt;</code>.</p>
+<pre><code class="language-java">  public static Function&lt;Integer, MathTask&gt; mathTask = new Function&lt;Integer, MathTask&gt;() {
+    @Override
+    public MathTask apply(Integer maxResultValue) {
+      final Random random = new Random(System.nanoTime());
+      int bound = maxResultValue / 2;
+      int first = random.nextInt(bound);
+      int second = random.nextInt(bound);
+      return new MathTask(first , second , (first + second));
+    }
+  };
+</code></pre>
+<p>Nun, hierbei handelt es sich um die herkömmliche Schreibweise. Dank der neuen Syntax können wir das
+auch kompakter schreiben.</p>
+<pre><code class="language-java">  public static Function&lt;Integer, MathTask&gt; mathTask = (maxResultValue) -&gt; {
+    final Random random = new Random(System.nanoTime());
+    int bound = maxResultValue / 2;
+    int first = random.nextInt(bound);
+    int second = random.nextInt(bound);
+    return new MathTask(first , second , (first + second));
+  };
+</code></pre>
+<p>Programmieren wir nun funktional? Meiner Meinung nach ist das bisher noch nicht <strong>funktional</strong> im reinen Sinne, aber wir nähern uns dem an und
+wir beachten immer mehr funktionale Aspekte.</p>
+<p>Bisher haben wir versucht Funktionen direkt zu formulieren. Aber eigentlich möchte man doch eine Instanz haben. Woher diese also herbekommen?
+Schreiben wir das letzte Beispiel nochmals um, in der Art, dass man eine Funktion als Rückgabewert bekommt.</p>
+<p>Quelltexte : <a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001/tree/master/src/main/java/org/rapidpm/frp/v006">v006</a></p>
+<pre><code class="language-java">  public static Function&lt;Integer, MathTask&gt; mathTaskFunction() {
+    return (maxResultValue) -&gt; {
+      final Random random = new Random(System.nanoTime());
+      int bound = maxResultValue / 2;
+      int first = random.nextInt(bound);
+      int second = random.nextInt(bound);
+      return new MathTask(first , second , (first + second));
+    };
+  }
+</code></pre>
+<p>Nun haben wir eine Methode die uns eine Instanz einer Funktion liefert mit der wir nun frei arbeiten können, da wir sicher sind das diese Instanz
+ausschließlich von uns verwendet wird.
+Das Selbe realisieren wir nun mit der Methode <code>validate</code>.</p>
+<pre><code class="language-java">  static Function&lt;MathTaskResult, Boolean&gt; validate(){
+    return (mathTaskResult) -&gt; mathTaskResult.getHumanResult() ==
+                             mathTaskResult.getMathTask().getResult();
+  }
+</code></pre>
+<p>Wie sieht nun der dazugehörige Quelltext in der Verwendung aus ?</p>
+<pre><code class="language-java">int maxResultValue = 10;
+int humanResult = 0;
+final Function&lt;Integer, MathTask&gt; mathTaskFunction = MathService.mathTaskFunction();
+final MathTask mathTask = mathTaskFunction.apply(maxResultValue);
+
+final BiFunction&lt;Integer, MathTask, MathTaskResult&gt; resultBiFkt
+        = (result , task) -&gt; new MathTaskResult(task , result);
+
+final MathTaskResult mathTaskResult = resultBiFkt.apply(humanResult , mathTask);
+         
+final Function&lt;MathTaskResult, Boolean&gt; validate = MathService.validate();
+final Boolean apply = validate.apply(mathTaskResult);
+</code></pre>
+<p>Eine weitere Funktion habe ich an der Stellen mit definiert. Diese
+diehnt der Transformation von <code>MathTask</code>und dem Ergebnis von dem Benutzer <code>humanResult</code>
+in eine Instanz vom Typ <code>MathTaskResult</code>.</p>
+<p>Was aber ist der Vorteil von diesen Funktionen? Sicher ist auf jeden Fall, das man mit
+Funktionen nicht mehr Probleme lösen kann als mit objekt-orientiertem - Java. Die Vorteile müssen also an anderer Stelle zu finden sein.</p>
+<p>Beginnen wir einmal ein wenig das vorhandene umzuschreiben.</p>
+<pre><code class="language-java">final BiFunction&lt;Integer, MathTask, MathTaskResult&gt; resultBiFkt
+         = (result , task) -&gt; new MathTaskResult(task , result);
+
+Boolean result = resultBiFkt
+         .andThen(validate())
+         .apply(humanResult , mathTaskFunction().apply(maxResultValue));
+</code></pre>
+<p>Hier nun haben wir eine Eigenschaft der Funktionen verwendet. Gemeint ist hier die Kombination von Funktionen mittels
+<code>andThen</code>. Damit werden Funktionen hintereinaner gehängt. Das Ergebnis der vorherigen Funktion ist der Eingang der nächsten Funktion.
+Das Ergebnis ist wiederum eine Funktion. <code>Function&lt;A, B&gt;</code> <strong>andThen</strong> <code>Function&lt;B,C&gt;</code> wird zu <code>Function&lt;A, C&gt;</code></p>
+<p>Nun verwenden wirhier aber noch eine <code>BiFunction</code>, sprich eine Funktion die zwei Eingangsparameter hat und ein Ausgangsparameter.
+Auch diese kann man mittels <strong>andThen</strong> mit ein er einfachen Funktion kombinieren. Aber was ist, wenn wir dieses ein wenig symmetrischer
+gestallten wollen?
+Diese <code>BiFunktion</code> werden wir recht schnell los, indem wir hier wieder die beiden Eingangsparameter zusammenfassen in einem <code>Pair</code>.</p>
+<pre><code class="language-java">    final Function&lt;Integer, Pair&lt;MathTask, Integer&gt;&gt; integerPairFunction = mathTaskFunction()
+        .andThen(mathTask -&gt; new Pair&lt;&gt;(mathTask , humanResult));
+        
+    final Function&lt;Pair&lt;MathTask, Integer&gt;, MathTaskResult&gt; mapToMathTaskResult
+        = (resultPair) -&gt; new MathTaskResult(resultPair.getT1() , resultPair.getT2());
+
+    Boolean aBoolean = integerPairFunction
+        .andThen(mapToMathTaskResult)
+        .andThen(validate())
+        .apply(maxResultValue);
+</code></pre>
+<p>Nun sind wir die <code>BiFunction</code> los. Allerdings ist diese Lösung nicht zu gebrauchen, da wir zum einen
+die Variable <code>humanResult</code> in der Funktion selbst verwenden. Das sollte ja eher ein Eingangsparameter sein.
+Und zweitens sind zwischen den Transformationen Interaktionen von dem Benutzer notwendig. Die Werte aus der Instanz <code>MathTask</code>
+müssen ebenfalls noch in der UI angezeigt werden. Lange Rede kurzer Sinn, wir müssen das nun wieder in zwei Abschnitte teilen.</p>
+<pre><code class="language-java">//t1 - show the values on Screen
+    final MathTask mathTask = mathTaskFunction().apply(maxResultValue); 
+    
+    final Function&lt;Pair&lt;MathTask, Integer&gt;, MathTaskResult&gt; mapToMathTaskResult
+        = (resultPair) -&gt; new MathTaskResult(resultPair.getT1() , resultPair.getT2());
+        
+//t2 - button was pressed
+    final Boolean aBoolean = mapToMathTaskResult //t2 - button was pressed
+        .andThen(validate())
+        .apply(new Pair&lt;&gt;(mathTask , humanResult));
+
+</code></pre>
+<p>Quelltexte : <a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001/tree/master/src/main/java/org/rapidpm/frp/v007">v007</a></p>
+<p>Nun kann die Transformation noch extrahiert werden in die Methode <code>public stativ Function&lt;Pair&lt;MathTask, Integer&gt;, MathTaskResult&gt; mapToMathTaskResul()</code></p>
+<pre><code class="language-java">//t1 - show the values on Screen
+    final MathTask mathTask = mathTaskFunction().apply(maxResultValue);
+    
+//t2 - button was pressed
+    final Boolean aBoolean = mapToMathTaskResult().andThen(validate()).apply(new Pair&lt;&gt;(mathTask , humanResult)
+</code></pre>
+<p>Nun kann man Funktionen auch mittels <strong>compose(..)</strong> miteinander kombinieren.
+Hier ist die Abfolge genau invers zu <strong>andThen(..)</strong>.
+Damit erhalten wir eine weitere Möglichkeit das letzte Statement zu formulieren.</p>
+<pre><code class="language-java">//t1 - show the values on Screen
+    final MathTask mathTask = mathTaskFunction().apply(maxResultValue);
+    
+//t2 - button was pressed
+    final Boolean aBoolean = validate().compose(mapToMathTaskResult()).apply(new Pair&lt;&gt;(mathTask , humanResult));
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Was haben wir derzeitig erreicht? Wir haben ein wenig bestehenden Quelltext umgeformt und die ersten Ideen and Ansätze von Funktionaler Programmierung ausprobiert. Wir sind absichtlich keinen formalen Weg gegangen und haben bisher auch nicht
+eindeutig festgelegt ab wann wir von Objekt-orientiert und wann von funktionaler Programmierung sprechen.</p>
+<p>Das werden wir in den nächsten Teilen weiter erarbeiten und uns um die Einbindung in bestehenden (legacy) Quelltext als auch die Erstellung von neuen Projekten / Modulen
+kümmern.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-001.git">https://github.com/Java-Publications/functional-reactive-with-core-java-001.git</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter [<a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>](https://twitter.com/SvenRuppert).</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Typed Constructors
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002">
+    Functional Reactive mit Core Java 02
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

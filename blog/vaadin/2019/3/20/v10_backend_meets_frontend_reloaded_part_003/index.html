@@ -1,0 +1,752 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 03</title>
+
+
+<meta name="description" content="In dem letzten Teil der Serie haben wir uns damit beschäftigt, wie mittels I18NProvider innerhalb von Vaadin Flow der Zugriff auf ein ResouceBundle erfolgen kann. In diesem Teil werden wir uns ansehen wie man dieses nun auf mehrere Sprachen ausweitet und uns dabei eine mögliche Implementierung eigener ResourcenBudles ansehen. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-03-20-V10_Backend_Meets_Frontend_Reloaded_Part_003.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/3/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_003","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003"},"next":{"path":"blog/vaadin/2019/4/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_004","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004"},"previous":{"path":"blog/vaadin/2019/2/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002"},"description":"In dem letzten Teil der Serie haben wir uns damit beschäftigt, wie mittels I18NProvider innerhalb von Vaadin Flow der Zugriff auf ein ResouceBundle erfolgen kann. In diesem Teil werden wir uns ansehen wie man dieses nun auf mehrere Sprachen ausweitet und uns dabei eine mögliche Implementierung eigener ResourcenBudles ansehen. ","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 03"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 03</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 03</h2>
+        <p class="subtitle is-4">In dem letzten Teil der Serie haben wir uns damit beschäftigt, wie mittels I18NProvider innerhalb von Vaadin Flow der Zugriff auf ein ResouceBundle erfolgen kann. In diesem Teil werden wir uns ansehen wie man dieses nun auf mehrere Sprachen ausweitet und uns dabei eine mögliche Implementierung eigener ResourcenBudles ansehen. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 03</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-03-20">März 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>In dem letzten Teil der Serie haben wir uns damit beschäftigt, wie mittels I18NProvider innerhalb von Vaadin Flow der Zugriff auf ein ResouceBundle erfolgen kann.
+In diesem Teil werden wir uns ansehen wie man dieses nun auf mehrere Sprachen ausweitet und uns dabei eine mögliche Implementierung eigener ResourcenBudles ansehen.</p>
+<h2 id="resourcebundle---seit-jdk-11"><a href="#resourcebundle---seit-jdk-11" id="resourcebundle---seit-jdk-11" class="anchor"></a>ResourceBundle - seit JDK 1.1</h2>
+<p>Wenn man sich in dem JDK ein wenig umsieht dann findet man die abstrakte Klasse <strong>ResourceBundle</strong>. Diese stellt die Basisimplementierung für den Umgang mit Schlüssel/Wert Paaren bereit, die zum Beispiel schon in Swing-Anwendungen
+für die Mehrsprachlichkeit verwendet worden ist.</p>
+<p>Wie in den vorangegangenen Teilen dieser Tutorialreihe erwähnt, benötigen wir ein ResourceBundle in dem die verschiedenen Übersetzungen für die unterstützten Sprachen abgelegt werden können. Die grundlegende Implementierung des ResourceBundle ist die abstrakte Klasse mit dem Namen <em>ResourceBundle</em>.
+Wir werden uns nun drei Wege ansehen die gegangen werden können.</p>
+<h3 id="propertyresourcebundle"><a href="#propertyresourcebundle" id="propertyresourcebundle" class="anchor"></a>PropertyResourceBundle</h3>
+<p>Die am häufigsten verwendete Version ist die bereits dem JDK beiligende Implementierung, die Properties-Dateien verwendet. Hier können wir mit dem Einsatz sofort loslegen, nachdem wir die benötigten Properties-Dateien erstellt haben. Hier ist lediglich des zu verwendende Namens-Schema für die Dateien selbst zu beachten.
+Die ausführliche Beschreibung ist in der JavaDoc zu finden. Die Kurzversion stellt sich wie folgt dar. Der Basisname der Datei muss bei allen gleich sein. in unserem Fall <em>vaadinapp</em>
+Für die deutsche Sprache bekommt dann die Datei zusätzlich ein <em>_de</em> angehängt.
+Um die englische Sprache zu unterstützen wird ein <em>_en</em> verwendet.
+Die daraus resultierenden Dateinamen sind dann in diesem Fall</p>
+<ul>
+<li>vaadinapp.properties</li>
+<li>vaadinapp_de.properties</li>
+<li>vaadinapp_en.properties</li>
+</ul>
+<p>Wen man nun noch den Unterschied zwischen Deutschland und der Schweiz sprachlich abbilden möchte wird das <em>de</em> Bundle nochmals spezialisert.</p>
+<ul>
+<li>vaadinapp_de_DE.properties</li>
+<li>vaadinapp_de_CH.properties</li>
+</ul>
+<p>Der entscheidende Punkt ist jedoch, dass die Properties-Dateien im Klassenpfad verfügbar sein müssen. Nicht immer ist es die Lösung die angestrebt wird.</p>
+<pre><code class="language-java">  public static final String RESOURCE_BUNDLE_NAME = &quot;vaadinapp&quot;;
+
+  private static final ResourceBundle RESOURCE_BUNDLE_EN = getBundle(RESOURCE_BUNDLE_NAME , ENGLISH);
+  private static final ResourceBundle RESOURCE_BUNDLE_DE = getBundle(RESOURCE_BUNDLE_NAME , GERMAN);
+</code></pre>
+<h3 id="listresourcebundle"><a href="#listresourcebundle" id="listresourcebundle" class="anchor"></a>ListResourceBundle</h3>
+<p>Die abstrakte Implementierung des ResouceBundle, über die wir als nächstes sprechen,
+befindet sich in der Klasse <em>ListResourceBundle</em>. Hier bekommen wir ebenfalls eine abstrakte Implementierung geliefert. Jeweils eine Implementierung oder Instanz der Implementierung ist für ein dediziertes Gebietsschema bereitzustellen.
+Zu implementieren ist immer die Methode <code>protected Object [] [] getContents ()</code>.</p>
+<p>Wie gerade erwähnt muss für jedes Gebietsschema, das wir zur Laufzeit unterstützen möchten, eine entsprechende Implementierung oder Instanz zur Verfügung stehen.
+In der Praxis sieht es unter Umständen wie folgt aus.</p>
+<pre><code class="language-java">public class VaadinAppResource extends ListResourceBundle {
+  @Override
+  protected Object[][] getContents() {
+    return new Object[][]{
+        {&quot;s1&quot; , &quot;value 01&quot;} ,
+        {&quot;s2&quot; , &quot;value 02&quot;}
+    };
+  }
+}
+</code></pre>
+<p>Diese Implementierung, die wir nun oben gesehen haben, verwenden wir als Standardressource.
+Um jetzt eine englische und eine deutsche Variante zu erhalten, müssen wir zwei weitere Klassen implementieren.</p>
+<pre><code class="language-java">public class VaadinAppResource_de extends ListResourceBundle {
+
+  @Override
+  protected Object[][] getContents() {
+    return new Object[][]{
+        {&quot;s1&quot; , &quot;value 01 - de&quot;} ,
+        {&quot;s2&quot; , &quot;value 02 - de&quot;}
+    };
+  }
+}
+
+public class VaadinAppResource_en extends ListResourceBundle {
+
+  @Override
+  protected Object[][] getContents() {
+    return new Object[][]{
+        {&quot;s1&quot; , &quot;value 01 - en&quot;} ,
+        {&quot;s2&quot; , &quot;value 02 - en&quot;}
+    };
+  }
+}
+</code></pre>
+<p>Hier gehen wir den Weg, das jedes dediziertes Gebietsschema eine eigene Implementierung erhält. Der jeweilige Name der Klasse muss den gleichen Regeln entsprechen, die wir für Properties-Dateien angewendet haben.</p>
+<p>Aber wie benutzt man das?
+Die Verwendung dieses ResourceBundle basiert auf dem vollständig qualifizierten Namen der Hauptklasse, in unserem Fall der Klasse <em>VaadinAppResource</em>. Mit diesem Klassennamen und dem angeforderten Gebietsschema wird einem die statische Methode <em>getBundle</em> der Klasse <em>ResourceBundle</em> die Instanz des benutzerdefinierten <em>ResourceBundle</em> für das angeforderte  Gebietsschema  geben.</p>
+<p><code>ResourceBundle.getBundle(VaadinAppResource.class.getName(), Locale.ENGLISH )</code></p>
+<p>Wenn das angeforderte Gebietsschema nicht vorhanden ist, wird eine <em>MissingResourceException</em> erzeugt.</p>
+<p>Eine Sache, die möglicherweise nicht regelmäßig verwendet wird, ist die Verwendung des Standardgebietsschemas.
+Um das Standard-ResouceBundle zu erhalten, muss das Gebietsschema <em>ROOT</em> verwendet werden.</p>
+<p>Natürlich sollte die Implementierung auch getestet werden.</p>
+<pre><code class="language-java">public class VaadinAppResourceTest {
+
+  @Test
+  @DisplayName(&quot;Locale English&quot;)
+  void test001() {
+    final ResourceBundle a = ResourceBundle.getBundle(VaadinAppResource.class.getName(), Locale.ENGLISH );
+    Assertions.assertEquals(&quot;value 01 - en&quot;, a.getString(&quot;s1&quot;));
+  }
+
+  @Test
+  @DisplayName(&quot;Locale German&quot;)
+  void test002() {
+    final ResourceBundle a = ResourceBundle.getBundle(VaadinAppResource.class.getName(), Locale.GERMAN );
+    Assertions.assertEquals(&quot;value 01 - de&quot;, a.getString(&quot;s1&quot;));
+  }
+
+  @Test
+  @DisplayName(&quot;Locale Default&quot;)
+  void test003() {
+    final ResourceBundle a = ResourceBundle.getBundle(VaadinAppResource.class.getName() , Locale.ROOT);
+    Assertions.assertEquals(&quot;value 01&quot; , a.getString(&quot;s1&quot;));
+  }
+}
+</code></pre>
+<h3 id="custom-resourcebundle"><a href="#custom-resourcebundle" id="custom-resourcebundle" class="anchor"></a>Custom ResourceBundle</h3>
+<p>Die beiden vorherigen Möglichkeiten werden vom JDK selbst bereitgestellt. Der dritte Weg, der gegangen werden kann, basiert auf der Implementierung der abstrakten Klasse <em>ResouceBundle</em>. Übrigens gibt es kein Interface, wie zum Beispiel <code>ResouceBundle</code> das  für eigene Implementierungen verwendet werden kann. Damit ist man in gewisser Weise an die vorhandene partielle Implementierung gebunden. Selbstverständlich kann man auch über eine vollständig eigene Realisierung nachdenken.</p>
+<p>Die abstrakte Klasse <em>ResouceBundle</em> stellt zwei abstrakte Methoden bereit.</p>
+<ul>
+<li><code>protected Object handleGetObject(String key)</code></li>
+<li><code>public Enumeration&lt;String&gt; getKeys()</code></li>
+</ul>
+<p>Beginnen wir mit der Methode <em>handleGetObject</em>. Wie Sie hier sehen kann, ist das <em>ResourceBundle</em> ist nicht auf die Verwendung von Strings beschränkt. Dieser Mechanismus kann für jeden beliebigen Ausgabetyp verwendet werden. In diesem Beispiel allerdings verwenden wir es nur für Übersetzungen. Die Methode ist der Übersetzungsvorgang selbst.</p>
+<p>Um möglichst einfach zu bleiben, basiert die Implementierung in diesem Beispiel auf der Klasse <em>ConcurrentHashMap</em> die für uns den Schlüssel- / Wertspeicher darstellt.</p>
+<p>An dieser Stelle kan man kreativ werden und alles verwenden und einsetzen was erforderlich ist. Hier können beispielsweise externe Dienste in Anspruch genommen werden oder eine Verbindung zu einem Persistenzspeicher hergestellt werden oder oder oder ...</p>
+<p>Zurück zu unserem einfachen Schlüssel- / Wert-Speicher, hier ist die Implementierung dieser Methode lediglich ein Delegator für die Methode <em>get</em> von der Map selbst.</p>
+<pre><code class="language-java">public class VaadinResourceBundle extends ResourceBundle {
+
+  private  Map&lt;String, String&gt; values = new ConcurrentHashMap&lt;&gt;();
+
+  @Override
+  protected Object handleGetObject(String key) {
+    return values.get(key);
+  }
+}
+</code></pre>
+<p>Die nächste zu implementierende Methode ist die Auflistung aller verfügbaren Schlüssel in dieser Instanz des ResourceBundles. In unserem Fall also lediglich der Schlüsselsatz der verwendeten Map.</p>
+<pre><code class="language-java">public class VaadinResourceBundle extends ResourceBundle {
+
+  private  Map&lt;String, String&gt; values = new ConcurrentHashMap&lt;&gt;();
+
+  @Override
+  protected Object handleGetObject(String key) {
+    return values.get(key);
+  }
+
+  @Override
+  public Enumeration&lt;String&gt; getKeys() {
+    return Collections.enumeration(values.keySet());
+  }
+}
+</code></pre>
+<p>Sicher, diese Implementierungen hängen von dem im Einsatz befindlichen Speicher ab. Allerdings ist die abzubildende Logik recht geradlinig. Interessanter ist vielmehr, wie zur Laufzeit die Instanz dieses ResourceBundles basierend auf einem angeforderten Gebietsschema erhalten werden kann. Zu beachten ist, das der grundlegende Mechanismus darauf basiert, das eine Instanz für ein definiertes Gebietsschema angefordert wird. Eine Instanz kann demnach nicht für mehr als ein Gebietsschema angegeben werden.
+Hier sind wir nun an einem Punkt angelangt, dass wir technische Entscheidungen treffen müssen, die zu dem jeweiligen Projekt passen.
+Für dieses Beispiel habe ich mich für eine statische Factory-Methode entschieden.</p>
+<p>Natürlich kann man auch über die Verwendung von einem ServiceLocator, Dependency Injnection oder etwas anderes nachdenken. Hier sind keine Grenzen gesetzt.</p>
+<p>Die statische Factory-Methode gibt mir für das angeforderte Gebietsschema, die erstellte Instanz die verwendet werden sollt. Hier können nun unterschiedliche Strategien zum Einsatz kommen, wie mit angeforderten Gebietsschemas umzugehen ist, die nicht unterstützt werden, oder spezialisierten Gebietsschemas für verschiedene Sprachvariationen.</p>
+<p>Ein anderes großes Thema sind Caching- und Lazy-Loading-Strategien, wenn das erstellen unde/oder halten von vollständigen ResouceBundles teuer ist. In diesem Beispiel werden wir allerdings nicht auf derartigen Dinge eingehen, das werden wir zu einem späteren Zeitpunkt im Detail besprechen.</p>
+<pre><code class="language-java">public class VaadinResourceBundle extends ResourceBundle {
+
+  private  Map&lt;String, String&gt; values = new ConcurrentHashMap&lt;&gt;();
+
+  // the technical decision on how to create a variant for a Locale
+  public static ResourceBundle forLocale(Locale locale) {
+
+    final VaadinResourceBundle resourceBundle = new VaadinResourceBundle();
+    if (locale.equals(Locale.GERMAN)) {
+      resourceBundle.values.put(&quot;btn.click-me&quot; , &quot;drück mich&quot;);
+    }
+
+    if (locale.equals(Locale.ENGLISH)) {
+      resourceBundle.values.put(&quot;btn.click-me&quot; , &quot;click me&quot;);
+    }
+    return resourceBundle;
+  }
+
+  @Override
+  protected Object handleGetObject(String key) {
+    return values.get(key);
+  }
+
+  @Override
+  public Enumeration&lt;String&gt; getKeys() {
+    return Collections.enumeration(values.keySet());
+  }
+}
+</code></pre>
+<p>Die Verwendung erfolgt dann innerhalb der <em>I18NProvider</em> -Implementierung, so wie wir es im letzten Teil gesehen haben.</p>
+<pre><code class="language-java">  private static final ResourceBundle RESOURCE_BUNDLE_EN = VaadinResourceBundle.forLocale(ENGLISH);
+  private static final ResourceBundle RESOURCE_BUNDLE_DE = VaadinResourceBundle.forLocale(GERMAN);
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben nun eine erste Implementierung eines eigenen ResourceBundles. Technisch sind wir hier noch sehr einfach geblieben, für den skalierbaren Einsatz gibt es noch weitere Themen die von Interesse sein können. Diese werden wir zu einem späteren Zeitpunkt in dieser Serie aufgreifen.</p>
+<p>In dem nächsten Teil werden wir uns ansehen wie man dieses nun verwenden kann um
+Vaadin Flow zu erweitern.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden.
+<a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-003">https://github.com/Java-Publications/backend-meets-frontend-reloaded-003</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 02
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004">
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 04
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

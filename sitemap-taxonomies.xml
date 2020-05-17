@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://www.sven-ruppert.de/blog/vaadin</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/blog/kotlin</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/blog/java</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/blog/devops</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/categories</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/web-components</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/vaadin</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/serverside-webapps</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/kotlin</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/java</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/java</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/jvm</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/jdk</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/functional-programming</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    <url>
+        <loc>http://www.sven-ruppert.de/tags/devops</loc>
+        <lastmod>2020-05-17</lastmod>
+        <priority>0.0</priority>
+        
+    </url>
+    
+</urlset>

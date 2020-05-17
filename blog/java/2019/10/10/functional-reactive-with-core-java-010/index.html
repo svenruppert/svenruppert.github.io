@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 10</title>
+
+
+<meta name="description" content="In dem letzten Teil dieser Serie haben wir uns angesehen wie mittels ```CompletableFuture&lt;T&gt;``` Arbeitspakete auf verschiedene ResourcenPools verteilt werden können und wie diese Arbeit als eine Kette von asynchronen Aufrufen formuliert werden kann. In diesem Teil werden wir uns damit auseinandersetzen wie die Ketten kompakter formuliert werden können und welche Möglichkeiten zur Steuerung einem zur Verfügung stehen.">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009">
+
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-10-10-functional-reactive-with-core-java-010.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/10/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-010","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010"},"previous":{"path":"blog/java/2019/9/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-009","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009"},"description":"In dem letzten Teil dieser Serie haben wir uns angesehen wie mittels ```CompletableFuture<T>``` Arbeitspakete auf verschiedene ResourcenPools verteilt werden können und wie diese Arbeit als eine Kette von asynchronen Aufrufen formuliert werden kann. In diesem Teil werden wir uns damit auseinandersetzen wie die Ketten kompakter formuliert werden können und welche Möglichkeiten zur Steuerung einem zur Verfügung stehen.","title":"Functional Reactive mit Core Java 10"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010" aria-current="page">Functional Reactive mit Core Java 10</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 10</h2>
+        <p class="subtitle is-4">In dem letzten Teil dieser Serie haben wir uns angesehen wie mittels ```CompletableFuture&lt;T&gt;``` Arbeitspakete auf verschiedene ResourcenPools verteilt werden können und wie diese Arbeit als eine Kette von asynchronen Aufrufen formuliert werden kann. In diesem Teil werden wir uns damit auseinandersetzen wie die Ketten kompakter formuliert werden können und welche Möglichkeiten zur Steuerung einem zur Verfügung stehen.</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 10</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-10-10">Oktober 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In dem letzten Teil dieser Serie haben wir uns angesehen wie mittels <code>CompletableFuture&lt;T&gt;</code> Arbeitspakete
+auf verschiedene ResourcenPools verteilt werden können und wie diese Arbeit
+als eine Kette von asynchronen Aufrufen formuliert werden kann.</p>
+<p>In diesem Teil werden wir uns damit auseinandersetzen wie die Ketten kompakter formuliert werden können
+und welche Möglichkeiten zur Steuerung einem zur Verfügung stehen.</p>
+<h2 id="die-aufgabe"><a href="#die-aufgabe" id="die-aufgabe" class="anchor"></a>Die Aufgabe</h2>
+<p>Beginnen wir mit der trivialen Aufgabe einen String in einen Integerwert zu transformieren.
+Hierbei gibt es einige typische Fallstricke, obwohl der Vorgang selbst sehr einfach und auch schon innerhalb des JDK gelöst ist.</p>
+<p>Die hier verwendete Ausgangslage ist wie folgt definiert und wir haben im Hinterkopf, dass die beiden Funktionen
+hier Stellvertreter, für etwas aufwendigere Arbeitspakete, darstellen.</p>
+<pre><code class="language-java">final String input = .... // some String
+final Integer value = Integer.parseInt(input);
+</code></pre>
+<p>Jedoch auch bei diesem einfachen Beispiel kann schon eine Menge fehlschlagen. Nehmen wir an das
+der String null sein kann oder nicht. Oder das der Inhalt von dem gelieferten String schlicht und ergreifend keine Zahl darstellt,
+oder eine die nicht in den Wertebereich eines Integer passt.</p>
+<p>Die Kurzversion lautet demnach, es können Fehler auftreten die wiederum zu Exceptions führen.</p>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="teile-und-verteile"><a href="#teile-und-verteile" id="teile-und-verteile" class="anchor"></a>Teile und verteile</h2>
+<p>Als erstes werden wir die Schritte wieder aufteilen und daraus einzelne Instanzen der Klasse completableFuture erzeugen.</p>
+<pre><code class="language-java">    final Supplier&lt;String&gt; nextStringValue = () -&gt; valueOf(new Random().nextInt(10));
+    final CompletableFuture&lt;String&gt; step01 = CompletableFuture.supplyAsync(nextStringValue);
+    
+    final CompletableFuture&lt;Integer&gt; step02 = supplyAsync(nextStringValue)
+        .thenComposeAsync(new Function&lt;String, CompletionStage&lt;Integer&gt;&gt;() {
+          @Override
+          public CompletionStage&lt;Integer&gt; apply(String s) {
+            return CompletableFuture.completedFuture(Integer.parseInt(s));
+          }
+        });
+</code></pre>
+<p>Hier in idesem Fall kommt eine neue Methode zum Einsatz. Gemeint ist hier die Erzeugung einer
+Instanz vom Typ <code>CompletableFuture&lt;T&gt;</code> bei dem das Ergebnis schon
+feststeht. Gemeint ist die Methode <code>CompletableFuture.completedFuture(Integer.parseInt(s))</code>.</p>
+<p>In diesem Beispiel ist demnach nichts mehr zu erledigen, es wurden lediglich die einzelnen Werte verpackt.
+Es kann natürlich auch wesentlich kompakter geschrieben werden.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;Integer&gt; step02 = supplyAsync(nextStringValue)
+        .thenComposeAsync(s -&gt; completedFuture(Integer.parseInt(s)));
+</code></pre>
+<p>Wie jedoch reagiert man auf eine Exception ?</p>
+<h2 id="handleasync"><a href="#handleasync" id="handleasync" class="anchor"></a>handleAsync</h2>
+<p>Der Umgang mit einer auftretenden Exception wird in diesem Fall mit der Methode <code>handleAsync</code> definiert.
+Hier kann man zwei Dinge definieren. Das erste ist der positive Fall das ein Ergebnis vorliegen wird und der zweite Fall
+ist die Verarbeiting der geworfenen Exception.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;String&gt; step02 = supplyAsync(nextStringValue)
+        .thenComposeAsync(s -&gt; completedFuture(Integer.parseInt(s)))
+        .handleAsync(new BiFunction&lt;Integer, Throwable, String&gt;() {
+          @Override
+          public String apply(Integer value , Throwable throwable) {
+            return (throwable == null)
+                   ? &quot;all is ok, value is &quot; + value
+                   : throwable.getMessage();
+          }
+        });
+</code></pre>
+<p>Natürlich kann es auch kompakter mittels Lambda-Konstrukt geschrieben werden.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;String&gt; step02 = supplyAsync(nextStringValue)
+        .thenComposeAsync(s -&gt; completedFuture(Integer.parseInt(s)))
+        .handleAsync((value , throwable) -&gt; (throwable == null)
+                                            ? &quot;all is ok, value is &quot; + value
+                                            : throwable.getMessage());
+</code></pre>
+<p>In diesem Fall ist die Unterscheidung mittels <code>BiFunction</code> realisiert. Das bedeutet, dass es einen Rückgabewert geben muss.
+Nun sind wir wieder an der Stelle an der ein Einsatz von der Klasse <code>Optional&lt;T&gt;</code> oder eben der Optional-Weiterentwicklung <code>Result&lt;T&gt;</code>
+sinnvoll ist.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;Result&lt;Integer&gt;&gt; step02 = supplyAsync(nextStringValue)
+        .thenComposeAsync(s -&gt; completedFuture(Integer.parseInt(s)))
+        .handleAsync((value , throwable) -&gt; (throwable == null)
+                                            ? Result.success(value)
+                                            : Result.failure(throwable.getMessage()));
+</code></pre>
+<h2 id="checkedfunction-again"><a href="#checkedfunction-again" id="checkedfunction-again" class="anchor"></a>CheckedFunction again</h2>
+<p>Diese Fallunterscheidung kann aber auch mit der schon vorher vorgestellten <code>CheckedFunction</code> abgebildet werden.
+Die Fallunterscheidung ist damit schon definiert und sieht wie folgt aus.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;Result&lt;Integer&gt;&gt; step02 = supplyAsync(nextStringValue)
+        .thenComposeAsync(s -&gt; completedFuture(((CheckedFunction&lt;String, Integer&gt;) Integer::parseInt).apply(s)));
+</code></pre>
+<p>Wenn man nun an dieser Stelle angelangt ist, kommt als nächstes die Herausforderung wie mehr als eine Verarbeitungsstufe
+kombiniert werden wird. Ist das Ergebnis doch nun in einem Result verpackt worden.
+Ebenfalls hat man hier auch die Möglichkeit unnötige Schritte zu verkürzen,
+da meist Fehler in einer Stufe die restlichen, nachfolgenden Verarbeitungsstufen überflüssig machen.</p>
+<h2 id="chain-of-thencomposeasync"><a href="#chain-of-thencomposeasync" id="chain-of-thencomposeasync" class="anchor"></a>chain of thenComposeAsync</h2>
+<p>Als nächstes wir der Verarbeitungsprozess um eine weitere Stufe erweitert werden. Es soll im Erfolgsfall eine Nachricht generiert werden.
+Im Fehlerfall wird eine mehr oder weniger aussagekräftige Nachricht erstellt und zurückgeliefert.</p>
+<pre><code class="language-java">    final CompletableFuture&lt;Result&lt;String&gt;&gt; result = supplyAsync(nextStringValue)
+        .thenComposeAsync(input -&gt; completedFuture(((CheckedFunction&lt;String, Integer&gt;) Integer::parseInt).apply(input)))
+        .thenComposeAsync(input -&gt; completedFuture(input.isPresent()
+                                                   ? input.map(integer -&gt; &quot;Result is now &quot; + integer)
+                                                   : Result.&lt;String&gt;failure(&quot;Value was not available&quot;)));
+
+</code></pre>
+<p>Hier ist impliziet eine Reduktion um eine Stufe vom Typ <code>Result</code> vorhanden. Im Erfolgsfall wird mit der Methode <code>map</code> eine neue Instaz vom Typ <code>Result</code> erzeugt.
+Genauso ist es mit der Fehlernachricht. Das kann explizieter geschrieben werden um zu verdeutlichen was genau passiert.</p>
+<pre><code class="language-java">    final BiFunction&lt;Result&lt;Integer&gt;, Function&lt;Integer, Result&lt;String&gt;&gt;, Result&lt;String&gt;&gt; flatMap
+        = (input , funct) -&gt; (input.isPresent())
+                             ? funct.apply(input.get())
+                             : input.asFailure();
+</code></pre>
+<p>In unserem Fall exisitiert eine Methode <code>flatMap</code> in der Klasse <code>Optional</code> als auch in der Klasse <code>Result</code>.
+Hiermit ist das Problem an der Stelle gelöst.</p>
+<p>Innerhalb einer Methode <code>flatMap</code> kann antürlich auch wieder eine Exception verarbeitet werden.</p>
+<pre><code class="language-java">        supplyAsync(nextStringValue)
+           .thenComposeAsync(input -&gt; completedFuture(((CheckedFunction&lt;String, Integer&gt;) Integer::parseInt).apply(input)))
+           .thenComposeAsync(input -&gt; completedFuture(input.flatMap((CheckedFunction&lt;Integer, String&gt;) integer -&gt; &quot;Result is now &quot; + integer)))
+</code></pre>
+<p>In den Quelltexten zu diesem Teil befindet sich noch eine
+kleine Komfortfunktion mit der das Ergebnis der hier erzeugten Instanzen vom Typ <code>CompletableFuture</code>
+auf der Kommandozeile ausgegeben werden kann.</p>
+<pre><code class="language-java">    Consumer&lt;CompletableFuture&lt;Result&lt;?&gt;&gt;&gt; print = (cf) -&gt; cf
+        .whenCompleteAsync((result , throwable) -&gt; {
+          if (throwable == null)
+            result.ifPresentOrElse(
+                System.out::println ,
+                (Consumer&lt;String&gt;) System.out::println
+            );
+          else System.out.println(&quot;throwable = &quot; + throwable);
+        })
+        .join();
+</code></pre>
+<p>Damit sieht der Aufruf wie folgt aus.</p>
+<pre><code class="language-java">    print.accept(
+        supplyAsync(() -&gt; &quot;oh no&quot;)
+            .thenComposeAsync(input -&gt; completedFuture(((CheckedFunction&lt;String, Integer&gt;) Integer::parseInt).apply(input)))
+            .thenComposeAsync(input -&gt; completedFuture(input.flatMap((CheckedFunction&lt;Integer, String&gt;) integer -&gt; &quot;Result is now &quot; + integer)))
+    );
+</code></pre>
+<h2 id="chain-of-functions"><a href="#chain-of-functions" id="chain-of-functions" class="anchor"></a>Chain of Functions</h2>
+<p>Wenn man sich die bisher erstellten Beispiele ansieht, so kann man leicht erkennen das der Aufwand zum Schreiben doch recht hoch ist
+je mehr Funktionen hintereinander geschaltet werden sollen.
+Ebenfalls von Interesse kann es sein, das eine vorher nicht definierte Anzahl an Funktionen in einer Verarbeitungskette hintereinander geschaltet werden sollen.</p>
+<p>Definieren wir einfach drei Funktionen, im Moment noch alle mit dem selben Eingangs- und Ausgangstyp.</p>
+<pre><code class="language-java">    final Function&lt;String, String&gt; step1 = (input) -&gt; input.toUpperCase();
+    final Function&lt;String, String&gt; step2 = (input) -&gt; input + &quot; next A&quot;;
+    final Function&lt;String, String&gt; step3 = (input) -&gt; input + &quot; next B&quot;;
+</code></pre>
+<p>Wenn man diese nun in klassischer Art und Weise hintereinander schaltet erhält man folgende Funktion.</p>
+<pre><code class="language-java">    final String hello = step1
+        .andThen(step2)
+        .andThen(step3)
+        .apply(&quot;hello&quot;); // blocking call
+</code></pre>
+<p>Das wird jetzt in eine Kette nicht-blockierender Aufrufe überführt. Was an der Stelle erreicht werden soll
+ist eigentlich eine TriFunction die einem basierend auf den drei Funktionen eine Funktion liefert die einen
+Eingangswert erhält und ein CompletableFuture zurückliefert.
+Damit hat man etwas recht Interessantes erreicht.
+Es kann nun eine Kette basierend auf mehreren Instanzen vom Typ <code>CompletableFuture</code> gebaut werden ohne das diese direkt in Aktion tritt.</p>
+<pre><code class="language-java">    TriFunction&lt;
+        Function&lt;String, String&gt;,
+        Function&lt;String, String&gt;,
+        Function&lt;String, String&gt;,
+        Function&lt;String, CompletableFuture&lt;String&gt;&gt;&gt; inputTriA = (f1 , f2 , f3) -&gt; {
+      return (value) -&gt; {
+        final CompletableFuture&lt;String&gt; result1 = supplyAsync(() -&gt; f1.apply(value));
+        final CompletableFuture&lt;String&gt; result2 = result1.thenComposeAsync(v -&gt; supplyAsync(() -&gt; f2.apply(v)));
+        final CompletableFuture&lt;String&gt; result3 = result2.thenComposeAsync(v -&gt; supplyAsync(() -&gt; f3.apply(v)));
+        return result3;
+      };
+    };
+</code></pre>
+<p>Das Beispiel kann man natürlich auch wieder kompakter schreiben....</p>
+<pre><code class="language-java">    TriFunction&lt;
+        Function&lt;String, String&gt;,
+        Function&lt;String, String&gt;,
+        Function&lt;String, String&gt;,
+        Function&lt;String, CompletableFuture&lt;String&gt;&gt;&gt; inputTriB
+        = (f1 , f2 , f3)
+        -&gt; (value)
+        -&gt;
+        CompletableFuture
+            .completedFuture(value)
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; f1.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; f2.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; f3.apply(v)));
+
+</code></pre>
+<p>... und nachfolgend allgemeiner definieren.</p>
+<pre><code class="language-java">  public &lt;A, B, C, D&gt; TriFunction&lt;
+      Function&lt;A, B&gt;, 
+      Function&lt;B, C&gt;,
+      Function&lt;C, D&gt;,
+      Function&lt;A, CompletableFuture&lt;D&gt;&gt;&gt; genericTriFunction() {
+
+    return (f1 , f2 , f3)
+        -&gt; (value)
+        -&gt;
+        CompletableFuture
+            .completedFuture(value)
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; f1.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; f2.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; f3.apply(v)));
+  }
+</code></pre>
+<p>Wenn man diese Funktion nun diese Funktion in eine &quot;curried&quot; Version transformiert
+erhält man die Möglichkleit die einzelnen Funktionen nacheinander zu übergeben.
+Somit kommen wir dem gewünschten Verhalten, das eine beliebige Anzahl an Funktionen übergeben
+werden kann ein wenig näher.</p>
+<p>Zur Erinnerung, für ein einfaches Beispiel sieht das Ergebnis wie folgt aus.</p>
+<pre><code class="language-java">    TriFunction&lt;String, String, String,Integer&gt; triDemo 
+        = (s1,s2,s3)-&gt;{return -1;};
+    
+    final Function&lt;String, Function&lt;String, Function&lt;String, Integer&gt;&gt;&gt; 
+    triDemoCurried 
+        = Transformations.&lt;String, String, String, Integer&gt;curryTriFunction().apply(triDemo);
+    
+    final Integer i = triDemoCurried.apply(&quot;A&quot;).apply(&quot;B&quot;).apply(&quot;C&quot;);
+</code></pre>
+<p>Allerdings wenn man sich die transformierte Funktion basierend auf der den Instanzen vom Typ <code>CompletableFuture</code> ansieht, wird man recht schnell zu dem Entschluss kommen das es nicht sonderlich wartbarer Quelltext ist.</p>
+<pre><code class="language-java">     final Function&lt;
+            Function&lt;String, String&gt;, 
+            Function&lt;Function&lt;String, String&gt;, 
+                     Function&lt;Function&lt;String, String&gt;, 
+                              Function&lt;String, CompletableFuture&lt;String&gt;&gt;&gt;&gt;&gt; apply
+        = Transformations.&lt;Function&lt;String, String&gt;, 
+                           Function&lt;String, String&gt;, 
+                           Function&lt;String, String&gt;, 
+                           Function&lt;String, CompletableFuture&lt;String&gt;&gt;&gt;
+                           curryTriFunction()
+                           .apply(inputTriA);
+
+    final Function&lt;String, 
+                   CompletableFuture&lt;String&gt;&gt; resultCF 
+                   = apply
+                          .apply(step1)
+                          .apply(step2)
+                          .apply(step3);
+    
+    final CompletableFuture&lt;String&gt; cf = resultCF.apply(&quot;hello World&quot;);
+</code></pre>
+<p>Es muss also noch einen anderen Weg geben dieses Ziel zu erreichen.
+Gehen wir dazu nochmal einen Schritt zurück und sehen nehmen die manuelle Version als Ausgangslage.</p>
+<pre><code class="language-java">    //manual
+    Function&lt;String, CompletableFuture&lt;String&gt;&gt; f = (value) -&gt;
+        CompletableFuture
+            .completedFuture(value)
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; step1.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; step2.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; step3.apply(v)));
+</code></pre>
+<p>Erreicht werden soll, dass der Anteil mit dem <strong>composeAsync</strong> definiert wird ohne
+das schon eine Ausführung gestartet wird. Der Startwert steht also noch nicht zur Verfügung.</p>
+<p>Ziel soll auch sein, das eine Funktion zur Verfügung steht der Art, das der zu verarbeitende
+Wert übergeben wird und als Rückgabewert eine Instanz von <code>CompletableFuture</code> erhalten wird.</p>
+<p>Die Anzahl der Verarbeitungsschritte soll nicht vorher fest definiert werden, erst bei dem Aufbau der Kette
+werden die Funktionen nach und nach zur Verfügung gestellt.</p>
+<p>Definieren wir nun erneut drei Funktionen, so das auch bei jeder Verarbeitungsstufe der Ergebnistyp sich ändert.</p>
+<pre><code class="language-java">    final Function&lt;String, Integer&gt; step1A = Integer::parseInt;
+    final Function&lt;Integer, String&gt; step2A = (input) -&gt; input + &quot; next A&quot;;
+    final Function&lt;String, Pair&lt;String, Integer&gt;&gt; step3A = (input) -&gt; new Pair&lt;&gt;(input , input.length());
+</code></pre>
+<p>Manuell ergibt sich wieder folgendes Ergebnis.</p>
+<pre><code class="language-java">    Function&lt;String, CompletableFuture&lt;Pair&lt;String, Integer&gt;&gt;&gt; fB = (value) -&gt;
+        CompletableFuture
+            .completedFuture(value)
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; step1A.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; step2A.apply(v)))
+            .thenComposeAsync(v -&gt; supplyAsync(() -&gt; step3A.apply(v)));
+</code></pre>
+<p>Wenn man nun den Anteil mit <strong>thenComposeAsync</strong> extrahiert und generisch formuliert so ist ein mögliches Ergebnis
+die nachfolgende Methode. Abstrakt gesprochen passiert hier folgendes.
+Nehme die Funktion (<code>Function&lt;T, CompletableFuture&lt;R&gt;&gt;</code>) aus dem Schritt n-1
+und hänge Dich selber (<code>supplyAsync(() -&gt; nextTransformation.apply(v))</code>) dort an. Die Instanz der Klasse
+<code>CFQ</code> ist der Rahmen um alles. dazu kommen wir gleich.</p>
+<pre><code class="language-java">    private Function&lt;T, CompletableFuture&lt;R&gt;&gt; resultFunction;
+
+    public &lt;N&gt; CFQ&lt;T, N&gt; thenCombineAsync(Function&lt;R, N&gt; nextTransformation) {
+      final Function&lt;T, CompletableFuture&lt;N&gt;&gt; f = this.resultFunction
+          .andThen(before -&gt; before.thenComposeAsync(v -&gt; supplyAsync(() -&gt; nextTransformation.apply(v))));
+      return new CFQ&lt;&gt;(f);
+    }
+</code></pre>
+<p>Nun fehlt noch der initiale Schritt. Hier definieren wir die Methode die uns aus einer normalen <code>Function&lt;T,R&gt;</code>
+eine Funktion vom Typ <code>Function&lt;T, CompletableFuture&lt;R&gt;&gt;</code> erzeugt.</p>
+<pre><code class="language-java">    public static &lt;T, R&gt; CFQ&lt;T, R&gt; define(Function&lt;T, R&gt; transformation) {
+      return new CFQ&lt;&gt;(t -&gt; CompletableFuture.completedFuture(transformation.apply(t)));
+    }
+</code></pre>
+<p>Jetzt haben wir alle Schritte zusammen um eine Kette von beliebigen Funktionen in eine Kette von Arbeitsschritten
+zu transformieren. Ausgelassen habe ich an der Stelle, das natürlich jede Funktion auch in einer definierten
+Ressource abgearbeitet werden könnte. Das wäre nur ein weiterer Parameter vom Typ Executor.</p>
+<p>Die Funktionen die übergeben werden können müssen natürlich dem Kriterium entsprechen,
+das der Ausgangstyp der Funktion n-1 gleich dem Eingangstyp der Funktion n ist.</p>
+<pre><code class="language-java">  public static class CFQ&lt;T, R&gt; {
+
+    private Function&lt;T, CompletableFuture&lt;R&gt;&gt; resultFunction;
+
+    private CFQ(Function&lt;T, CompletableFuture&lt;R&gt;&gt; resultFunction) {
+      this.resultFunction = resultFunction;
+    }
+
+    public static &lt;T, R&gt; CFQ&lt;T, R&gt; define(Function&lt;T, R&gt; transformation) {
+      return new CFQ&lt;&gt;(t -&gt; CompletableFuture.completedFuture(transformation.apply(t)));
+    }
+
+    public &lt;N&gt; CFQ&lt;T, N&gt; thenCombineAsync(Function&lt;R, N&gt; nextTransformation) {
+      final Function&lt;T, CompletableFuture&lt;N&gt;&gt; f = this.resultFunction
+          .andThen(before -&gt; before.thenComposeAsync(v -&gt; supplyAsync(() -&gt; nextTransformation.apply(v))));
+      return new CFQ&lt;&gt;(f);
+    }
+
+    public Function&lt;T, CompletableFuture&lt;R&gt;&gt; resultFunction() {
+      return this.resultFunction;
+    }
+  }
+</code></pre>
+<p>In der Verwendung sieht das dann so aus.</p>
+<pre><code class="language-java">    // functions die chain
+    final Function&lt;String, Integer&gt; step1A = Integer::parseInt;
+    final Function&lt;Integer, String&gt; step2A = (input) -&gt; input + &quot; next A&quot;;
+    final Function&lt;String, Pair&lt;String, Integer&gt;&gt; step3A = (input) -&gt; new Pair&lt;&gt;(input , input.length());
+
+    //transformation
+    final Function&lt;String, CompletableFuture&lt;Pair&lt;String, Integer&gt;&gt;&gt; f = CFQ
+        .define(step1A)
+        .thenCombineAsync(step2A)
+        .thenCombineAsync(step3A)
+        .resultFunction();
+    
+    //usage - activate
+    final CompletableFuture&lt;Pair&lt;String, Integer&gt;&gt; cf = f.apply(&quot;hello&quot;);
+
+    //usage - get result
+    final String hello = cf
+        .join()
+        .getT1();
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Mit der Klasse CFQ ist man nun in der Lage eine beliebige Anzahl an Funktionen
+in eine Kette zu verschalten. Jeder Schritt kann in einen eigenen Ressourcenpool ausgelagert werden und
+blockiert nicht die Ausführung an der Stelle.</p>
+<p>Ebenfalls können solche Ketten definiert werden ohne das die Verarbeitung
+direkt beginnen muss.</p>
+<p>Der Aufwand um dieses zu formulieren ist im Vergleich zu der manuellen Variante erheblich
+reduziert und dabei auch noch typesafe.</p>
+<p>Die Klasse CFQ ist im Projekt <a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a>
+unter dem Namen <code>CompletableFutureQueue</code> zu finden.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-010.git">https://github.com/Java-Publications/functional-reactive-with-core-java-010.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 09
+  </a>
+
+
+
+  <a class="pagination-next" disabled>
+    <span class="inner">
+      Next
+      <span class="icon"><i class="fas fa-chevron-right"></i></span>
+    </span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

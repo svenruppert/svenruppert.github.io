@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 02</title>
+
+
+<meta name="description" content="In unserem letzten Teil dieser Serie über Functional - Reactive with Core Java haben wir die ersten Umformungen vorgenommen und uns angesehen wie sich der Quelltext verändert wenn wir ein wenig funktionale Elemente und Aspekte verwenden. Aber die Frage ab wann wir von funktionaler Entwicklung sprechen ist immer noch offen. Beginnen wir also mit ein paar Beispielen genau dazu.">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-02-10-functional-reactive-with-core-java-002.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/2/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002"},"next":{"path":"blog/java/2019/3/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-003","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003"},"previous":{"path":"blog/java/2019/1/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001"},"description":"In unserem letzten Teil dieser Serie über Functional - Reactive with Core Java haben wir die ersten Umformungen vorgenommen und uns angesehen wie sich der Quelltext verändert wenn wir ein wenig funktionale Elemente und Aspekte verwenden. Aber die Frage ab wann wir von funktionaler Entwicklung sprechen ist immer noch offen. Beginnen wir also mit ein paar Beispielen genau dazu.","title":"Functional Reactive mit Core Java 02"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002" aria-current="page">Functional Reactive mit Core Java 02</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 02</h2>
+        <p class="subtitle is-4">In unserem letzten Teil dieser Serie über Functional - Reactive with Core Java haben wir die ersten Umformungen vorgenommen und uns angesehen wie sich der Quelltext verändert wenn wir ein wenig funktionale Elemente und Aspekte verwenden. Aber die Frage ab wann wir von funktionaler Entwicklung sprechen ist immer noch offen. Beginnen wir also mit ein paar Beispielen genau dazu.</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 02</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-02-10">Februar 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In unserem letzten Teil dieser Serie über Functional - Reactive with Core Java haben wir die ersten Umformungen vorgenommen und uns angesehen wie
+sich der Quelltext verändert wenn wir ein wenig funktionale Elemente und Aspekte verwenden.
+Aber die Frage ab wann wir von funktionaler Entwicklung sprechen ist immer noch offen.
+Beginnen wir also mit ein paar Beispielen genau dazu.</p>
+<blockquote>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+</blockquote>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="functionalinterfaces-und-lambdas"><a href="#functionalinterfaces-und-lambdas" id="functionalinterfaces-und-lambdas" class="anchor"></a>FunctionalInterfaces und Lambdas</h2>
+<p>Mit Java 8 haben wir die FunctionalInterfaces  bekommen, die dann in Java9 erweitert worden sind. Dieses ist ein oft verwendetes
+technisches Mittel um funktionale Elemente in Java zu realisieren.</p>
+<p>Hier zur Wiederholung nochmals ein paar Kleinigkeiten zu den Interfaces und den Änderungen in Java9.</p>
+<p>Wir haben ein Interface mit zwei Methoden. Eine davon ist statisch <code>doMore()</code>die andere <code>doSomething()</code> hat eine <strong>default</strong> Implementierung.</p>
+<pre><code class="language-java">  public interface DemoInterface {
+    static void doMore() {
+      System.out.println(DemoInterface.class.getSimpleName() + &quot; : &quot; + &quot;doMore&quot;);
+    }
+
+    default void doSomething() {
+      System.out.println(DemoInterface.class.getSimpleName() + &quot; : &quot; + &quot;doSomething&quot;);
+    }
+  }
+
+</code></pre>
+<p>Nun erstellen wir ein Interface mit dem Namen <code>InterfaceA</code> und erben von <code>DemoInterface</code>. Hier überschreiben wir die Methode <code>doSomething()</code></p>
+<pre><code class="language-java">  public interface InterfaceA extends DemoInterface {
+    default void doSomething() {
+      System.out.println(InterfaceA.class.getSimpleName() + &quot; : &quot; + &quot;doSomething&quot;);
+    }
+  }
+</code></pre>
+<p>Als letztes erstellen wir ein Interface mit dem Namen <code>InterfaceB</code> das nicht von dem Interface <code>DemoInterface</code>erbt, jedoch
+auch eine Methode mit dem Namen <code>doSomething</code> und einer <strong>default</strong> Implementierung hat.</p>
+<p>Wenn wir nun folgenden Quelltext aschreiben und nachfolgend ausführen, was erhalten wir für Meldungen auf der Konsole?</p>
+<pre><code class="language-java">  public static void main(String[] args) {
+    DemoInterface.doMore();
+    new ImplA().doSomething();
+    ImplA.doMore(); 
+    new ImplB().doSomething();
+  }
+</code></pre>
+<p>Das erste was uns passiert, ist ein Abbruch der Übersetzung. Die Zeile <code>ImplA.doMore()</code> wird mit einem <strong>cannot find symbol &quot;doMore()&quot;</strong> durch den Kompiler quittiert.
+Statische Methoden können also nur auf dem originalen Interface aufgerufen werden. Leider wird das immer mal wieder gerne vergessen und dan ert später in der Implementierung bemerkt.
+Wenn wir also diese Zeile auskommentieren, können wir den Quelltext ausführen und erhalten die nachfolgende Ausgabe.</p>
+<pre><code>DemoInterface : doMore
+InterfaceA : doSomething
+ImplB : doSomething
+</code></pre>
+<p>Es wird also immer die letzte Implementierung aus der Vererbungskette verwendet. In dem Fall <code>InterfaceB</code> kann der Kompiler nicht selber entscheiden
+welche Implemetierung die dominante von Beiden ist. Hier muss der Entwickler mittels Implementierung selber die Endscheidung treffen.</p>
+<p>In Java9 können wir nun zusätzlich Methoden mit der Sichtbarkeit <code>private</code> deklarieren bzw implementieren. Eine reine Deklaration ist
+nicht möglich, da diese auch in erbenden Interfaces nicht mit einer Implementierung versehen werden könnte. Nun sind wir aber wieder in der Lage
+größere <strong>default</strong> Implementierungen wieder sauber in mehrere Methoden innerhalb eines Interface aufzuteilen. In Java8 musste dieses entweder ausgelagert werden oder führte zu
+unschönen Quelltextfragmenten.</p>
+<p>Kommen wir nun zu den FunctionalInterfaces. Die Definition der FunctionalInterfaces ist in Java9 immer noch die Selbe wie zu Java8 Zeiten.
+Es handelt sich um ein FunctionalInterface wenn eine noch zu implementierende Methode vorhanden ist. Die Anzahl der Methoden mit <strong>default</strong>
+Implementierung ht hier keinen Einfluss genauso ob die Annotation <code>@FunctionalInterface</code> vorhanden ist oder nicht.</p>
+<h3 id="lambdas"><a href="#lambdas" id="lambdas" class="anchor"></a>Lambdas</h3>
+<p>Nun hier werde ich nicht auf alle möglichen Formen eingehen. Nur soweit, das überall dort wo ein FunctionalInterface als Attribut übergeben werde kann auch ein Lambda
+verwendet werden kann. Die Verwendung von Lambdas wir öfter mal gleich gesetzt mit funktionaler Programmierung. Aber ist es wirklich schon funktionale Programmierung?</p>
+<p>Sehen wir uns dazu folgendes Beispiel an.</p>
+<pre><code class="language-java">public class Main {
+
+  @FunctionalInterface
+  public static interface Service {
+    public Integer doWork(String value);
+  }
+
+  public static class ServiceImpl implements Service {
+    @Override
+    public Integer doWork(String value) {
+      return Integer.valueOf(value);
+    }
+  }
+
+  public static void main(String[] args) {
+    Integer integer = new ServiceImpl().doWork(&quot;1&quot;);
+    Service serviceA = (value)-&gt; { return Integer.valueOf(value);};
+    Service serviceB = Integer::valueOf;
+    serviceA.doWork(&quot;1&quot;);
+    serviceB.doWork(&quot;1&quot;); 
+  }
+}
+</code></pre>
+<p>Hier haben wir ein Interface mit dem Namen <code>Service</code> das einmal klassisch implementiert worden ist durch die Klasse <code>ServiceImpl</code>.
+Die Verwendung erfolgt nun wie in Java üblich indem eine Instanz der Klasse erzeugt wird um nachfolgend die Methode aufzurufen.</p>
+<p>Aber auch die beiden anderen Implementierungen erst mittels Lambda und nachfolgend mittels Methodreference können wie gewohnt verwendet werden.
+Nur hier haben wir einen etwas anderen Lebenszyklus bei der Initialisierung und es kann keine Klassenattribute (Zustand) wie bei der ersten klassischen Implementierung geben.
+Das kann man schon in den Bereich der Funktionalen Aspekte aufnehmen. Also Wert rein, Wert raus und kein Zustand der einem etwas verderben kann.</p>
+<p>Die Unterschiede zwischen Lambda und Methodreference lasse ich hier bewusst aus.</p>
+<p>Nun kann es ja sein, das die Methode mit dem Eingangswert &quot;HoppelPoppel&quot; aufgerufen wird.
+Was soll nun die Antwort der Methode sein? Entweder eine Exception, oder ein null? Beides ist gegen die grundsätzlichen Überlegungen
+der Funktionalen Programmierung.</p>
+<h2 id="optional"><a href="#optional" id="optional" class="anchor"></a>Optional<T></h2>
+<p>Sehen wir uns hierzu die seit Java8 verfügbare Klasse <code>Optional&lt;T&gt;</code>an. Sie diehnt dazu, eine Referenz zurück zu geben selbst wenn
+der Wert um den es letztendlich geht nicht verfügbar ist.
+Anstelle von null oder dem Wert (die Instanz der vom dem gewünschten Typ), bekommt man nun eine Instanz der Klasse Optional.</p>
+<p>Hierzu schreiben wir also das Interface wie folgt um. Die klassische Implementierung lasse ich hier im Listing weg. Sie ist im git Repository, Package v003 zu finden.</p>
+<pre><code class="language-java">  @FunctionalInterface
+  public static interface Service {
+    public Optional&lt;Integer&gt; doWork(String value);
+  }
+
+  public static class ServiceImpl implements Service {
+    @Override
+    public Optional&lt;Integer&gt; doWork(String value) {
+      try {
+        return Optional.of(Integer.valueOf(value));
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
+      return Optional.empty();
+    }
+  }
+
+  public static void main(String[] args) {
+    Optional&lt;Integer&gt; integer = new ServiceImpl().doWork(&quot;1&quot;);
+
+    Service serviceA = (value) -&gt; {
+      try {
+        return Optional.of(Integer.valueOf(value));
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
+      return Optional.empty();
+    };
+  
+  //SNIPP usage of the implementations  
+  }
+</code></pre>
+<p>Hier werden also nun immer Werte übergeben, bzw es wird nie null als Rückgabewert verwendet. Auch ist kein Wert aus dem Wertevorrat
+von der Zielmenge, hier Integer, dazu verwendet worden einen Fehler zu signalisieren. Die RuntimeException muss auch nicht mehr bei der Verwendung gefangen werden.
+Wir haben also nun ein wesentlich robusteres Stück Quelltext geschrieben.
+Wenn wir nun die Verwendung der Instanz Optional ansehen kommen wir einen Schritt weiter in Richtung funktionaler Aspekte. Nun können wir hier wieder wie im letzten Teil der Serie
+die Methode umschreiben in eine <code>Function&lt;String, Optional&lt;Integer&gt;&gt;</code> und das als Rückgabewert einer statischen Methode implementieren.</p>
+<pre><code class="language-java">  @FunctionalInterface
+  public static interface Service {
+    public Optional&lt;Integer&gt; doWork(String value);
+  }
+
+  
+  static Function&lt;String, Optional&lt;Integer&gt;&gt; service() {
+    return (value) -&gt; {
+      try {
+        return Optional.of(Integer.valueOf(value));
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
+      return Optional.empty();
+    };
+  }
+
+  public static void main(String[] args) {
+    Optional&lt;Integer&gt; apply = service().apply(&quot;1&quot;);
+  }
+</code></pre>
+<p>Nun haben wir wieder eine Funktion, aber den Bezug zu der fachlichen Ausprägung <code>Service</code> verloren. Nun gibt es hier wieder bei Bedarf die Möglichkeit das mittels Vererbung
+in den fachlichen Namensbereich <code>Service</code> zu heben.</p>
+<pre><code class="language-java">public class Main {
+
+  @FunctionalInterface
+  public static interface Service extends Function&lt;String, Optional&lt;Integer&gt;&gt; {
+    public default Optional&lt;Integer&gt; doWork(String value) {
+      return apply(value);
+    }
+  }
+
+  static Service service() {
+    return (value) -&gt; {
+      try {
+        return Optional.of(Integer.valueOf(value));
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+      }
+      return Optional.empty();
+    };
+  }
+
+  public static void main(String[] args) {
+
+    Optional&lt;Integer&gt; applyA = service().apply(&quot;1&quot;);
+    
+    Optional&lt;Integer&gt; applyB = service().doWork(&quot;1&quot;);
+  }
+}
+</code></pre>
+<p>Hier ist zu beachten, das die Methode mittels <strong>default</strong> Implementierung auf die Methode <strong>apply</strong> delegiert und wir dadurch auch wieder ein FunctionalInterface erhalten.
+Der Rückgabewert kann jetzt unterschiedlich verarbeitet werden.</p>
+<h3 id="optional-und-seine-feinheiten"><a href="#optional-und-seine-feinheiten" id="optional-und-seine-feinheiten" class="anchor"></a>Optional und seine Feinheiten</h3>
+<p>Nun haben wir ein Optional in dem ein Integer eingepackt ist. Was nun? Um die Möglichkeiten zu erkunden gehen wir einmal ein wenig die
+Möglichkeiten durch die uns ein Optional bietet.</p>
+<pre><code class="language-java">    Optional&lt;Integer&gt; apply = service().doWork(&quot;1&quot;);
+
+    final Integer intA = apply.get();
+  //if(apply.isPresent()){   
+    if (intA != null) {
+      //do something usefull
+    }
+    else {
+      //do something ???
+    }
+</code></pre>
+<p>Natürlich können wir den enthaltenen Wert einfach dem Optional entnehmen.
+Wenn dieser jedoch <strong>null</strong> ist, so wird eine <code>NoSuchElementException</code> geworfen.
+Wir müssen das Optional selbst mittels der Methode <code>isPresent()</code> befragen ob ein Wert enthalten ist.</p>
+<p>Hier die originale Implementierung aus dem JDK.</p>
+<pre><code class="language-java">    public T get() {
+        if (value == null) {
+            throw new NoSuchElementException(&quot;No value present&quot;);
+        }
+        return value;
+    }
+</code></pre>
+<p>Das Ziel jedoch ist es, diese direkten Kontrollstrukturen durch funktionale Aspekte zu ersetzen.</p>
+<pre><code class="language-java">    final Integer intB1 = apply.orElseGet(() -&gt; - 1);
+    final Integer intB2 = apply.orElse(- 1);
+    final Integer intB3 = apply.orElseThrow(() -&gt; new RuntimeException(&quot;panic ;-)&quot;));
+
+</code></pre>
+<p>Ein Optional kann auch mit Alternativwerten versehen werden, oder eine Exception werfen wenn kein Wert vorhanden ist. Letzteres jedoch ist mit Bedacht zu verwenden, da wir
+hier wieder erst zur Laufzeit damit konfrontiert werden.</p>
+<p>Nun kann an eine Aktion auch nur mit dem Vorhandensein eines Wertes verknüpfen.</p>
+<pre><code class="language-java">    apply.ifPresent(v -&gt; {
+      System.out.println(&quot;v = &quot; + v);
+    });
+
+</code></pre>
+<p>Bei der Verwendung von java8 ist schnell aufgefallen, dass es einige Unzulänglichkeiten hier gibt.
+Zum Beispiel fehlt die Möglichkeit zusätzlich zur Aktion beim Vorhandensein eines Wertes auch eine Aktion zu definieren
+wenn eben kein Wert vorhanden ist. Das wurde in Java9 erweitert.</p>
+<pre><code class="language-java">    //since 9
+    apply.ifPresentOrElse(v -&gt; {
+      System.out.println(&quot;v = &quot; + v);
+    } , () -&gt; {
+      System.out.println(&quot;value not present&quot;);
+    });
+</code></pre>
+<p>Ebenfalls wurde die Kombination <code>ifPresent()</code> und <code>get()</code> oft verwendet. Deswegen gibt es nun in Java9
+ein <code>stream()</code> was einem einen <code>Stream&lt;T&gt;</code> von dem <code>Optional&lt;T&gt;</code> liefert.</p>
+<pre><code class="language-java">final Stream&lt;Integer&gt; stream = apply.stream();
+</code></pre>
+<p>Und ebenfalls wurde eine Möglichkeit für eine Alternative eingebaut. Diesmal aber nicht für den Wert, sondern als Optional.
+Der typ <strong>T</strong> kann dabei allerdings nicht geändert werden. Die Alternative wird geliefert wenn die Methode <code>ìsPresent()</code> false liefert.</p>
+<pre><code class="language-java">apply.or(() -&gt; Optional.of(Integer.MAX_VALUE));
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wenn man nun hier alles zusammen fasst, so ergeben sich hieraus verschiedene Ansatzpunkte die man direkt im täglichen
+Arbeitsalltag anwenden kann. Zum Beispiel kann man API´s mit dem Optional versehen, das man an der Stelle der <code>NullPointerException</code> entgegen arbeitet.
+Die Verwendung von <code>Optional&lt;T&gt;</code> führt auch dazu, dass man Kontrollstrukturen anders formulieren kann. Es sind keine imperativen Fallunterscheidungen mötig, was definitiv
+in Richtung funktionaler Entwicklung geht.</p>
+<p>Aber wenn man nun ein wenig darüber nachdenkt, so kann man mit der <code>map()</code> Methode bei einem Optional auch ein wenig anderes anstellen.</p>
+<pre><code class="language-java">    String value = &quot;&quot;;
+    service()
+        .doWork(value)
+        .or(() -&gt; Optional.of(0))  // per definition
+        .map((Function&lt;Integer, Function&lt;Integer, String&gt;&gt;) integer 
+                    -&gt; (valueToAdd) -&gt; integer + valueToAdd + &quot; was calculated&quot;)
+        .ifPresentOrElse(
+            fkt -&gt; System.out.println(&quot;f(10) ==&gt; = &quot; + fkt.apply(10)),
+            () -&gt; System.out.println(&quot;value not present (usless here)&quot;));
+
+</code></pre>
+<p>Was man daraus machen kann, werden wir noch ansehen und ebenfalls wie wir die Unzulänglichkeiten des Optional in Java8 aber auch die in Java9 noch umgehen können.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-002.git">https://github.com/Java-Publications/functional-reactive-with-core-java-002.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 01
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003">
+    Functional Reactive mit Core Java 03
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

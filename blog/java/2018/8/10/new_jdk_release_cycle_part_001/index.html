@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Die Auswirkungen des neuen JDK-Release-Zyklus 01</title>
+
+
+<meta name="description" content="Seit einiger Zeit ist bekannt das Oracle die Zyklen in denen das JDK veröffentlicht wird geändert hat. Nun ist es soweit, das die Auswirkungen auch für die meisten Projekte spürbar werden. Was also ist zu beachten?">
+
+
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2018-08-10-New_JDK_Release_Cycle_Part_001.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2018/8/10","baseUrl":"http://www.sven-ruppert.de","fileName":"new_jdk_release_cycle_part_001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001"},"next":{"path":"blog/java/2018/9/10","baseUrl":"http://www.sven-ruppert.de","fileName":"new_jdk_release_cycle_part_002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002"},"description":"Seit einiger Zeit ist bekannt das Oracle die Zyklen in denen das JDK veröffentlicht wird geändert hat. Nun ist es soweit, das die Auswirkungen auch für die meisten Projekte spürbar werden. Was also ist zu beachten?","title":"Die Auswirkungen des neuen JDK-Release-Zyklus 01"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001" aria-current="page">Die Auswirkungen des neuen JDK-Release-Zyklus 01</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Die Auswirkungen des neuen JDK-Release-Zyklus 01</h2>
+        <p class="subtitle is-4">Seit einiger Zeit ist bekannt das Oracle die Zyklen in denen das JDK veröffentlicht wird geändert hat. Nun ist es soweit, das die Auswirkungen auch für die meisten Projekte spürbar werden. Was also ist zu beachten?</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Die Auswirkungen des neuen JDK-Release-Zyklus 01</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2018-08-10">August 10, 2018</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/jvm">#JVM</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/jdk">#JDK</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>Seit einiger Zeit ist bekannt das Oracle die Zyklen in denen das JDK veröffentlicht wird geändert hat. Nun ist es soweit, das die Auswirkungen auch für die meisten Projekte spürbar werden.
+Was also ist zu beachten?
+In dieser Serie werden wir uns mit den praktischen Auswirkungen der neuen Release-Zyklen des JDK
+auseinandersetzen. Allerdings ausschließlich aus der Sicht der Entwickler.
+Sicherlich gibt es noch das ein oder andere auf der rechtlichen Seite zu klären und es lohnt sich das einmal für die eigenen Projekte zu beleuchten. Allerdings werden wir uns hier
+lediglich auf die praktischen Dinge hier konzentrieren.</p>
+<h2 id="the-history"><a href="#the-history" id="the-history" class="anchor"></a>The history</h2>
+<p>Viele Jahre lang wurden die JDK-Releases, wenn man von den Hauptversionen spricht,
+lediglich alle paar Jahre veröffentlicht. Was auf der einen Seite zu
+der Annahme führte das Java eine sich nur träge weiterentwickelnde
+Sprache sei, führte auf der anderen Seite zu einer für die Industrie
+sehr gut passenden Stabilität. Diese Stabilität ist, meiner Meinung nach,
+auch einer der Gründe gewesen, dass sich ein so reichhaltiges Open Source
+Ökosystem um die Sprache herum entwickeln konnte.
+Für Firmen die Produkte für die Sprache entwickelten ist es ebenfalls sehr von Vorteil gewesen,
+konnte man sich doch auf die neuen Funktionen konzentrieren anstelle immer neuen Versionen
+hinterher zu laufen.
+Viele Open Source Projekte haben eine große Userbasis, aber leider eine recht
+überschaubare Anzahl an aktiven Mitgliedern die in regelmäßigen Abständen
+Beiträge leisten. Aufgrund der langan Zeiträume bis eine neue Hauptversion
+auf den Markt gekommen ist, konnte sich auch hier voll und ganz auf die Umsetzung
+von Funktionalitäten und Qualität konzentriert werden.</p>
+<p>Die Welt änderte sich als immer mehr Sprachen entwickelt worden sind um
+einige Punkte die an der Sprache Java bemängelt worden sind, auszugleichen.
+Die Vielzahl der Sprachen führte teilweise doch zu einem babylonischen Wirrwar.
+Mir ist bewusst das ich mir mit dieser Aussage nicht nur Beifall einfange.</p>
+<p>Nachdem einige Zeit eine Art Konsolidierung stattgefunden hatte, wurden aus viele Sprachen
+die von der Community ins Rennen gebracht worden sind, einzelne Elemente
+in die Sprache Java übernommen. Sicherlich nicht so konsequent und mit der Geschwindigkeit
+wie es sich der ein oder andere Entwickler wünschte, aber schnell genug für einen Wandel und langsam genug das die Industrie es verdauen konnte.</p>
+<h2 id="and-now"><a href="#and-now" id="and-now" class="anchor"></a>And now</h2>
+<p>Aber nun haben sich einige Dinge sehr geändert. Die gesamte Entwicklung des JDK liegt nun in der Händen der Community und findet im OpenJDK statt. Immer mehr ehemals kommerzielle
+Erweiterungen werden von Oracle an die Community übergeben. Und der Release-Zyklus hat sich drastisch geändert.
+Es wird nun alle sechs Monate eine neue JDK version geben. Begonnen hat dieses mit der Version 9,
+Version 10 ist gerade aktuell und Version 11 steht kurz vor der Tür.</p>
+<p>In jeder Version sind recht große Änderungen enthalten. Die Änderungen reichen von neuen syntaktischen Elementen bis hin zum Entfernen von ganzen Paketen. Im JDK11 wird es zum Beispiel
+kein Corba mehr geben. Viele wird das nicht sonderlich stören, aber bei der Entfernung von JavaFX
+aus dem JDK ist der Aufschrei teils doch recht groß gewesen. Vermutet hatten es auf jeden Fall die wenigsten.</p>
+<p>Wir sind nun also an dem Punkt angekommen, an dem sich die Sprache Java und damit auch das JDK
+nun in einer sehr hohen Geschwindigkeit verändert. Aber werfen wir noch einmal kurz einen Blick auf die Versionen selbst.</p>
+<h2 id="jdk-versions-and-the-lts"><a href="#jdk-versions-and-the-lts" id="jdk-versions-and-the-lts" class="anchor"></a>JDK Versions and the LTS</h2>
+<p>Java 8 selbst wird noch recht lange weiter entwickelt werden. Commercial Support gibt es dafür noch bis ca 2025. Des weiteren ist das JDK8 auch das letzte das ohne JIGSAW auskommt.
+Die JDK-Versionen 9 und 10 verlieren ihren Public Support an dem Datum an dem die jeweils nächste Version final auf den Markt kommt. Erst die Version 11 wird wieder eine LTS Version sein. Danach ist erst wieder mit der Version 17 eine weitere LTS Version geplant. Aber auch hier sollte man nicht vergessen, das die frei verfügbaren Versionen nur 6 Monate zum Download bereitstehen sollen. Das LTS bezieht sich auf den kommerziellen Aspekt.</p>
+<p>Dieser Release-Zyklus rief nun auch andere Firmen auf den Plan.
+Da nun die gesamte Basisentwicklung auf dem OpenJDK basiert, hat zum Beispiel auch die Firma Azul
+begonnen eine angepasste JDK Version anzubieten. Hier allerdings mit einem etwa anderem Release-Plan. Laut Hersteller werden alle Versionen, also auch die Version 9 und 10, von Azul mit Support und Weiterentwicklung versehen.</p>
+<p>Ganz neu auf dem Markt ist nun auch die GraalVM. Diese basiert nun auf der Sprachversion Java8.
+In welchen Abständen welche Sprachversionen unterstützt werden steht derzeitig noch nicht fest.
+Wir wisse also noch nicht ob es eine GraalVM für Java 10 oder 11 geben wird.</p>
+<p>Wir haben also nun eine Situation in der wir nicht nur eine Menge an JDK Versionen haben, sondern auch noch verschiedene Anbieter. Wie kann man nun damit umgehen?</p>
+<h2 id="simple-solution"><a href="#simple-solution" id="simple-solution" class="anchor"></a>Simple Solution</h2>
+<p>Die einfachste Lösung ist es, sich bei einem Projekt für ein JDK zu entscheiden und dieses bis zum Ende der Verwendung beizubehalten. Allerdings kann das nicht bei allen Projekten so gehandhabt werden. Wenn man nun auch noch frei im Internet im Einsatz kommt, so sind mindestens Sicherheitsupdates notwendig. Auch diese wird es nach Ablauf der freien Support-phase nicht kostenlos geben. Ebenfalls recht einfach kann es sein, wenn in Zeitabständen die für das Projekt verträglich sind, die JDK-Version zu einem defnierten Zeitpunkt geändert wird.
+Hier handelt man sich allerdings die typischen Migrationsproblematiken ein, da dieses Vorgehen eher dazu neigt, das man sich lediglich in recht großen zeitlichen Abständen mit dieser Problematik beschäftigen wird.</p>
+<h2 id="continuous-update"><a href="#continuous-update" id="continuous-update" class="anchor"></a>Continuous Update</h2>
+<p>Ein anderer Weg kann es sein, das man bei der Entwicklung ständig am Ball bleibt.
+Das bedeutet nicht das immer das neueste JDK zum Einsatz kommt. Allerdings wird ständig gegen die aktiven JDK getestet. Das kann zum beispiel bedeuten, das aktuell die JDK Version 8 das verwendete Umfeld ist, die Tests allerdings schon gegen das aktuelle JDK 10 und die sich noch in der Entwicklung befindlichen JDK Version 11 (bis 29.09.2018) ausgeführt werden. Wobei es die ersten Builds für das JDK12 auch schon gibt..</p>
+<p>Das hat verschiedene Vorteile. Auf dieser Art und Weise erfolgt zum Beispiel immer ein Test
+ob einzelne Teile in einer der nächsten JDK Versionen als <strong>Deprecated</strong> markiert werden.
+Da mittlerweile solche Elemente auch aus dem JDK entfernt werden, kann man auf einfache Art und Weise testen ob die eigenen Sourcen damit zurecht kommen werden und natürlich werden damit auch alle
+Abhängigkeiten diesem Test unterzogen. Wenn auch nur indirekt, aber man erhält sofort einen Überblick, welche Abhängigkeiten zu Herausforderungen führen werden. Je früher man in einem Projekt diese Information einsetzten kann, desto erfolgreicher lässt sich damit umgehen.</p>
+<p>Nehmen wir uns nun den einfachsten Fall vor. Hierbei geht es lediglich darum ob die Anwendung
+mit einem bestimmten JDK übersetzt und gebaut werden kann. Ich lasse an der Stelle bewusst die Durchführung der jUnit Tests aussen vor.</p>
+<h2 id="docker-is-your-friend"><a href="#docker-is-your-friend" id="docker-is-your-friend" class="anchor"></a>Docker is your friend</h2>
+<p>Wenn man nun sein Projekt mittels verschiedener JDK´s übersetzen möchte, so bedingt dieses dass man alle diese JDK´s auf der Platform zur Verfügung und lauffähig im Einsatz hat.
+Meist handelt man sich damit ein wenig manuelle Arbeit ein. Allerdings gibt es aus dem Open Source Bereich sehr hilfreiche Werkzeuge die sich genau mit dieser Problematik auseinandersetzen.</p>
+<p>Das Werkzeug das bei mir zum Einsatz kommt nennt sich Jabba und ist unter der folgenden Addresse auf github zu finden. <a href="https://github.com/shyiko/jabba">https://github.com/shyiko/jabba</a></p>
+<p>Der Einsatz ist recht einfach. Auf der Kommandozeile kann man das Werkzeug einfach installieren
+und später auch verwenden. Die genauen Parameter und Möglichkeiten bitte ich auf der Webseite zu diesem Projekt nachzulesen.</p>
+<h3 id="the-demo-project"><a href="#the-demo-project" id="the-demo-project" class="anchor"></a>The demo project</h3>
+<p>Kommen wir zu dem Beispielprojekt das wir hier in diesem Beispiel verwenden wollen.
+Dieses ist sehr einfach, und besteht lediglich aus eine Button. Wird dieser betätigt, wird ein Label erzeugt in dem die aktuelle Zeitmarke steht und unter dem Button hinzugefügt.</p>
+<p>Als Basis werde ich an dieser Stelle den Meecrowave als Container</p>
+<p>Das Projekt basierend auf Vaadin 8 und befindet sich unter <a href="https://github.com/Nano-Vaadin-Demos/nano-vaadin-meecrowave-V08">https://github.com/Nano-Vaadin-Demos/nano-vaadin-meecrowave-V08</a> oder wer Vaadin 10 als Basis verwenden möchte nimmt <a href="https://github.com/Nano-Vaadin-Demos/nano-vaadin-meecrowave-V10">https://github.com/Nano-Vaadin-Demos/nano-vaadin-meecrowave-V10</a></p>
+<p>Wenn nun das Projekt per <strong>git clone</strong> auf den eigenen Rechner geladen hat, kann dort in dem Verzeichnis mit einem <strong>mvn clean install</strong> das Projekt in dem lokalen Umfeld übersetzen.
+Voraussetzung hierfür ist natürlich ein installiertes Maven und ein JDK 8.</p>
+<p>Wer die Anwendung einmal starten möchte der kann die <strong>main</strong> Methode in der Klasse <code>HelloWorld</code>
+dazu verwenden. Nach weniger als einer Sekunde (auf meinem Laptop 300ms), wenn alle notwendigen Abhängigkeiten lokal vorhanden sind, kann mittels Browser darauf zugegriffen werden.
+Da der Port bei jedem Start neu gewählt wird, muss man den aktuell verwendeten Port aus den Logmeldungen auf der Kommandozeile entnehmen.</p>
+<h3 id="first-docker-based-compile"><a href="#first-docker-based-compile" id="first-docker-based-compile" class="anchor"></a>First Docker based compile</h3>
+<p>Ein lokal lauffähiges Docker einmal vorausgesetzt, kann nun der erste Versuch unternommen werden
+den Übersetzungsprozess in einen Docker Container auszulagern.
+Das hier verwendete Basis Image ist auf Dockerhub unter dem Namen <strong>maven:3.5-jdk-8</strong> zu finden.</p>
+<p>Um nun den Übersetzungsprozess zu starten kann man mit dem nachfolgenden Dockerbefehl
+vorgehen.</p>
+<pre><code class="language-bash">docker run -it --rm --name compileJDK08 \
+        -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+        -w /usr/src/mymaven \
+        maven:3.5-jdk-8 \
+        mvn clean install
+</code></pre>
+<p>Was hier passiert ist relativ einfach. Es wird das Maven Image falls es nicht lokal vorhanden ist, aus der offiziellen Docker-Registry geladen. Hier ist es die Version mit Maven und einem JDK8, was man an dem Tag <strong>3.5-jdk-8</strong> erkennt. Basierend auf dem Image wird ein Container erzeugt und gestartet der den Namen <strong>compileJDK08</strong> bekommt, das lokale Verzeichnis in dem Container
+unter <strong>/usr/src/mymaven</strong> einbindet und dieses als Arbeitsverzeichnis definiert. Genau an dieser
+Stelle wird dann innerhalb des Containers ein <strong>mvn clean install</strong> ausgeführt.</p>
+<p>Das Ergebnis ist dann unter <strong>target</strong> zu finden, so als hätte man dieses Maven Kommando lokal ausgeführt. Es kann also nach dem Durchlauf das Ergebnis und die Logfiles überprüft werden.</p>
+<p>Wenn man nun dieses Kommand ausführt zu wird man alle Aktionen auf der Kommandozeile verfolgen können. Auffällig ist auf jeden Fall, dass natürlich alle Abhängigkeiten mittels Maven aus dem Internet geladen werden. Das kann natürlich einige Zeit dauern. Nun kann man auf die Idee kommen, dass  dieses ja eigentlich nicht notwendig ist und das lokale Maven Repository ebenfalls mit einbinden. Sicherlich ist das möglich, allerdings icht immer sinnvoll. Jedoch kommen wir auf dieses Thema später nocheinmal zu sprechen und werden das lokale Repository nicht mit einbinden.</p>
+<p>Nun können wir den Versuch unternehmen das Projekt mit einem JDK 10 zu übesetzen.
+Hierzu muss man lediglich ein anderes Image angeben. Anstelle des <strong>3.5-jdk-8</strong> nun ein <strong>3.5-jdk-10</strong></p>
+<pre><code class="language-bash">docker run -it --rm --name compileJDK10 \
+        -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+        -w /usr/src/mymaven \
+        maven:3.5-jdk-10 \
+        mvn clean install
+</code></pre>
+<p>Und schon haben wir das Projekt gegen zwei verschiedene JDK - Versionen gebaut, ohne diese auf dem lokalen System vorhalten zu müssen.</p>
+<h3 id="the-requirements"><a href="#the-requirements" id="the-requirements" class="anchor"></a>The Requirements</h3>
+<p>Kommen wir nun zu den Anforderungen. Bisher hatten wir einfach die vorhandenen Docker Images verwendet die offiziell angeboten werden. Hierbei stellt sich aber gleich eine Menge an Fragen.</p>
+<ul>
+<li>Welche Maven Version wurde verwendet?</li>
+<li>Welches JDK wurde verwendet?</li>
+<li>Welche Build Nummer hat das zum Einsatz kommende JDK?</li>
+<li>Sind alle Images gleichförmig aufgebaut?</li>
+<li>Wie kann man den Build-Prozess beschleunigen?</li>
+<li>Wie schnell stehen neue JDK-Build-Nummern zur Verfügung?</li>
+</ul>
+<p>Ich versuche diese Fragen in seiner Gesamtheit ein wenig zu beleuchten.
+Als erstes muss man wissen, das die Images nicht alle exakt gleich aufgebaut worden sind.
+Das bedeutet, dass es schon zu Fehlern gekommen ist, die in den Unterschieden der Images lagen.
+Das kann einem schon mal eine sehr nervige Stunde verursachen. Des weiteren wird wohl immer das OpenJDK verwendet, allerdings ist das nicht zwingend vorgeschrieben, müsste also bei jedem neuen Image geprüft werden. Demnach ist es auch nicht immer möglich die gewünschte JDK-Buildnummer zu erhalten. Der Zeitraum von der Veröffentlichung einer neuen JDK Version, sei es die Hauptversion oder ein bestimmter Build ist ebenfalls eher Glückssache.</p>
+<p>Alles zusammen bedeutet, dass man sich damit auseinandersetzen
+sollte diese Images selber zu bauen. Aus Sicherheitsgründen ist es eh anzuraten nicht einfach blind den öffentlichen Registries zu vertrauen.</p>
+<h3 id="docker-yourself"><a href="#docker-yourself" id="docker-yourself" class="anchor"></a>Docker yourself</h3>
+<p>Wie nun können wir uns einfach diese Images aufbauen?
+Beginnen wir mit der manuellen Methode.
+Als Basis nehmen wir in diesem Beispiel das Dockerimage mit dem Namen <strong>buildpack-deps:buster-curl</strong>
+Natürlich kann man auch ein Debian nehmen und <strong>curl</strong> von Hand installieren.</p>
+<p>Die nachfolgenden Schritte sind nun recht geradlinig.
+Zuerst wird das Maven Paket heruntergeladen, meist in Form einer Datei mit der Endung <strong>tar.gz</strong>
+Sobald die Datei geladen worden ist, wird diese in das Verzeichnis <strong>/usr/share/maven</strong> entpackt.
+Nun fehlt noch der symbolische Link damit <strong>mvn</strong> unter <strong>/usr/bin/mvn</strong> erreichbar ist.
+Nun kann noch ein wenig aufgräumt werden, damit keine unnötigen Dateien in dem Image vorhanden sind.</p>
+<p>Alles zusammen in ein Dockerfile verpackt sieht dann wie folgt aus.</p>
+<pre><code class="language-Dockerfile">FROM buildpack-deps:buster-curl
+MAINTAINER sven.ruppert@gmail.com
+
+ARG MAVEN_VERSION=3.5.3
+ARG USER_HOME_DIR=&quot;/root&quot;
+ARG BASE_URL=http://www-eu.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
+
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  &amp;&amp; curl -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  &amp;&amp; tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
+  &amp;&amp; rm -f /tmp/apache-maven.tar.gz \
+  &amp;&amp; ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG &quot;$USER_HOME_DIR/.m2&quot;
+CMD [&quot;mvn&quot;]
+</code></pre>
+<p>Dieses Image ist dann die Basis für die jeweiligen JDK-Images. Es muss demnach nur noch basierend
+auf dem Image ein JDK installiert werden. Dazu wird das vorhin erwähnte Open Source Werkzeug Jabba<br />
+verwendet. Wenn das JDK installiert ist, werden lediglich alle benötigten Pfade und Umgebungsvariablen gesetzt und fertig sind wir.</p>
+<pre><code class="language-Dockerfile">FROM svenruppert/maven-3.5-no-jdk:maven-3.5.3
+MAINTAINER sven.ruppert@gmail.com
+
+ARG USER_HOME_DIR=&quot;/root&quot;
+
+RUN curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | \
+    JABBA_COMMAND=&quot;install adopt@1.8.172-11 -o /jdk&quot; bash
+
+ENV JAVA_HOME /jdk
+ENV PATH $JAVA_HOME/bin:$PATH
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG &quot;$USER_HOME_DIR/.m2&quot;
+
+RUN java -version
+RUN mvn -version
+
+CMD [&quot;mvn&quot;]
+</code></pre>
+<p>Hiermit haben wir nun die volle Kontrolle welche Maven-Version und welches JDK
+zum Einsatz kommen wird. Ebenfalls hilfreich ist dieses, um auch für später
+noch JDK´s zur Verfügung zu haben die zum Beispiel nicht mehr zum Download angeboten werden.
+Als Beispiel sei hier das Oracle JDK9 genannt, das genau an dem Tag nicht mehr zum Download zur Verfügung stand als das JDK10 final wurde.</p>
+<p>Selbstverständlich kann man sich auch genauso die Basisimages für die Runtimes zusammenstellen.
+Hier wurde schon eine Menge Vorarbeit geleistet und ist unter der URL
+<a href="https://github.com/vaadin-developer/vaadin-dev-environment">https://github.com/vaadin-developer/vaadin-dev-environment</a> auf github zu finden. In dem Verzeich <strong>images</strong> befinden sich die jeweiliegen Dockerfiles. Ebenfalls befinden sich die Images auf dockerhub unter der Organisation <strong>svenruppert</strong></p>
+<p>Damit ändert sich der Aufruf lediglich um die Angabe des Images. Hier wird nun das JDK 10 von Azul
+verwendet.</p>
+<pre><code class="language-bash">docker run -it --rm --name compileJDK10 \
+        -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+        -w /usr/src/mymaven \
+        svenruppert/maven-3.5-jdk-zulu-10 \
+        mvn clean install
+</code></pre>
+<p>Möchte man eine bestimmte JDK-Buildnummer verwenden, so erweitert man die Angabe des Image
+lediglich um die Buildnummer. (Wenn dafür ein Image erstellt worden und es dementsprechend mit einem Tag versehen worden ist. In dem nachfolgenden Fall ist es die Buildnummer <strong>1.10.0-1</strong> des Zulu JDK´s.</p>
+<pre><code class="language-bash">docker run -it --rm --name compileJDK10 \
+        -v &quot;$(pwd)&quot;:/usr/src/mymaven \
+        -w /usr/src/mymaven \
+        svenruppert/maven-3.5-jdk-zulu-10:1.10.0-1 \
+        mvn clean install
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir sind nun in der Lage das Projekt manuell gegen eine Matrix von JDK Versionen und Herstellern zu testen. Bisher haben wir lediglich eine einfachen <strong>mvn clean install</strong> durchgeführt.</p>
+<p>Da wir jedoch auch Webanwendungen damit testen möchten, kommen wir um ein wenig weitere Infrastruktur nicht drum herum. Ebenfalls ist der Build-Prozess noch nicht schnell genug, da Maven
+uns immer wieder mit langen Downloadzeiten verwöhnt.
+Das werden wir in dem nächsten Teil weiter angehen.</p>
+<p>Für die ungeduldigen Leser sei hier schon mal auf die Sourcen verfügbar auf github verwiesen.</p>
+<p><a href="https://github.com/vaadin-developer/vaadin-dev-environment">https://github.com/vaadin-developer/vaadin-dev-environment</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter [<a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>](https://twitter.com/SvenRuppert).</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" disabled>
+    <span class="inner">
+      <span class="icon"><i class="fas fa-chevron-left"></i></span>
+      Previous
+    </span>
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002">
+    Die Auswirkungen des neuen JDK-Release-Zyklus 02
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

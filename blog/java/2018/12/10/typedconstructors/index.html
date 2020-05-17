@@ -1,0 +1,790 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Typed Constructors</title>
+
+
+<meta name="description" content="In Java ist es vorgesehen Abstraktionen mittels Interfaces vorzunehmen. Schon in einer der ersten Vorlesungen zum Thema Java wird dieses einem beigebracht. Jedoch manchmal kann es auch zu etwas unsauberen Quelltext führen.">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2018-12-10-TypedConstructors.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2018/12/10","baseUrl":"http://www.sven-ruppert.de","fileName":"typedconstructors","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors"},"next":{"path":"blog/java/2019/1/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001"},"previous":{"path":"blog/java/2018/9/10","baseUrl":"http://www.sven-ruppert.de","fileName":"new_jdk_release_cycle_part_002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002"},"description":"In Java ist es vorgesehen Abstraktionen mittels Interfaces vorzunehmen. Schon in einer der ersten Vorlesungen zum Thema Java wird dieses einem beigebracht. Jedoch manchmal kann es auch zu etwas unsauberen Quelltext führen.","title":"Typed Constructors"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors" aria-current="page">Typed Constructors</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Typed Constructors</h2>
+        <p class="subtitle is-4">In Java ist es vorgesehen Abstraktionen mittels Interfaces vorzunehmen. Schon in einer der ersten Vorlesungen zum Thema Java wird dieses einem beigebracht. Jedoch manchmal kann es auch zu etwas unsauberen Quelltext führen.</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Typed Constructors</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2018-12-10">Dezember 10, 2018</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h1 id="typed-constructors"><a href="#typed-constructors" id="typed-constructors" class="anchor"></a>Typed Constructors</h1>
+<p>In Java ist es vorgesehen Abstraktionen mittels Interfaces vorzunehmen.
+Schon in einer der ersten Vorlesungen zum Thema Java wird dieses einem beigebracht.
+Jedoch manchmal kann es auch zu etwas unsauberen Quelltext führen.
+In meinen Projekten sehen ich immer mal wieder, das interne Implementierungsklassen
+zwei oder mehr Interfaces eines API implementieren. Das an sich ist nichts schlimmes,
+nur auf der anderen Seite führt es dann zu folgenden Konstrukten.</p>
+<p>Gehen wir im Folgenden davon aus, das wir zwei Interfaces (ServiceA und ServiceB) haben. (siehe nachfolgendes Listing)</p>
+<pre><code class="language-java">public interface Service_A {
+  String doWork_A();
+}
+
+public interface Service_B {
+  String doWork_B();
+}
+</code></pre>
+<p>In der Implementierung des Frameworks gibt es nun eine Klasse <code>ServiceInternImpl</code> die diese beiden Interfaces implementiert.</p>
+<pre><code class="language-java">public class ServiceImplInternal implements Service_A, Service_B {
+  @Override
+  public String doWork_A() {
+    return &quot;A&quot;;
+  }
+
+  @Override
+  public String doWork_B() {
+    return &quot;B&quot;;
+  }
+}
+</code></pre>
+<p>Innerhalb des Frameworks ist das weiterhin nicht von Bedeutung. An gegebener Stelle wird intern nun diese Implementierung verwendet. Nur ausserhalb möchte man nicht auf diese Implementierung explizit casten, da nicht sichergestellt ist, dass diese Implementierung auf Dauer so bestehen bleibt.</p>
+<p>Es gibt also kein Interface das von beiden Interfaces erbt und damit diese zusammenführt. Nun soll es eine Methode geben, die einen Datenholder erzeugt, basierend auf Methodenrückgabewerten von Methoden beider Interfaces.</p>
+<pre><code class="language-java">public static class DataHolder_A {
+    private String a; //doWork_A()
+    private String b; //doWork_B()
+    
+    public DataHolder_A(final String a, final String b) {
+      this.a = a;
+      this.b = b;
+    }
+  }
+</code></pre>
+<p>Das führt dann zu Transformationen wie z.B.</p>
+<pre><code class="language-java">final List&lt;Service_A&gt; service_A_list = getServices(); //auf ein Interface reduziert
+
+final List&lt;DataHolder_A&gt; list = service_A_list.stream()
+        .map(a -&gt; {
+          final Service_B b = (Service_B) a;
+          return new DataHolder_A(a.doWork_A(), b.doWork_B());
+        })
+        .collect(Collectors.toList());
+</code></pre>
+<p>Das ist nicht sonderlich elegant, was also kann man nun machen ?
+Der erste Schritt ist, das man z.B. die Liste die man von dem Framework bekommt transformiert.
+Das kann dann als eine <code>map()</code> - Stufe bei der Streamverarbeitung realisiert werden.</p>
+<pre><code class="language-java">    final List&lt;DataHolder_A&gt; collect = service_A_list
+        .stream()
+        .map(e -&gt; (Service_A &amp; Service_B) e)
+        .map(e -&gt; new DataHolder_A(e.doWork_A(), e.doWork_B()))
+        .collect(Collectors.toList());
+
+</code></pre>
+<p>Hier kann man ausnutzen, dass man in einem Schritt auf eine beliebige Anzahl Interfaces casten kann. <code>e -&gt; (Service_A &amp; Service_B) e</code>
+Aber warum einen Cast durchführen? Sehen wir uns mal den <code>DataHolder_A</code> an. Hier ist das Ziel, die Ergebnisse beide Methoden zu halten. Von Methoden ist bekannt, das man den Typ T in der Methode selbst deklarieren kann. Wenden wir dieses auf unsere Transformation von eben an, so bekommen wir eine Methode mit der folgenden Signatur.</p>
+<pre><code class="language-java">  private &lt;T extends Service_A &amp; Service_B&gt; List&lt;T&gt; transform(List&lt;Service_A&gt; services) {
+    return services.stream()
+        .map(e -&gt; (Service_A &amp; Service_B) e)
+        .map(value -&gt; (T) value)
+        .collect(Collectors.toList());
+}
+</code></pre>
+<p>Wichtig an der Stelle ist <code>&lt;T extends Service_A &amp; Service_B&gt; List&lt;T&gt;</code>.</p>
+<p>Nun ist es nur noch ein kleiner Schritt. Wenn man nun in diesem Fall einen Konstruktor wie eine Methode versteht, kann man auch hier ein T definieren. Der Vorteil ist, das es nicht auf Klassenebene passieren muss.</p>
+<p>Ändern wir nun unseren DataHolder wie folgt.</p>
+<pre><code class="language-java">public class DataHolder_B {
+
+    private String a;
+    private String b;
+
+    public &lt;T extends Service_A &amp; Service_B&gt; DataHolder_B(T input) {
+      this.a = input.doWork_A();
+      this.b = input.doWork_B();
+    }
+  }
+</code></pre>
+<p>Nun kann man die Transformation recht einfach formulieren.</p>
+<pre><code class="language-java">    final List&lt;Service_A&gt; service_A_list = getServices(); //auf ein Interface reduziert   
+    final List&lt;DataHolder_B&gt; collect = service_A_list
+        .stream()
+        .map(e -&gt; (Service_A &amp; Service_B) e)
+        .map(DataHolder_B::new)
+        .collect(Collectors.toList());
+        
+</code></pre>
+<p>Wenn man das nun ein wenig formaler formuliert bekommen wir das nachfolgende Beispiel. Hiermit ist auch sichergestellt, das wir nie eine ungültige Kombination verwenden, bzw Implementierungsklassen ausserhalb des Frameworks sichtbar werden.
+Sollte sich die Implementierung innerhalb des Framework in der Zusammensetzung der Interfaces verändern, wird dieses direkt beim kompilieren sichtbar.</p>
+<pre><code class="language-java">public class Main {
+  interface Service_A { String doWork_A(); }
+  interface Service_B { String doWork_B(); }
+  interface Service_C { String doWork_C(); }
+  interface Service_D { String doWork_D(); }
+  
+  public static class Impl_A implements Service_A , Service_B{
+    public String doWork_A() { return &quot;A&quot;; }
+    public String doWork_B() { return &quot;B&quot;; }
+  }
+  public static class Impl_B implements Service_C , Service_D{
+    public String doWork_C() { return &quot;C&quot;;}
+    public String doWork_D() { return &quot;D&quot;;}
+  }
+
+  public static class DataHolder{
+    String a;
+    String b;
+
+    public DataHolder(final String a, final String b) {
+      this.a = a;
+      this.b = b;
+    }
+
+    public &lt;T extends Service_A &amp; Service_B&gt; DataHolder(T value) {
+      this.a = value.doWork_A();
+      this.b = value.doWork_B();
+    }
+    public &lt;T extends Service_C &amp; Service_D&gt; DataHolder(T value) {
+      this.a = value.doWork_C();
+      this.b = value.doWork_D();
+    }
+  }
+
+  public static void main(String[] args) {
+    new DataHolder(&quot;A&quot;,&quot;B&quot;);
+    new DataHolder(new Impl_A());
+    new DataHolder(new Impl_B());
+  } 
+}
+</code></pre>
+<p>Aber manchmal trifft man auch Fälle an, in denen es zu einem Interface mehrere Implementierungen gibt. Dann kommt man manchmal in folgende Situation.</p>
+<pre><code class="language-java">  public interface Service_A {
+    String doWork_A();
+  }
+
+  public static class Service_A_Impl_A implements Service_A {
+    @Override
+    public String doWork_A() {
+      return null;
+    }
+  }
+
+  public static class Service_A_Impl_B implements Service_A {
+    @Override
+    public String doWork_A() {
+      return null;
+    }
+  }
+
+
+  public interface Service_B {
+    String doWork_B();
+  }
+
+  public static class Service_B_Impl_A implements Service_B {
+    @Override
+    public String doWork_B() {
+      return null;
+    }
+  }
+
+  public static class Service_B_Impl_B implements Service_B {
+    @Override
+    public String doWork_B() {
+      return null;
+    }
+  }
+</code></pre>
+<p>Nun ist es leider so, dass die Kombinationen der Ergebnisse nur fachlich dann richtig sind wenn
+jeweils die A Implementierung oder B Implementierung von beiden genommen worden ist.
+(ja soetwas gibt es wirklich ;-) )
+D.h. es gibt gültige und ungültige Kombinationen der Implementierungen.</p>
+<pre><code class="language-java">  //the only valid combinations
+  // Service_A_Impl_A &amp;&amp; Service_B_Impl_A
+  // Service_A_Impl_B &amp;&amp; Service_B_Impl_B
+
+  // not allowed
+  // Service_A_Impl_A &amp;&amp; Service_B_Impl_B
+  // Service_A_Impl_B &amp;&amp; Service_B_Impl_A
+</code></pre>
+<p>Das wiederum führte zu Konstruktionen wir nachfolgend aufgelistet.</p>
+<pre><code class="language-java">  //not nice
+  public static class DataHolder_AB {
+    private String a;
+    private String b;
+
+    //not secure
+    public DataHolder_AB(final Service_A service_a, final Service_B service_b) {
+      a = service_a.doWork_A();
+      b = service_b.doWork_B();
+    }
+
+    //not secure
+    public DataHolder_AB(String a, String b) {
+      this.a = a;
+      this.b = b;
+    }
+
+    //not nice
+    public DataHolder_AB(final Service_A_Impl_A service_a, final Service_B_Impl_A service_b) {
+      a = service_a.doWork_A();
+      b = service_b.doWork_B();
+    }
+
+    //not nice
+    public DataHolder_AB(final Service_A_Impl_B service_a, final Service_B_Impl_B service_b) {
+      a = service_a.doWork_A();
+      b = service_b.doWork_B();
+    }
+  }
+</code></pre>
+<p>Wenn man nun damit konfrontiert ist und es nicht erlaubt ist die Klasse DataHolder selbst
+zu typisieren. Also kein DataHolder&lt;...&gt; erlaubt ist. Dann kann man evtl auch hier mit Typed Constructors
+helfen.</p>
+<pre><code class="language-java">  //no generics on class level
+  public static class DataHolder {
+
+    //not secure
+    //public &lt;A extends Service_A, B extends Service_B&gt; DataHolder(A serviceA, B serviceB) {}
+
+    //ok
+    public &lt;A extends Service_A_Impl_A, B extends Service_B_Impl_A&gt; DataHolder(A serviceA, B serviceB) {}
+    public &lt;A extends Service_A_Impl_B, B extends Service_B_Impl_B&gt; DataHolder(A serviceA, B serviceB) {}
+
+  }
+</code></pre>
+<p>In der Verwendung sind dann nur Kombinationen erlaubt die hier explizit als Konstruktor vorgegeben sind.
+Die Schreibweise hier ist wesentlich kürzer und übersichtlicher
+wenn man es mit mehreren Kombinationen zu tun hat.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wenn man mit alten und stark gewachsenen Software-Systemen zu &quot;kämpfen&quot; hat kommen einem die merkwürdigsten Dinge entgegen. Leider kann man nicht immer die gesamte Architektur verbessern, auch wenn man es als sehr sinnvoll und als gute Investition aus technischer Sicht so sehen möge.</p>
+<p>In solchen Fällen kann man aber mit kleinen Verbesserungen manchmal doch dafür sorgen das einiges in die statische Semantik kommt und einem der Compiler hilft (fachliche) Fehler zu finden.</p>
+<p>Die Sourcen sind unter <a href="https://github.com/Java-Publications/jaxenter.de-0028-CoreJava-TypedConstructor">https://github.com/Java-Publications/jaxenter.de-0028-CoreJava-TypedConstructor</a> zu finden.</p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter [<a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>](https://twitter.com/SvenRuppert).</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Die Auswirkungen des neuen JDK-Release-Zyklus 02
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001">
+    Functional Reactive mit Core Java 01
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

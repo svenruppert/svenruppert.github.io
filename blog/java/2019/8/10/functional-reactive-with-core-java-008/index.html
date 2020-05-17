@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 08</title>
+
+
+<meta name="description" content="In den letzten Teilen hatten wir den Schwerpunkt auf den funktionalen Ansätzen. Nun beginnen wir die reaktiven Ansätze zu beleuchten um diese dann mit den funktionalen Ansätzen zu kombinieren. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-08-10-functional-reactive-with-core-java-008.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/8/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-008","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008"},"next":{"path":"blog/java/2019/9/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-009","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009"},"previous":{"path":"blog/java/2019/7/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-007","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007"},"description":"In den letzten Teilen hatten wir den Schwerpunkt auf den funktionalen Ansätzen. Nun beginnen wir die reaktiven Ansätze zu beleuchten um diese dann mit den funktionalen Ansätzen zu kombinieren. ","title":"Functional Reactive mit Core Java 08"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008" aria-current="page">Functional Reactive mit Core Java 08</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 08</h2>
+        <p class="subtitle is-4">In den letzten Teilen hatten wir den Schwerpunkt auf den funktionalen Ansätzen. Nun beginnen wir die reaktiven Ansätze zu beleuchten um diese dann mit den funktionalen Ansätzen zu kombinieren. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 08</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-08-10">August 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In den letzten Teilen hatten wir den Schwerpunkt auf den funktionalen Ansätzen.
+Nun beginnen wir die reaktiven Ansätze zu beleuchten um diese dann mit den funktionalen Ansätzen
+zu kombinieren.</p>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="reactive-mit-core-java"><a href="#reactive-mit-core-java" id="reactive-mit-core-java" class="anchor"></a>Reactive mit Core Java</h2>
+<p>Kommen wir nun zu dem reaktiven Teil. Vereinfacht kann man sagen, dass es sich hierbei um alle möglichen Formen des Observerpattern handelt. (Genau an dieser Stelle werden viele Leser aufschreien, die sich schon damit beschäftigt
+haben) Jedoch sehen wir uns das erst einmal ganz einfach an.</p>
+<p>Das Grundprinzip hierbei ist, das der Aufrufer nicht solange wartet bis das Ergebnis berechnet worden ist.
+Es wird die Aufgabe formuliert und der nächsten Stufe übergeben. Wenn dies dann fertig ist, wird diese sich schon zurückmelden.</p>
+<p>Im ersten Schritt bedeutet das nun, dass ich nicht selber den Aufruf starte, sondern gestartet werde.
+Und da sind wir schon bei dem Observer-Pattern. Die verarbeitende Einheit meldet sich bei dem Produzenten von Informationseinheiten an. Ist eine Informationseinheit fertig für die Verarbeitung, werden die Listener (Die Menge kann auch null Elemente enthalten), oder ein Listener explizit mit diesem Wert aufgerufen. Dieser wiederum verarbeitet auf die selbe Art und Weise sein Ergebnis und liefert es dann auch aus. Und schon haben wir eine beliebig lange Kette an Operatoren die
+aufeinander aufbauend ein Ergebnis berechnen.</p>
+<h2 id="simple-observer-pattern"><a href="#simple-observer-pattern" id="simple-observer-pattern" class="anchor"></a>Simple Observer-Pattern</h2>
+<p>Implementieren wir als erstes eine sehr einfache Version des Observer-Patterns. Hier ist es nichts anderes als ein Wrapper um eine <code>Map&lt;KEY, Consumer&lt;VALUE&gt;&gt;</code>. Die Map selbst wird mittels <code>ConcurrentHashMap</code> realisiert, damit wir zumindest an der Stelle keine Nebenläufigkeitsprobleme bekommen. Können wir doch nicht vorhersehen, wieviele unterschiedliche Threads zu welchem Zeitpunkt Ereignisse erzeugen werden. Ob das reichen wird? Wir kommen später noch dazu. Unter einem Schlüssel kann sich ein Verbraucher registrieren und auch selbst wieder entfernen sobald er keine weiteren Events mehr empfangen möchte.</p>
+<p>Wird ein Event erzeugt und dem Observer übergeben, wird dieses Event an alle registrierten Verbraucher übergeben.
+Was der Verbraucher damit macht, ist ihm selbst überlassen. Hier zeigt sich aber auch das erste Problem.
+Ein Event, also die Daten oder besser gesagt die Datenstruktur wird jedem Verbraucher übergeben. Das bedeutet, die selbe Instanz wird jedem Verbraucher übergeben. Hier wird still und schweigend angenommen, dass der jeweilige Verbraucher
+den Inhalt von dem Ereignis nicht verändert. Eine sehr gewagte Anforderung.</p>
+<p>Kommen wir nun zu der Implementierung selbst. Diese ist im Moment nioch sehr einfach, und bedarf wohl keiner weiteren Erklärung.</p>
+<pre><code class="language-java">  public class Observable&lt;KEY, VALUE&gt; {
+
+    private final Map&lt;KEY, Consumer&lt;VALUE&gt;&gt; listeners = new ConcurrentHashMap&lt;&gt;();
+
+    public void register(KEY key , Consumer&lt;VALUE&gt; listener) {
+      listeners.put(key , listener);
+    }
+
+    public void unregister(KEY key) { listeners.remove(key);}
+
+    public void sendEvent(VALUE event) {
+      listeners.values().forEach(c -&gt; c.accept(event));
+    }
+  }
+</code></pre>
+<p>***Listing: V001 ***</p>
+<p>Nachfolgend eine beispielhafte Verwendung von unserem Verbraucher.</p>
+<pre><code class="language-java">  public static void main(String[] args) {
+
+    final Observable&lt;String, String&gt; observable = new Observable&lt;&gt;();
+
+    observable.register(&quot;key1&quot;, System.out::println);
+    observable.register(&quot;key2&quot;, System.out::println);
+
+    observable.sendEvent(&quot;Hello World&quot;);
+
+    observable.unregister(&quot;key1&quot;);
+    observable.sendEvent(&quot;Hello World again&quot;);
+  }
+</code></pre>
+<p>***Listing: V001 ***</p>
+<p>Die dazugehörige Ausgabe ist:</p>
+<pre><code>Hello World
+Hello World
+Hello World again
+</code></pre>
+<h2 id="memory-leaks-with-listeners"><a href="#memory-leaks-with-listeners" id="memory-leaks-with-listeners" class="anchor"></a>Memory Leaks with Listeners</h2>
+<p>Selbst diese einfache Implementierung führt allerdings immer mal wieder dazu, dass
+Memory Leaks produziert werden. Ok, Memory Leaks und Java? Doch das geht!</p>
+<p>Kommen wir hier zu einem recht typischen Anwendungsfall.
+Oftmals werden solche Observer genommen um eine Art Eventservice aufzubauen.
+Dazu wird der Observer statisch zur Verfügung gestellt. Nun können von allen möglichen Stellen in dem Programm
+Listener registriert werden.</p>
+<pre><code class="language-java">  public class Registry {
+    private static final Observable&lt;String, String&gt; observable = new Observable&lt;&gt;();
+
+    public static void register(String key, Consumer&lt;String&gt; consumer){
+      observable.register(key, consumer);
+    }
+
+    public static void unregister(String key){
+      observable.unregister(key);
+    }
+
+    public static void sendEvent(String input){
+      observable.sendEvent(input);
+    }
+  }
+</code></pre>
+<p>In der Verwendung hat sich nicht viel geändert.</p>
+<pre><code class="language-java">  public static void main(String[] args) {
+    Registry.register(&quot;key1&quot; , System.out::println);
+    Registry.register(&quot;key2&quot; , System.out::println);
+
+    Registry.sendEvent(&quot;Hello World&quot;);
+
+    Registry.unregister(&quot;key1&quot;);
+    Registry.sendEvent(&quot;Hello World again&quot;);
+  }
+</code></pre>
+<p>Was nun leider immer wieder passiert, ist der Fall dass in einem Programm Verbraucher registriert werden die leider nie wieder
+entfernt werden. Das kann zum einen dazu führen das der Observer selbst einfach &quot;überlaufen&quot; wird, zum anderen aber kann es
+auch verhindern das bestimmte Teile der Anwendung von dem GC erfasst werden können.</p>
+<p>Nehmen wir als Beispiel eine Webanwendung die in dem Consumer eine grafische Einheit wie zum Beispiel eine Instanz von einem Label, verwendet. Wird nun die Session geschlossen,
+so hängt diese Einheit leider immer noch in dem Consumer und damit in dem Observer. Solange dieser nicht aufräumt, bzw
+selber dem GC zum Opfer fallen kann oder darf, kann es sein das alle indirekt enthaltenen Daten über das Label gehalten werden.
+Was nun fehlt, ist ein komfortabler Weg für den Entwickler dieses automatisch erledigen zu lassen.</p>
+<h3 id="lösung-mit-callback"><a href="#lösung-mit-callback" id="lösung-mit-callback" class="anchor"></a>Lösung mit CallBack</h3>
+<p>Ein Lösungsansatz besteht darin, das die Elemente die mit dem Observer interagieren, über einen Lebenszyklus verfügen.
+Damit meine ich nicht die Methode <strong>finalize</strong>. Diese sollte so lange wie möglich nicht verwendet werden.</p>
+<p>Als Beispiel hier wieder die Webanwendung. Wenn die Komponenten über etwas derartiges verfügen wie ein <strong>attach()</strong> und <strong>detach()</strong>
+so kann man dieses verwenden um sich wieder von dem Observer zu lösen.</p>
+<p>Hierfür definieren wir ein Interface <code>Registration</code> der als Rückgabewert der registrierenden Methode verwendet wird. Hier wird das Lösen der Verbindung schon hinterlegt.</p>
+<pre><code class="language-java">  public static interface Registration {
+    public void remove();
+  }
+
+  public class Observable&lt;KEY, VALUE&gt; {
+
+    private final Map&lt;KEY, Consumer&lt;VALUE&gt;&gt; listeners = new ConcurrentHashMap&lt;&gt;();
+
+    public Registration register(KEY key , Consumer&lt;VALUE&gt; listener) {
+      listeners.put(key , listener);
+
+      return () -&gt; listeners.remove(key);
+    }
+
+    public void sendEvent(VALUE event) {
+      listeners.values().forEach(c -&gt; c.accept(event));
+    }
+  }
+</code></pre>
+<p>Wie auch schon bei dem Observer gibt es nun keine Methode mehr um einen Eintrag explizit zu entfernen.</p>
+<pre><code class="language-java">  public class Registry {
+
+    private static final Observable&lt;String, String&gt; observable = new Observable&lt;&gt;();
+
+    public static Registration register(String key , Consumer&lt;String&gt; consumer) {
+      return observable.register(key , consumer);
+    }
+
+    public static void sendEvent(String input) {
+      observable.sendEvent(input);
+    }
+  }
+</code></pre>
+<p>Die Verwendung ändert sich derart, das nun auf der Registration selbst der Vorgang zum Entfernen der Verbindung gestartet wird.
+Diese Methode sollte dann direkt oder indirekt von dem Teil der Anwendung aufgerufen werden,
+der sich um den Lebenszyklus dieser Elemente kümmert.</p>
+<pre><code class="language-java">  public static void main(String[] args) {
+    final Registration registerA = Registry.register(&quot;key1&quot; , System.out::println);
+    final Registration registerB = Registry.register(&quot;key2&quot; , System.out::println);
+    Registry.sendEvent(&quot;Hello World&quot;);
+
+    //done by life cycle
+    registerA.remove();
+
+    Registry.sendEvent(&quot;Hello World again&quot;);
+  }
+</code></pre>
+<h2 id="mehr-als-ein-observer"><a href="#mehr-als-ein-observer" id="mehr-als-ein-observer" class="anchor"></a>Mehr als ein Observer</h2>
+<p>Kommen wir nun zurück zu dem Observer und versuchen nun mehrere miteinander zu koppeln.
+Wenn nur ein Observer verwendet wird, ist alles recht einfach. Wie jedoch sieht es aus wenn nun
+mehrere Schritte aufeinander aufbauen? Hier werden nun die Ein- und Ausgänge der Observer miteinander verbunden.</p>
+<p>Als Beispiel kommt die folgende Klasse mit zwei Methoden zum Einsatz. Der</p>
+<pre><code class="language-java">  public static class Worker {
+
+    public String doWork(String input) {
+      return input.toUpperCase();
+    }
+
+    public String[] split(String input) {
+      return input.split(&quot; &quot;);
+    }
+  }
+</code></pre>
+<p>Wenn nun diese Arbeitsschritte hintereinander ausgeführt werden sollen, so könnte man das wie folgt schreiben.</p>
+<pre><code class="language-java">    final Worker worker = new Worker();
+    final String[] split = worker.split(worker.doWork(&quot;Hello World&quot;));
+    System.out.println(&quot;result = &quot; + Arrays.asList(split));
+</code></pre>
+<p>Möchte man dieses nun mittels Oberserver miteinander koppeln so muss in der derzeitigen Lösung ein
+Oserver für jede Zwischenstufe definiert werden. Hier sind es drei Stück.
+Der Ablauf ist recht einfach in diesem Beispiel.</p>
+<ul>
+<li>rufe die Methode <code>worker.doWork(s)</code> auf</li>
+<li>rufe mit dem Ergebnis aus dem ersten Aufruf die Methode <code>worker.split(..)</code> auf.</li>
+<li>das finale Ergebnis soll nun zur Verfügung stehen</li>
+</ul>
+<p>Um nun die erste Methode aufzurufen kann man sich den folgenden Aufruf vorstellen.
+<code>observableA.sendEvent(&quot;Hello World &quot;);</code> Damit die Daten verarbeitet werden, muss zuvor
+der Arbeitsschritt registriert worden sein. Und nun kommen wir zu dem ersten Punkt der
+ein wenig Beachtung bedarf. Wenn ein Observer ein Ergebnis verarbeitet, erhalten wir kein Ergebnis zurück.
+Um das nun abzubilden, arbeiten wir indirekt auf dem Ergebnis.
+<code>observableB.sendEvent(worker.doWork(s))</code>.</p>
+<p>Beides zusammen ergibt nun den ersten Observer.</p>
+<pre><code class="language-java">    final Observable&lt;String, String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String, String&gt; observableB = new Observable&lt;&gt;();
+    observableA.register(&quot;A&quot; , s -&gt; observableB.sendEvent(worker.doWork(s)));
+</code></pre>
+<p>Nun passiert innerhalb des zweiten Observers noch nichts sinnvolles. Auch hier muss noch ein Verarbeitungsschritt registriert werden. <code>observableB.register(&quot;B&quot; , s -&gt; observableC.sendEvent(worker.split(s)));</code>
+Hier wird ebenfalls indirekt auf dem Ergebnis gearbeitet. Und so kommen wir zu unserem dritten und vorerst letzten Observer. <code>observableC.register(&quot;C&quot; , strings -&gt; results.addAll(Arrays.asList(strings)));</code></p>
+<p>Hier kommen wir nun zu dem Punkt an dem wir das Ergebnis in irgendeiner Form aus dieser Kette herausholen wollen/müssen. In diesem Fall arbeiten wir auf einer Datenstruktur die ausserhalb definiert worden ist. <code>List&lt;String&gt;</code></p>
+<p>Alles zusammen sieht nun wie folgt aus.</p>
+<pre><code class="language-java">    final List&lt;String&gt; results = new ArrayList&lt;&gt;();
+    
+    final Observable&lt;String, String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String, String&gt; observableB = new Observable&lt;&gt;();
+    final Observable&lt;String, String[]&gt; observableC = new Observable&lt;&gt;();
+
+    observableA.register(&quot;A&quot; , s -&gt; observableB.sendEvent(worker.doWork(s)));
+    observableB.register(&quot;B&quot; , s -&gt; observableC.sendEvent(worker.split(s)));
+    observableC.register(&quot;C&quot; , strings -&gt; results.addAll(Arrays.asList(strings)));
+
+    observableA.sendEvent(&quot;Hello World &quot;);
+
+    System.out.println(&quot;results = &quot; + results);
+</code></pre>
+<p>Soweit haben wir nun das selbe Ergebnis wie zuvor. Einen wirklichen Vorteil haben wir uns hier noch nicht erarbeitet.
+Es ist eher schwieriger geworden, da wir die Verarbeitungskette eher von hinten nach vorne definiert haben.</p>
+<h2 id="unabhängige-schritte"><a href="#unabhängige-schritte" id="unabhängige-schritte" class="anchor"></a>Unabhängige Schritte</h2>
+<p>Bisher wird die Kette von einer Instanz der Klasse Worker verarbeitet. Wenn nun mehr als ein Thread Events sendet, kann es hier leicht zu Nebenläufigkeitsproblemene kommen. Der erste Schritt in die Richtung das uns solches erspart bleibt, ist die Verwendung von mehr als einer Instanz der Klasse Worker.</p>
+<pre><code class="language-java">    final List&lt;String&gt; results = new ArrayList&lt;&gt;();
+
+    final Observable&lt;String, String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String, String&gt; observableB = new Observable&lt;&gt;();
+    final Observable&lt;String, String[]&gt; observableC = new Observable&lt;&gt;();
+
+    observableA.register(&quot;A&quot; , s -&gt; observableB.sendEvent(new Worker().doWork(s)));
+    observableB.register(&quot;B&quot; , s -&gt; observableC.sendEvent(new Worker().split(s)));
+    observableC.register(&quot;C&quot; , strings -&gt; results.addAll(Arrays.asList(strings)));
+
+    observableA.sendEvent(&quot;Hello World &quot;);
+</code></pre>
+<h2 id="entferne-die-zustände"><a href="#entferne-die-zustände" id="entferne-die-zustände" class="anchor"></a>entferne die Zustände</h2>
+<p>Der nächste Schritt entfernt erst einmal vollständig die Instanz der Klasse Worker incl. der Implementierung und ersetzt
+jeden Schritt durch die Methoden - Implementierung selbst. Hiermit haben wir evtl vorhandene Zustände weiter reduziert.</p>
+<pre><code class="language-java">    final List&lt;String&gt; results = new ArrayList&lt;&gt;();
+
+    final Observable&lt;String, String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String, String&gt; observableB = new Observable&lt;&gt;();
+    final Observable&lt;String, String[]&gt; observableC = new Observable&lt;&gt;();
+
+    observableA.register(&quot;A&quot; , s -&gt; observableB.sendEvent(s.toUpperCase()));
+    observableB.register(&quot;B&quot; , s -&gt; observableC.sendEvent(s.split(&quot; &quot;)));
+    observableC.register(&quot;C&quot; , strings -&gt; results.addAll(Arrays.asList(strings)));
+
+    observableA.sendEvent(&quot;Hello World &quot;);
+
+    System.out.println(&quot;results = &quot; + results);
+</code></pre>
+<p>Hier kann man schon erkennen das die Verwendung von Funktionen sich geradezu aufdrängt.</p>
+<h2 id="von-list-zu-tree"><a href="#von-list-zu-tree" id="von-list-zu-tree" class="anchor"></a>von List zu Tree</h2>
+<p>Vorteile ergeben sich erst , wenn man nun anstelle einer linearen Liste von Verarbeitungen
+multiple Wege beschreiten möchte. Wir bauen nun einen Baum auf. Gehen wir davon aus, das wir nicht nur alles in Großbuchstaben haben möchten, sondern auch eine Variante die nur aus Kleinbuchstaben besteht.
+Um das zu erreichen kann man nun einen weiteren Observer einhängen.</p>
+<pre><code class="language-java">    final List&lt;String&gt; results = new ArrayList&lt;&gt;();
+
+    final Observable&lt;String, String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String, String&gt; observableB = new Observable&lt;&gt;();
+    final Observable&lt;String, String[]&gt; observableC = new Observable&lt;&gt;();
+
+    observableA.register(&quot;A1&quot; , s -&gt; observableB.sendEvent(s.toUpperCase()));
+    observableA.register(&quot;A2&quot; , s -&gt; observableB.sendEvent(s.toLowerCase()));
+    observableB.register(&quot;B&quot; , s -&gt; observableC.sendEvent(s.split(&quot; &quot;)));
+    observableC.register(&quot;C&quot; , strings -&gt; results.addAll(Arrays.asList(strings)));
+
+    observableA.sendEvent(&quot;Hello World &quot;);
+
+    System.out.println(&quot;results = &quot; + results);
+</code></pre>
+<p>Das kann man nun an allen möglichen Stellen erweitern. Zum Beispiel kann man auch die terminale Operation, die das Ergebnis auf der Kommandozeile ausgibt auch mittels Observer abbilden.</p>
+<pre><code class="language-java">    final List&lt;String&gt; results = new ArrayList&lt;&gt;();
+
+    final Observable&lt;String, String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String, String&gt; observableB = new Observable&lt;&gt;();
+    final Observable&lt;String, String[]&gt; observableC = new Observable&lt;&gt;();
+
+    observableA.register(&quot;A1&quot; , s -&gt; observableB.sendEvent(s.toUpperCase()));
+    observableA.register(&quot;A2&quot; , s -&gt; observableB.sendEvent(s.toLowerCase()));
+    observableB.register(&quot;B&quot; , s -&gt; observableC.sendEvent(s.split(&quot; &quot;)));
+    observableC.register(&quot;C1&quot; , strings -&gt; results.addAll(Arrays.asList(strings)));
+    observableC.register(&quot;C2&quot; , strings -&gt; System.out.println(&quot;From C2 &quot; + Arrays.asList(strings)));
+
+    observableA.sendEvent(&quot;Hello World &quot;);
+
+    System.out.println(&quot;results = &quot; + results);
+</code></pre>
+<h2 id="concurrenthashset"><a href="#concurrenthashset" id="concurrenthashset" class="anchor"></a>ConcurrentHashSet</h2>
+<p>In diesem Schritt werden wir die Map in dem Observer durch ein Set ersetzen. Zu Beachten ist hier die
+Art und Weise ein <code>ConcurrentHashSet</code> zu erzeugen.
+Diese Version ist meiner Meinung nach der synchronisierten Version vorzuziehen.</p>
+<pre><code class="language-java">  public static class Observable&lt;VALUE&gt; {
+
+    private final Set&lt;Consumer&lt;VALUE&gt;&gt; listeners = ConcurrentHashMap.newKeySet();
+
+    public Registration register(Consumer&lt;VALUE&gt; listener) {
+      listeners.add(listener);
+
+      return () -&gt; listeners.remove(listener);
+    }
+
+    public void sendEvent(VALUE event) {
+      listeners.forEach(c -&gt; c.accept(event));
+    }
+</code></pre>
+<p>Dadurch vereinfachen sich auch die Implementierungen in der Verwendung.</p>
+<pre><code class="language-java">    final List&lt;String&gt; results = new ArrayList&lt;&gt;();
+
+    final Observable&lt;String&gt; observableA = new Observable&lt;&gt;();
+    final Observable&lt;String&gt; observableB = new Observable&lt;&gt;();
+    final Observable&lt;String[]&gt; observableC = new Observable&lt;&gt;();
+
+    observableA.register(s -&gt; observableB.sendEvent(s.toUpperCase()));
+    observableA.register(s -&gt; observableB.sendEvent(s.toLowerCase()));
+    observableB.register(s -&gt; observableC.sendEvent(s.split(&quot; &quot;)));
+    observableC.register(strings -&gt; results.addAll(Arrays.asList(strings)));
+    observableC.register(strings -&gt; System.out.println(&quot;From C2 &quot; + Arrays.asList(strings)));
+
+    observableA.sendEvent(&quot;Hello World &quot;);
+
+    System.out.println(&quot;results = &quot; + results);
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>An diesem Schritt angekommen ergeben sich einige Fragen.</p>
+<ul>
+<li>Wie kann man ganze Teilbäume de-registrieren ohne alles manuell zu realisieren?</li>
+<li>Welcher Weg wird angeboten um an ein Ergebnis einer Verarbeitungsstufe zu gelangen?</li>
+<li>Wie kann hier skaliert werden?</li>
+<li>Ist asynchrone Abarbeitung möglich?</li>
+<li>uvm.</li>
+</ul>
+<p>Schnell erkennt man, dass es recht viel Aufwand bedeuten kann wenn man mehr als nur einen
+&quot;einfachen&quot; Observer benötigt. Deutlich wird auch, das auch bei kleinen Aufgaben der Weg wie Aufgabenketten formuliert werden, doch sehr unübersichtlich werden können. Ungünstig ist hier zum Beispiel, dass der Prozess eher von hinten nach vorne definiert werden muss.</p>
+<p>Aber dennoch kann man mit den reaktiven Ansätzen sehr performante und skalierbare Anwendungen produzieren.
+Und schon in diesem Beispiel zeigt sich, das funktionale Aspekte hier sehr gut zu gebrauchen sind.
+Denn auch hier gilt, Zustände sind mit Vorsicht zu genießen und sollten vermieden werden.</p>
+<p>Wir werden uns nun in den nächsten Teilen ausführlich mit dieser Thematik beschäftigen und zusätzlich die Brücke zu den funktionalen Aspekten herstellen.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-008.git">https://github.com/Java-Publications/functional-reactive-with-core-java-008.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 07
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009">
+    Functional Reactive mit Core Java 09
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 07</title>
+
+
+<meta name="description" content="Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Frage wie: Wo ist das Menü und wie gehe ich mit Benachrichtigungen um werden ab jetzt im Fokus stehen. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-07-20-V10_Backend_Meets_Frontend_Reloaded_Part_007.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/7/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_007","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007"},"next":{"path":"blog/vaadin/2019/8/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_008","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008"},"previous":{"path":"blog/vaadin/2019/6/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_006","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006"},"description":"Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Frage wie: Wo ist das Menü und wie gehe ich mit Benachrichtigungen um werden ab jetzt im Fokus stehen. ","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 07"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 07</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 07</h2>
+        <p class="subtitle is-4">Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Frage wie: Wo ist das Menü und wie gehe ich mit Benachrichtigungen um werden ab jetzt im Fokus stehen. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 07</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-07-20">Juli 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Frage wie: Wo ist das Menü und wie gehe ich mit Benachrichtigungen um werden ab jetzt im Fokus stehen.</p>
+<h2 id="die-anforderungen"><a href="#die-anforderungen" id="die-anforderungen" class="anchor"></a>Die Anforderungen</h2>
+<p>Eine Webanwendung kann den unterschiedlichsten Zielgruppen angedacht sein. In unserem Fall  nehme ich eine Anwendung an, die in einem Büro der Unterstützung der internen Prozesse diehnt. Damit haben wir es eher mit einer ganz gewöhnlichen Geschäftsanwendung zu tun, mit der wharscheinlich schon so ziemlich jeder Entwickler in Kontakt gekommen ist. Die Weboberflächen in dem Bereich orientieren sich doch recht häufig an den Erfahrungen die mit den klassischen Desktopanwendungen gemacht worden sind.</p>
+<h3 id="minimalversion"><a href="#minimalversion" id="minimalversion" class="anchor"></a>Minimalversion</h3>
+<p>In unserer Minimalversion werden wir davon ausgehen, dass es ein Menü in der Kopfzeile der Anwendung geben wird. Die Anzahl der Menüeinträge beschränkt sich auf vier bis fünf und ist demnach keine Herausforderung für einen Bildschirm. Natürlich unter der Annahme das die Begriffe die zum Einsatz kommen ein wenig kürzer sind als so manch anderer Begriff aus dem deutschen, wie zum Beispiel</p>
+<p>&quot;Gleisschotterrbettungsreinigungsmaschine&quot;. Ja das Ding gibt es wirklich und wer sich das mal ansehen möchte, dem empfehle ich nachfolgendes Fachmagazin für angehende Ingenieure <a href="https://youtu.be/3ddiwkspXxE?t=13">SMDM</a>.</p>
+<h2 id="das-layout"><a href="#das-layout" id="das-layout" class="anchor"></a>Das Layout</h2>
+<p>Die Anwendung soll aufgeteilt werden in ein Layout um den Rahmen der Anwendung zu stellen und den dann folgenden fachlichen Views. Diese fachlichen Views sollen sich in den Arbeitsbereich der in dem Layout definiert ist eingliedern und mittels der Menüpunkte angesteuert werden.</p>
+<p>Hier haben wir nun das erste Mal die Herausforderung, das die Navigation nicht einfach den gesamten Bereich ersetzen wird. Wir können uns das wie folgt vorstellen.</p>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-06-20/Layout-Minimal.png" alt="" /></p>
+<p>Innerhalb des hier gezeigten Bereiches &quot;Products&quot; unterhalb der Menüleiste werden die jeweiligen Views eingesetzt werden.</p>
+<h3 id="das-grundgerüst"><a href="#das-grundgerüst" id="das-grundgerüst" class="anchor"></a>Das Grundgerüst</h3>
+<p>Das Grundgerüst das hier zum Einsatz kommen wird basiert auf der Komponente App-Layout von Vaadin selbst. Die offizielle Beschreibung zu der Komponente befindet sich übrigens <a href="https://vaadin.com/components/vaadin-app-layout">hier</a>.</p>
+<p>Das Vaadin Applayout basiert auf dem Routing mittels RouterLayout. Hierrüber hatten wir in dem letzten Blogbeitrag ein wenig ausführlicher berichtet. Was hier neu dazu kommen wird, ist das Layout selbst, sprich die Anordnung der Menüleiste und der Arbeitsbereiche. Um nun mit dem AppLayout von Vaadin zu beginnen erzeugen wir eine Klasse mit dem Namen <strong>MainLayout</strong> und erweitern damit die Klasse <strong>AbstractAppRouterLayout</strong>. Die dazu gehörige <strong>maven</strong> Abhängigkeit ist</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.vaadin&lt;/groupId&gt;
+    &lt;artifactId&gt;vaadin-app-layout-flow&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Die zu implementierende Methode hat den Namen <strong>configure</strong> und liefert einem zwei Parameter. Der erste ist die Instanz des erzeugten AppLayout selbst und die zweite ist das in dem AppLayout verwendete Menü. Basierend auf diesen beiden Instanzen kann man mit der Gestalltung beginnen. Neben dem Logo das in der linken oberen Ecke plaziert ist, kann man natürlich auch die Menüpunkte einrichten. Einen Menüpunkt selbst erzeugt man mit einer Instanz der Klasse <strong>AppLayoutMenuItem</strong>. Hier gibt es verschiedene Kombinationen die gewählt werden können. Zum Beispiel ein Icon plus Beschreibung und ein Navigationsziel oder anstelle eines Navigationsziels auch direkt eine Aktion.</p>
+<pre><code class="language-java">@Theme(Lumo.class)
+public class MainLayout extends AbstractAppRouterLayout {
+
+  private static final String LOGO_PNG = &quot;logo.png&quot;;
+
+  public static final String ITM_DASHBOARD = &quot;mainview.menue.item.dashboard&quot;;
+  public static final String ITM_PROFILE = &quot;mainview.menue.item.profile&quot;;
+  public static final String ITM_TRENDS = &quot;mainview.menue.item.trends&quot;;
+  public static final String ITM_LOGOUT = &quot;mainview.menue.item.logout&quot;;
+
+  @Override
+  protected void configure(AppLayout appLayout ,
+                           AppLayoutMenu appLayoutMenu) {
+
+    StreamResource res = new StreamResource(LOGO_PNG ,
+                                            () -&gt; MainView.class.getResourceAsStream(&quot;/&quot; + LOGO_PNG));
+    Image img = new Image(res , &quot;Vaadin Logo&quot;);
+
+    img.setHeight(&quot;44px&quot;);
+    appLayout.setBranding(img);
+
+    appLayoutMenu
+        .addMenuItems(
+            new AppLayoutMenuItem(DASHBOARD.create() ,
+                                  appLayout.getTranslation(ITM_DASHBOARD) ,
+                                  DashboardView.NAV) ,
+            new AppLayoutMenuItem(USER.create() ,
+                                  appLayout.getTranslation(ITM_PROFILE) ,
+                                  ProfileView.NAV) ,
+            new AppLayoutMenuItem(TRENDING_UP.create() ,
+                                  appLayout.getTranslation(ITM_TRENDS) ,
+                                  TrendsView.NAV) ,
+            new AppLayoutMenuItem(SIGN_OUT.create() ,
+                                  appLayout.getTranslation(ITM_LOGOUT) ,
+                                  e -&gt; {
+                                    UI ui = UI.getCurrent();
+                                    VaadinSession session = ui.getSession();
+                                    session.setAttribute(SecurityService.User.class , null);
+                                    session.close();
+                                    ui.navigate(MainView.class);
+                                  }));
+  }
+
+}
+
+</code></pre>
+<p>Um nun das Layout zu verwenden muss man an den beteiligten Views in der <strong>@Route</strong> Annotation das Attribut <strong>layout</strong> mit der Klasse <strong>MainLayout</strong> belegen.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben nun ein sehr einfaches Grundgerüst einer Anwendung mit einem für die heutige Zeit typischen Aufbau. Die Funktionalitäten sind recht begrenzt, allerdings ist das manchmal sogar schon voll und ganz ausreichend. Wer allerdings ein wenig umfangreichere Möglichkeiten haben möchte, der kann sich in dem <a href="https://vaadin.com/directory/search?keyword=layout">VaadinDirectory</a> ein wenig umsehen. Dort gibt es noch weitere Lösungen. Mindestens eine davon möchte ich im nächsten Teil dieser Serie genauer ansehen.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden.
+<a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-007">https://github.com/Java-Publications/backend-meets-frontend-reloaded-007</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 06
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008">
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 08
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

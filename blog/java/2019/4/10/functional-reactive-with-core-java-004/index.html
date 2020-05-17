@@ -1,0 +1,972 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 04</title>
+
+
+<meta name="description" content="In unserem letzten Teil haben wir uns angesehen wie wir die Klasse ```Optional&lt;T&gt;``` erweitern können. Das Ergebnis ist das Interface ```Result&lt;T&gt;``` gewesen was uns einges zusätzlich ermöglichte.
+In diesem Teil wollen wir uns nochmals mit den Funktionen selbst auseinandersetzen. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-04-10-functional-reactive-with-core-java-004.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/4/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-004","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004"},"next":{"path":"blog/java/2019/5/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-005","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005"},"previous":{"path":"blog/java/2019/3/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-003","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003"},"description":"In unserem letzten Teil haben wir uns angesehen wie wir die Klasse ```Optional<T>``` erweitern können. Das Ergebnis ist das Interface ```Result<T>``` gewesen was uns einges zusätzlich ermöglichte.\nIn diesem Teil wollen wir uns nochmals mit den Funktionen selbst auseinandersetzen. ","title":"Functional Reactive mit Core Java 04"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004" aria-current="page">Functional Reactive mit Core Java 04</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 04</h2>
+        <p class="subtitle is-4">In unserem letzten Teil haben wir uns angesehen wie wir die Klasse ```Optional&lt;T&gt;``` erweitern können. Das Ergebnis ist das Interface ```Result&lt;T&gt;``` gewesen was uns einges zusätzlich ermöglichte.
+In diesem Teil wollen wir uns nochmals mit den Funktionen selbst auseinandersetzen. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 04</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-04-10">April 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In unserem letzten Teil haben wir uns angesehen wie wir die Klasse <code>Optional&lt;T&gt;</code> erweitern können. Das Ergebnis ist das Interface
+<code>Result&lt;T&gt;</code> gewesen was uns einges zusätzlich ermöglichte.</p>
+<p>In diesem Teil wollen wir uns nochmals mit den Funktionen selbst
+auseinandersetzen.</p>
+<blockquote>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+</blockquote>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="und-alles-begann-mit-der-liste"><a href="#und-alles-begann-mit-der-liste" id="und-alles-begann-mit-der-liste" class="anchor"></a>Und alles begann mit der Liste</h2>
+<p>Ziel ist es einige Funktionen auf einer Menge von Autos zu definieren. Wir nennen die Klasse <code>Car</code> und leiten diese von
+der Klasse <code>Quint&lt;T1,T2,T3,T4,T5&gt;</code>ab. Die Klasse <code>Quint</code> ist aus dem Projekt <a href="http://www.functional-reactive.org">www.functional-reactive.org</a>. Wir hatten einem vorherigen Artikel die Klasse <code>Pair</code> verwendet. Die Klasse <code>Quint</code> ist sozusagen der große Bruder. Auch hier fügen wir die fachlichen get-Methoden hinzu.</p>
+<pre><code class="language-java">  public class Car 
+        extends Quint&lt;String, 
+                      Colour, 
+                      Integer, 
+                      Integer, 
+                      Float&gt; {
+    
+    public Car(String brand , 
+               Colour colour , 
+               Integer speed , 
+               Integer year , 
+               Float price) {
+      super(brand , colour , speed , year , price);
+    }
+
+    public String brand() {return getT1();}
+
+    public Colour colour() {return getT2();}
+
+    public Integer speed() {return getT3();}
+
+    public Integer year() {return getT4();}
+
+    public Float price() {return getT5();}
+  }
+  
+  public enum Colour {
+    UNDEFINED,
+    BLUE,
+    RED,
+    WHITE,
+    GREEN
+  }
+</code></pre>
+<p>Wir erzeugen uns nun eine Menge an Instanzen der Klasse <code>Car</code> und
+stellen diese als <code>Stream&lt;Car&gt;</code> zu Verfügung.</p>
+<pre><code class="language-java">    final Stream&lt;Car&gt; carsStream = Stream
+        .of(
+            new Car(&quot;BMW&quot; , Colour.BLUE , 200 , 2017 , 10000f) ,
+            new Car(&quot;BMW&quot; , Colour.GREEN , 215 , 2017 , 10432f) ,
+            new Car(&quot;BMW&quot; , Colour.UNDEFINED , 200 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.BLUE , 180 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.WHITE , 220 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.RED , 200 , 2017 , 10000f));
+</code></pre>
+<h2 id="die-aufgabe"><a href="#die-aufgabe" id="die-aufgabe" class="anchor"></a>Die Aufgabe</h2>
+<p>Nun wollen wir diese Menge zweimal filtern. Einmal wollen wir die Menge der <strong>BMW´s</strong> und einmal die Menge der <strong>VW´s</strong> (als der Artikel geschrieben wurde gab es noch den Volkswagen Konzern)</p>
+<p>Nun sieht meist eine erste Implementierung wie folgt aus.</p>
+<pre><code class="language-java">    Stream
+        .of(
+            new Car(&quot;BMW&quot; , Colour.BLUE , 200 , 2017 , 10000f) ,
+            new Car(&quot;BMW&quot; , Colour.GREEN , 215 , 2017 , 10432f) ,
+            new Car(&quot;BMW&quot; , Colour.UNDEFINED , 200 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.BLUE , 180 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.WHITE , 220 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.RED , 200 , 2017 , 10000f))
+        .filter(c -&gt; c.brand().equals(&quot;BMW&quot;))
+        .forEach(System.out::println);
+
+    Stream
+        .of(
+            new Car(&quot;BMW&quot; , Colour.BLUE , 200 , 2017 , 10000f) ,
+            new Car(&quot;BMW&quot; , Colour.GREEN , 215 , 2017 , 10432f) ,
+            new Car(&quot;BMW&quot; , Colour.UNDEFINED , 200 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.BLUE , 180 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.WHITE , 220 , 2017 , 10000f) ,
+            new Car(&quot;VW&quot; , Colour.RED , 200 , 2017 , 10000f))
+        .filter(c -&gt; c.brand().equals(&quot;VW&quot;))
+        .forEach(System.out::println);
+</code></pre>
+<p>Anstelle die jeweilige Menge in einer <code>Liste&lt;Car&gt;</code> final vorzuhalten, schreiben wir die Elemente einfach auf die Komandozeile.</p>
+<p>Wenn man sich diesen Quelltext ansieht, so erkennt man schnell,
+das diese Lösung alles andere als optimal ist. Beginnen wir nun das alles einmal ein wenig umzuformen.</p>
+<h3 id="trenne-daten-und-stream"><a href="#trenne-daten-und-stream" id="trenne-daten-und-stream" class="anchor"></a>Trenne Daten und Stream</h3>
+<p>Als erstes trennen wir die Daten von dem Stream. Ein Stream kann immer nur einmal verwendet werden. Möchten wir also zweimal einen Workflow abarbeiten, so muss zweimal ein Stream aus der Bestandsmenge
+der Daten die dem Stream zu Grunde liegen, erzeugt werden.</p>
+<pre><code class="language-java">  //persistence storage
+  public static List&lt;Car&gt; cars = Arrays.asList(
+      new Car(&quot;BMW&quot; , Colour.BLUE , 200 , 2017 , 10000f) ,
+      new Car(&quot;BMW&quot; , Colour.GREEN , 215 , 2017 , 10432f) ,
+      new Car(&quot;BMW&quot; , Colour.UNDEFINED , 200 , 2017 , 10000f) ,
+      new Car(&quot;VW&quot; , Colour.BLUE , 180 , 2017 , 10000f) ,
+      new Car(&quot;VW&quot; , Colour.WHITE , 220 , 2017 , 10000f) ,
+      new Car(&quot;VW&quot; , Colour.RED , 200 , 2017 , 10000f)
+  );
+
+  //query -&gt; result from persistence storage
+  public static Stream&lt;Car&gt; nextCarStream() {
+    return cars.stream();
+  }
+</code></pre>
+<p>Nun werden die Daten einmal vorgehalten, oder aus einer persistenten
+Quelle geholt. Die Methode <code>nextCarStream()</code> liefert uns die gewünschte Sicht als Stream auf die Daten.</p>
+<p>Der Rest der Aufgabe kann dann wie folgt dargestellt werden. Es wurden die Instanzen der Predicate´s die zum filtern des Streams diehnen schon mal extrahiert.</p>
+<pre><code class="language-java">    Predicate&lt;Car&gt; carBrandFilterBMW = (car) -&gt; 
+             car.brand().equals(&quot;BMW&quot;);
+    Predicate&lt;Car&gt; carBrandFilterVW = (car) -&gt;
+             car.brand().equals(&quot;VW&quot;);
+
+    nextCarStream()
+        .filter(carBrandFilterBMW::test)
+        .forEach(System.out::println);
+
+    nextCarStream()
+        .filter(carBrandFilterVW::test)
+        .forEach(System.out::println);
+</code></pre>
+<p>Aber auch hier können wir immer erst nach der Erzeugung des Streams
+die restlichen Komponenten anhängen. Und die Definition der Filter ist immer noch zu redundant.</p>
+<h3 id="definiere-die-predicates-allgemein"><a href="#definiere-die-predicates-allgemein" id="definiere-die-predicates-allgemein" class="anchor"></a>Definiere die Predicate´s allgemein</h3>
+<p>die nachfolgenden Zeilen zur Definition der Predicate´s ist immer noch zu redundant.</p>
+<pre><code class="language-java">    Predicate&lt;Car&gt; carBrandFilterBMW = (car) -&gt; 
+             car.brand().equals(&quot;BMW&quot;);
+    Predicate&lt;Car&gt; carBrandFilterVW = (car) -&gt;
+             car.brand().equals(&quot;VW&quot;);
+</code></pre>
+<p>Wir formen das um in eine Funktion die aus einem String ein entsprechendes Predicate erzeugt.</p>
+<pre><code class="language-java">    Function&lt;String,Predicate&lt;Car&gt;&gt; brandFilter 
+            = (brand) -&gt; (car) -&gt; car.brand().equals(brand);
+</code></pre>
+<p>Damit sieht die Verwendung schon recht ordentlich aus.</p>
+<pre><code class="language-java">    nextCarStream()
+        .filter(brandFilter.apply(&quot;BMW&quot;))
+        .forEach(System.out::println);
+
+    nextCarStream()
+        .filter(brandFilter.apply(&quot;VW&quot;))
+        .forEach(System.out::println);
+</code></pre>
+<h3 id="definiere-streams-ohne-sich-zu-erzeugen"><a href="#definiere-streams-ohne-sich-zu-erzeugen" id="definiere-streams-ohne-sich-zu-erzeugen" class="anchor"></a>definiere Streams ohne sich zu erzeugen</h3>
+<p>Nun haben wir hier einen Stream, den wir nach und nach aufbauen wollen. Hier in diesem Fall nur mit einer Modifikation, dem Filterelement. Wenn man es direkt definiert kommt man zum Beispiel auf folgende Lösung.</p>
+<pre><code class="language-java">  public static BiFunction&lt;Stream&lt;Car&gt;, 
+                           String, 
+                           Stream&lt;Car&gt;&gt; filteredStream =
+      (stream , brand) -&gt; stream.filter(brandFilter.apply(brand));
+</code></pre>
+<p>Wir beziehen uns hier auf die vorher definierte Funktion <strong>brandfilter</strong>. Jedoch kann man hier schon erkennen, das die Definition des Streams nicht erst nach der Erzeugung stattfinden muss. Somit erhalten wir nun die Möglichkeit diese Elemente
+generisch zu formulieren und in eine eigene Lib auszulagern.
+Es muss demnach noch ganrnicht bekannt sein, wie und mit welchen Daten der Stream real erzeugt werden wird.</p>
+<pre><code class="language-java">  public static Function&lt;String, Predicate&lt;Car&gt;&gt; brandFilter =
+          (brand) -&gt; (car) -&gt; car.brand().equals(brand);
+
+  public static BiFunction&lt;Stream&lt;Car&gt;, 
+                           String, 
+                           Stream&lt;Car&gt;&gt; filteredStream =
+      (stream , brand) -&gt; stream.filter(brandFilter.apply(brand));
+
+  public static Consumer&lt;Stream&lt;Car&gt;&gt; printStream 
+          = (stream) -&gt; stream.forEach(System.out::println);
+
+  public static void main(String[] args) {
+
+    printStream
+        .accept(filteredStream.apply(nextCarStream() , &quot;BMW&quot;));
+    printStream
+        .accept(filteredStream.apply(nextCarStream() , &quot;VW&quot;));
+  }
+</code></pre>
+<p>Wir sind zwar einen Schritt weiter, aber richtig fertig sind wir noch nicht. Unschön an dieser Stelle ist es zum Beispiel noch, wie die Elemente geschachtelt werden und das wir mit einer <code>BiFunction</code> arbeiten. Eine <code>BiFunction</code> lässt sich nicht so gut mittels <strong>andThen()</strong> und <strong>combine()</strong> mit anderen Funktionen verbinden. Beides werden wir nun angehen.</p>
+<h3 id="manuelles-transformieren"><a href="#manuelles-transformieren" id="manuelles-transformieren" class="anchor"></a>Manuelles Transformieren</h3>
+<p>Was wir benötigen ist eigentlich eine Funktion die aus der Eingabe
+einer Marke (BMW oder VW) einen gefilterten Stream erzeugt.</p>
+<p><code>Function&lt;String, Function&lt;Stream&lt;Car&gt;, Stream&lt;Car&gt;&gt;</code></p>
+<p>Der Stream auf das dieses angewendet werden soll ist natürlich noch nicht existent, demnach ist der Stream selbst ein Eingabeparameter.</p>
+<p>Nun ist es hier der expliziete Fall das wir aus einem String
+das <code>Predicate&lt;Car&gt;</code>erzeugen. Wenn man das nun allgemeiner formuliert, so kommt man eher auf eine Signatur wie die folgende.</p>
+<p><code>Function&lt;Predicate&lt;T&gt;, Function&lt;Stream&lt;T&gt;, Stream&lt;T&gt;&gt;</code></p>
+<p>Nun können wir diesen Teil generisch zur Verfügung stellen.</p>
+<pre><code class="language-java">  public static &lt;T&gt; Function&lt;Predicate&lt;T&gt;, 
+                             Function&lt;Stream&lt;T&gt;, 
+                                      Stream&lt;T&gt;&gt;&gt; streamFilter(){
+    return (filter) 
+               -&gt; (Function&lt;Stream&lt;T&gt;, Stream&lt;T&gt;&gt;) inputStream 
+                   -&gt; inputStream.filter(filter);
+  }
+</code></pre>
+<p>In der Verwendung sieht das nun wie folgt aus.</p>
+<pre><code class="language-java">    Main.&lt;Car&gt;streamFilter()
+        .apply(filter().apply(&quot;BMW&quot;))
+        .apply(nextCarStream())
+        .forEach(printCar());
+
+//or with andThen
+
+    filter()
+        .andThen(streamFilter())
+        .apply(&quot;BMW&quot;)
+        .apply(nextCarStream())
+        .forEach(printCar());
+</code></pre>
+<p>Wir sind nun schon recht weit und haben es geschafft die zustandslosen Anteile
+generisch zu extrahieren. Die Komposition ist demnach nicht mehr nach der Erzeugung des Streams, wie es meist gezeigt und gelehrt wird. Hiermit erhalten wir eine wesentlich höhere Abstraktion und Wiederverwendbarkeit bestehender Codeteile. Aber da war noch etwas...</p>
+<h2 id="type-definitionen"><a href="#type-definitionen" id="type-definitionen" class="anchor"></a>Type-Definitionen</h2>
+<p>Wir sind nun soweit, dass wir ein wenig mehr spielen können mit den Möglichkeiten die uns seit Java8 gegeben worden sind. Was nicht bedeuten soll, das man erst seit Java8 funktional mit Java arbeiten kann.
+Es ist nur wesentlich deutlicher geworden.</p>
+<p>Aber sehen wir uns nun folgendes an. Wir werden nun ausschließlich Funktionen von diesem Typ <code>Function&lt;Integer, Integer&gt;</code> miteinander verbinden.</p>
+<pre><code class="language-java">    final Function&lt;Integer, Integer&gt; f1 = (x)-&gt; x * 2;
+    final Function&lt;Integer, Integer&gt; f2 = (x)-&gt; x + 2;
+    final Function&lt;Integer, Integer&gt; f3 = (x)-&gt; x + 10;
+
+    System.out.println(&quot;f1 f2 f3 (andThen) =&gt; &quot; 
+                       + f1.andThen(f2).andThen(f3).apply(1));
+
+    System.out.println(&quot;f1 f2 f3 (compose) =&gt; &quot; 
+                       + f1.compose(f2).compose(f3).apply(1));
+</code></pre>
+<p>Das hier funktioniert ohne Probleme. Eine Kombination in beide Richtungen, gemeint ist damit <strong>andThen()</strong> und <strong>compose()</strong>, funktioniert.</p>
+<p>Versuchen wir das nun direkt ineinander zu schreiben.</p>
+<pre><code class="language-java">    final Function&lt;Integer, Integer&gt; f1 = (x)-&gt; x * 2;
+    
+        final Function&lt;Integer, Integer&gt;  fAndThen 
+            = f1
+                .andThen((x)-&gt; x + 2)
+                .andThen((x)-&gt; x + 10);
+</code></pre>
+<p>Auch das funktioniert mit der Verknüpfung mittels <strong>andThen()</strong>. Wie sieht es nun mit <strong>compose()</strong> aus?</p>
+<pre><code class="language-java">final Function&lt;Integer, Integer&gt;  fCompose 
+    = f1
+        .compose((x)-&gt; x + 2).  //Operator + cannot be applied to j.l.Object
+        .compose((x)-&gt; x + 10);
+</code></pre>
+<p>Ok, es funktioniert so schon mal nicht. Sprich, es kann der Typ nicht richtig ermittels werden, weswegen der Compiler von <code>Object</code> ausgeht. Und das geht halt schief. Was ist nun zu ändern?</p>
+<p>Hier hilft nur, dass der Typ expliziet angegeben wird. Das führt dann zu folgendem Quelltext.</p>
+<pre><code class="language-java">    final Function&lt;Integer, Integer&gt;  fCompose = f1
+        .compose((Function&lt;Integer, Integer&gt;) (x)-&gt; x + 2)
+        .compose((x)-&gt; x + 10);
+</code></pre>
+<p>Bitte beachten, das es nur einmal der Typ in unserem Beispiel angegeben werden muss. Das liegt hier daran, dass zum Ende die Typdefinition durch die deklaration der Variablen angegeben worden ist.
+Wir müssen allerdings den Typ zweimal angeben, wenn wir die Kombination
+als Argument, also ohne finale variablen Deklaration , verwenden wie im nachfolgenden Beispiel.</p>
+<pre><code class="language-java">    System.out.println(&quot;f1 f2 f3 (compose) =&gt; &quot; + f1
+        .compose((Function&lt;Integer, Integer&gt;)(x)-&gt; x + 2)
+        .compose((Function&lt;Integer, Integer&gt;)(x)-&gt; x + 10)
+        .apply(1));
+</code></pre>
+<p>Ok, der Vollständigkeit halber; Wie sieht es als Parameter einer Methode aus die einen passenden Typ hat?</p>
+<pre><code class="language-java">static void use(Function&lt;Integer, Integer&gt; f){
+    System.out.println(&quot;f.apply(1) = &quot; + f.apply(1));
+}
+
+    use(f1.compose((Function&lt;Integer, Integer&gt;)(x)-&gt; x + 2)
+          .compose((x)-&gt; x + 10));
+</code></pre>
+<p>Hier reicht es wieder aus, wie im Fall der deklarierten Variablen. Es sind also am anderen Ende genug Typdeinformationen vorhanden.</p>
+<p>Warum eigentlich der Unterschied zwischen der Verwendung mittels <strong>andThen()</strong> und <strong>compose</strong>? Der Grund ist recht einfach, wenn man bedenkt, das <strong>andThen</strong>  nachfolgend and der bestehenden Funktion ansetzt. Hier ist der Typ vorhanden. Im Falle von <strong>compose</strong> wird die Funktion vorne erweitert, was bedeutet das der Typ nicht fix ist in allen Fällen.</p>
+<h3 id="und-noch-ein-weg"><a href="#und-noch-ein-weg" id="und-noch-ein-weg" class="anchor"></a>und noch ein Weg</h3>
+<p>Es kann aber auch ein anderer Weg gegagnegn werden um die notwendingen Typinformationen zur Verfügung zu stellen.</p>
+<p>Wir definieren hierzu eine Methode die die uns ein <strong>compose</strong> abbildet.</p>
+<pre><code class="language-java">static &lt;T, U, V&gt; 
+       Function&lt;
+           Function&lt;U, V&gt;, 
+           Function&lt;Function&lt;T, U&gt;, Function&lt;T, V&gt;&gt;&gt; compose() {
+    return (Function&lt;U, V&gt; f) 
+        -&gt; (Function&lt;T, U&gt; g) 
+            -&gt; (T x) -&gt; f.apply(g.apply(x));
+  }
+</code></pre>
+<p>Hier wurde nicht nur der Vorgang des <strong>compose</strong> schrittweise abgebildet, sondern auch alle notwendigen Typinformationen mit definiert.</p>
+<p>In der Verwendung sieht das dann wie folgt aus.</p>
+<pre><code class="language-java">    Function&lt;Integer, Integer&gt; fx = Main.&lt;Integer, Integer, Integer&gt;compose()
+        .apply((x)-&gt; x + 2)
+        .apply((x)-&gt; x * 2)
+</code></pre>
+<h2 id="eine-funktion-die-eine-funktion-liefert"><a href="#eine-funktion-die-eine-funktion-liefert" id="eine-funktion-die-eine-funktion-liefert" class="anchor"></a>Eine Funktion die eine Funktion liefert</h2>
+<p>Zu Beginn sind wir immer so vorgegangen, dass wir die Eingangsparameter
+in einen anderen Wert transformiert haben. Aber es spricht nichts dagegen, das der Rückgabewert wiederum eine Funktion ist.</p>
+<p>Sehen wir uns hierzu doch folgendes Beispiel an. Erst aus der OO-Welt, nachfolgend werden wir es ein wenig umformen.</p>
+<p>Wir wollen nun verschiedene Operatoren implementieren. Eingabe wird ein Zeichen sein, das dann in einen Operator transformiert werden wird.
+Zum Beispiel wird ein <strong>+</strong> in den Operator <strong>Add</strong> überführt.</p>
+<p>Dazu definieren wir erst einmal ein Interface und nachfolgend die verschiedenen Implementierungen.</p>
+<pre><code class="language-java">  public static interface Operator {
+    public Float work(Integer a , Integer b);
+  }
+
+  public static final class Add implements Operator {
+    @Override
+    public Float work(Integer a , Integer b) {
+      return (float) (a + b);
+    }
+  }
+
+  public static final class Sub implements Operator {
+    @Override
+    public Float work(Integer a , Integer b) {
+      return (float) (a - b);
+    }
+  }
+
+  public static final class Mult implements Operator {
+    @Override
+    public Float work(Integer a , Integer b) {
+      return (float) (a * b);
+    }
+  }
+
+  public static final class Divide implements Operator {
+    @Override
+    public Float work(Integer a , Integer b) {
+      return (float) (a / b);
+    }
+  }
+</code></pre>
+<p>Nun sehen wir uns nachfolgend die Implementierung für die Endscheidungsfindung an.</p>
+<pre><code class="language-java">  public static Operator operator(String op) {
+    Operator result;
+    switch (op) {
+      case &quot;+&quot;: result = new Add(); break;
+      case &quot;-&quot;: result = new Sub(); break;
+      case &quot;/&quot;: result = new Divide();break;
+      case &quot;*&quot;: result = new Mult(); break;
+      default: throw new RuntimeException(&quot;bad op&quot;);
+    }
+    return result;
+  }
+</code></pre>
+<p>Ich lasse hier bewusst eine Menge an Code weg um die Implementierung robust zu gestallten mit dem Ziel das Beispiel kurz zu halten.</p>
+<p>Die Verwendung ist recht geradlinig, wollen wir doch lediglich einen Operator auswählen und verwenden.
+<code>final Float result = operator(&quot;+&quot;).work(1 , 2);</code></p>
+<p>Es steht einer mehrfachen Verwendung des Operators nichts im Wege, wenn man hier davon ausgehen kan das der Operator keinen internen Zustand besitzt der nachfolgende Verwendungen beeinflusst.</p>
+<p>Beginnen wir nun mit der Umformung.</p>
+<h3 id="refactoring-step-1"><a href="#refactoring-step-1" id="refactoring-step-1" class="anchor"></a>Refactoring Step 1</h3>
+<p>Definieren wir zuerst was wir erreichen wollen. Der Operator ist eine Funktion die zwei <code>Integer</code> Werte übergeben bekommt und einen <code>Float</code> Wert zurückliefert.
+Wir können das recht einfach als Funktion mit zwei Eingangsparametern hinschreiben. <code>BiFunction&lt;Integer, Integer,Float&gt;</code>. Hiermit ersetzten wir erst einmal die Implementierungen.</p>
+<pre><code class="language-java">  public static BiFunction&lt;Integer, Integer, Float&gt; add = (a , b) -&gt; (float) (a + b);
+  public static BiFunction&lt;Integer, Integer, Float&gt; sub = (a , b) -&gt; (float) (a - b);
+  public static BiFunction&lt;Integer, Integer, Float&gt; div = (a , b) -&gt; (float) (a / b);
+  public static BiFunction&lt;Integer, Integer, Float&gt; mul = (a , b) -&gt; (float) (a * b);
+
+  static BiFunction&lt;Integer, Integer, Float&gt; operator(String operator) {
+    BiFunction&lt;Integer, Integer, Float&gt; fkt = null;
+    switch (operator) {
+      case &quot;+&quot;:
+        fkt = add;
+        break;
+      case &quot;-&quot;:
+        fkt = sub;
+        break;
+      case &quot;/&quot;:
+        fkt = div;
+        break;
+      case &quot;*&quot;:
+        fkt = mul;
+        break;
+      default:
+        throw new RuntimeException(&quot;bad op !!&quot;);
+    }
+    return fkt;
+  }
+
+</code></pre>
+<h3 id="refactoring-step-2"><a href="#refactoring-step-2" id="refactoring-step-2" class="anchor"></a>Refactoring Step 2</h3>
+<p>Wir haben im letzten Schritt die Imlementierungen ersetzt, jedoch kann man das auch gleich in die Methode <code>operator(String operator)</code> hineinnehmen.</p>
+<pre><code class="language-java">  static Function&lt;String, BiFunction&lt;Integer, Integer, Float&gt;&gt; operator() {
+    return (operator) -&gt; {
+      BiFunction&lt;Integer, Integer, Float&gt; fkt = null;
+      switch (operator) {
+        case &quot;+&quot;: fkt = (a , b) -&gt; (float) (a + b); break;
+        case &quot;-&quot;: fkt = (a , b) -&gt; (float) (a - b); break;
+        case &quot;/&quot;: fkt = (a , b) -&gt; (float) (a / b); break;
+        case &quot;*&quot;: fkt = (a , b) -&gt; (float) (a * b); break;
+        default:
+          throw new RuntimeException(&quot;bad op !!&quot;);
+      }
+      return fkt;
+    };
+  }
+</code></pre>
+<p>In der Implementierung die wir im letzten Schritt erreicht haben ist immer noch der Fall vorhanden, das eine Exception geworfen werden kann.
+Dieses könnten wir zum Beispiel durch ein <code>Optional&lt;T&gt;</code>oder <code>Result&lt;T&gt;</code> beheben.</p>
+<pre><code class="language-java">  static Function&lt;String, 
+                  Result&lt;BiFunction&lt;Integer, Integer, Float&gt;&gt;&gt; operator() {
+    return (operator) -&gt;
+        (operator.equals(&quot;+&quot;)) ? Result.success((a , b) -&gt; (float) (a + b)) 
+        : (operator.equals(&quot;-&quot;)) ? Result.success((a , b) -&gt; (float) (a - b))
+        : (operator.equals(&quot;/&quot;)) ? Result.success((a , b) -&gt; (float) (a / b))
+        : (operator.equals(&quot;*&quot;)) ? Result.success((a , b) -&gt; (float) (a * b))
+        : Result.failure(&quot;bad op !!&quot;);
+  }
+
+
+  public static void main(String[] args) {
+    operator()
+        .apply(&quot;+&quot;)
+        .ifPresentOrElse(
+            success -&gt; System.out.println(&quot;result = &quot; + success) ,
+            failure -&gt; System.out.println(failure)
+        );
+  }
+
+</code></pre>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben uns in diesem Teil damit beschäftigt wie wir Aufgaben in einzelne Funktionen zerlegen können. Hierbei haben wir uns angesehen wie sich die Typinformationen bei der Kombination von Funktionen verhalten und unterschiedliche Ansätze geliefert wie man damit umgehen kann.</p>
+<p>Einer der Hauptpunkte ist auch der Unterschied bei der Definition von Streams geweaen und der Weg wie man die Definition von der Erzeugung von Streams trennen kann.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-004.git">https://github.com/Java-Publications/functional-reactive-with-core-java-004.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 03
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005">
+    Functional Reactive mit Core Java 05
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

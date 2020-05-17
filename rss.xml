@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <id>http://www.sven-ruppert.de</id>
+        <title>Sven Ruppert</title>
+        <link>http://www.sven-ruppert.de</link>
+        <atom:link href="http://www.sven-ruppert.de/rss.xml" rel="self" type="application/rss+xml"/>
+        <description>Code, Coffee, and an outdoor nerd</description>
+        <item>
+            <title>Say Hello to DevOps!</title>
+            <guid>http://www.sven-ruppert.de/blog/devops/2020/1/14/say-hello-to-devops</guid>
+            <link>http://www.sven-ruppert.de/blog/devops/2020/1/14/say-hello-to-devops</link>
+            <description>All about my ...</description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 08</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008</link>
+            <description>In unserem letzten Teil der Serie haben wir uns mit dem App LAyout von Vaadin beschäftigt. Für einfache Anwendungen ist das ein sehr gute Wahl. Kommen wir aber zu Anforderungen die über die Positionierung einer Menüleiste hinausgehen, gibt es ein paar komfortablere AddOns aus dem vaadin Directory. Das AddOn von Johannes Goebel werden wir uns heute ein wenig genauer ansehen. </description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 07</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007</link>
+            <description>Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Frage wie: Wo ist das Menü und wie gehe ich mit Benachrichtigungen um werden ab jetzt im Fokus stehen. </description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 06</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006</link>
+            <description>Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Um sich mit dem Thema zu beschäftigen, benötigt man mehr informationen darüber wie der Layout-Mechanismus in Vaadin Flow funtioniert. </description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 05</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005</link>
+            <description>In dem letzte Teil der Serie haben wir uns nochmal ausgiebig mit dem Thema i18n beschäftigt. Der nächste Schritt wird nun sein, das Grundgerüst einer Anwendung zu erstellen. Hier gibt es sicherlich einige Wege. Da wir nicht die ersten sind, die sich mit dieser Aufgabe konfontiert sehen, gibt es einige Ansätze im Bereich der OpenSource Projekte.
+</description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 04</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/4/20/v10_backend_meets_frontend_reloaded_part_004</link>
+            <description>In dem letzten Teil haben wir uns angesehen wie man mit einem ResourceBundle umgehen kann, bzw wie man mit einer eigenen Implementierung beginnt. Das Thema ist auf der einen Seite schon recht alt, aber auf der anderen Seite top aktuell im Bereich von Webanwendungen. Heute werden wir uns damit beschäftigen wie man aus dem Teil 2 und dem Teil 3 eine praxistaugliche Implementierung eines I18NProviders für den Einsatz in Vaadin Flow implementieren kann. </description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 03</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/3/20/v10_backend_meets_frontend_reloaded_part_003</link>
+            <description>In dem letzten Teil der Serie haben wir uns damit beschäftigt, wie mittels I18NProvider innerhalb von Vaadin Flow der Zugriff auf ein ResouceBundle erfolgen kann. In diesem Teil werden wir uns ansehen wie man dieses nun auf mehrere Sprachen ausweitet und uns dabei eine mögliche Implementierung eigener ResourcenBudles ansehen. </description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 02</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002</link>
+            <description>In dem letzten Teil der Serie haben wir uns damit beschäftigt, einen Login Screen zu erstellen. Da dieses nun soweit in den Grundzügen vorhanden ist, kommen wir nun dazu das Grundgerüst einer vollständigen Anwendung zu erstellen. Hier werden wir uns in den nächsten Teilen verschiedene Wege ansehen die gegangen werden können. </description>
+        </item>
+        <item>
+            <title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 01</title>
+            <guid>http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001</guid>
+            <link>http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001</link>
+            <description>Vaadin 10 ist nun schon einige Zeit verfügbar und immer mehr Projekte beginnen mit dieser Version oder beginnen mit der Migration. In diesem Tutorial werden wir uns mit Vaadin 10 beschäftigen mit dem Fokus auf langlebige Projekte.</description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 10</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/10/10/functional-reactive-with-core-java-010</link>
+            <description>In dem letzten Teil dieser Serie haben wir uns angesehen wie mittels ```CompletableFuture&lt;T&gt;``` Arbeitspakete auf verschiedene ResourcenPools verteilt werden können und wie diese Arbeit als eine Kette von asynchronen Aufrufen formuliert werden kann. In diesem Teil werden wir uns damit auseinandersetzen wie die Ketten kompakter formuliert werden können und welche Möglichkeiten zur Steuerung einem zur Verfügung stehen.</description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 09</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/9/10/functional-reactive-with-core-java-009</link>
+            <description>In dem letzten Teil dieser Serie haben wir uns angesehen wie ein minimaler Ansatz mittels Observer Pattern realisiert werden kann. Dabei wurde deutlich, dass es einiges an Implementierung bedarf um die Beschränkungen der ersten Version aufzuheben. Das JDK selber bietet seit Java8 eine sehr komfortable Implementierung. Genau diese werden wir uns nun ansehen.</description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 08</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/8/10/functional-reactive-with-core-java-008</link>
+            <description>In den letzten Teilen hatten wir den Schwerpunkt auf den funktionalen Ansätzen. Nun beginnen wir die reaktiven Ansätze zu beleuchten um diese dann mit den funktionalen Ansätzen zu kombinieren. </description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 07</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007</link>
+            <description>Wenn man sich mit den funktionalen Aspekten der Programmierung auseinandersetzt, so kommt man irgendwann zu dem Begriff des **Memoizing**. Was genau soll das sein und wie können wir das in Core Java Abbilden? </description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 06</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006</link>
+            <description>Im letzten Teil haben wir uns damit beschäftigt wie wir mit den Exceptions umgehen können. Das hat dazu geführt, das wir auch immer einer Fallunterscheidung hatten. Zum einen den Glattläufer und zum anderen den Fehlerfall. Hier konnten wir es elegant mit einem ```Optional&lt;T&gt;``` oder noch funktionaler mit einem ```Result&lt;T&gt;``` formulieren. Wie aber gehen wir noch allgemeiner mit solchen Fallunterscheidungen um? Was ist, wenn es mehr als nur zwei Wege gibt?</description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 05</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005</link>
+            <description>Im letzten Teil haben wir uns damit beschäftigt wie wir Funktionen definieren und wie wir das mit Streams ein wenig kombinieren können. Ausgelassen haben wir allerdings bisher immer das Thema Exceptions.
+Nur leider begegnen einem diese Exceptions in Java immer und immer wieder. Wie kann man nun damit umgehen und welche Möglichkeiten ergeben sich daraus? Genau das werden wir jetzt ein wenig genauer ansehen und ausprobieren.</description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 04</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004</link>
+            <description>In unserem letzten Teil haben wir uns angesehen wie wir die Klasse ```Optional&lt;T&gt;``` erweitern können. Das Ergebnis ist das Interface ```Result&lt;T&gt;``` gewesen was uns einges zusätzlich ermöglichte.
+In diesem Teil wollen wir uns nochmals mit den Funktionen selbst auseinandersetzen. </description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 03</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003</link>
+            <description>In unserem letzten Teil haben wir uns mit der seit Java8 vorhandenen Klasse ```Optional&lt;T&gt;``` auseinander gesetzt. Dort haben wir gesehen, das wir einige Kontrollstrukturen ersetzen können durch einen fluent- bzw functional-style. Ebenfalls ermöglicht es uns der allseits bekannten ```NullpointerException``` entgegenzuwirken. Allerdings ist die Klasse ```Optional&lt;T&gt;``` final definiert. Demnach ist eine Erweiterung so nicht möglich, was uns in mancher Hinsicht dann doch im Wege stehen kann. Warum die Klasse ```Optional&lt;T&gt;``` nun genau **final** definiert worden ist konnte ich nicht herausfinden. (Ich mus aber auch zugeben, dass ich nicht lange versucht habe es herauszufinden) </description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 02</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002</link>
+            <description>In unserem letzten Teil dieser Serie über Functional - Reactive with Core Java haben wir die ersten Umformungen vorgenommen und uns angesehen wie sich der Quelltext verändert wenn wir ein wenig funktionale Elemente und Aspekte verwenden. Aber die Frage ab wann wir von funktionaler Entwicklung sprechen ist immer noch offen. Beginnen wir also mit ein paar Beispielen genau dazu.</description>
+        </item>
+        <item>
+            <title>Functional Reactive mit Core Java 01</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2019/1/10/functional-reactive-with-core-java-001</link>
+            <description>In dieser Serie werden wir uns dem Thema Functional Reactive mit Core Java zuwenden. Das bedeutet, das wir die Bereiche Funktionale Programmierung und Reaktive Systeme nach und nach unter die Lupe nehmen werden. Hier gibt es schon viele Systeme und Bibliotheken die dieses Thema (versuchen ? ) voll und ganz abzudecken. </description>
+        </item>
+        <item>
+            <title>Typed Constructors</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2018/12/10/typedconstructors</link>
+            <description>In Java ist es vorgesehen Abstraktionen mittels Interfaces vorzunehmen. Schon in einer der ersten Vorlesungen zum Thema Java wird dieses einem beigebracht. Jedoch manchmal kann es auch zu etwas unsauberen Quelltext führen.</description>
+        </item>
+        <item>
+            <title>Die Auswirkungen des neuen JDK-Release-Zyklus 02</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2018/9/10/new_jdk_release_cycle_part_002</link>
+            <description>Wie kann man sich auf die nun doch recht schnelle Abfolge neuer JDK´s in der Entwicklung einstellen? Mit welchen Ansätzen kann man sich die Arbeit erleichtern, welche Werkzeuge werden Erleichterung verschaffen? </description>
+        </item>
+        <item>
+            <title>Die Auswirkungen des neuen JDK-Release-Zyklus 01</title>
+            <guid>http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001</guid>
+            <link>http://www.sven-ruppert.de/blog/java/2018/8/10/new_jdk_release_cycle_part_001</link>
+            <description>Seit einiger Zeit ist bekannt das Oracle die Zyklen in denen das JDK veröffentlicht wird geändert hat. Nun ist es soweit, das die Auswirkungen auch für die meisten Projekte spürbar werden. Was also ist zu beachten?</description>
+        </item>
+        <item>
+            <title>Say Hello to Kotlin!</title>
+            <guid>http://www.sven-ruppert.de/blog/kotlin/2020/1/14/say-hello-to-kotlin</guid>
+            <link>http://www.sven-ruppert.de/blog/kotlin/2020/1/14/say-hello-to-kotlin</link>
+            <description>All about my ...</description>
+        </item>
+        <item>
+            <title>About Sven Ruppert</title>
+            <guid>http://www.sven-ruppert.de/authors/sven-ruppert</guid>
+            <link>http://www.sven-ruppert.de/authors/sven-ruppert</link>
+            <description></description>
+        </item>
+        
+    </channel>
+</rss>

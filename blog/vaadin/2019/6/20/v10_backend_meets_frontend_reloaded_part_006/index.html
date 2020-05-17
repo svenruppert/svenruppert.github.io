@@ -1,0 +1,693 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 06</title>
+
+
+<meta name="description" content="Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Um sich mit dem Thema zu beschäftigen, benötigt man mehr informationen darüber wie der Layout-Mechanismus in Vaadin Flow funtioniert. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-06-20-V10_Backend_Meets_Frontend_Reloaded_Part_006.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/6/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_006","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006"},"next":{"path":"blog/vaadin/2019/7/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_007","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007"},"previous":{"path":"blog/vaadin/2019/5/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_005","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005"},"description":"Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Um sich mit dem Thema zu beschäftigen, benötigt man mehr informationen darüber wie der Layout-Mechanismus in Vaadin Flow funtioniert. ","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 06"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/6/20/v10_backend_meets_frontend_reloaded_part_006" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 06</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 06</h2>
+        <p class="subtitle is-4">Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Um sich mit dem Thema zu beschäftigen, benötigt man mehr informationen darüber wie der Layout-Mechanismus in Vaadin Flow funtioniert. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 06</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-06-20">Juni 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>Wir sind in dieser Serie nun an der Stelle angekommen, das wir uns über einen grundsätzlichen Aufbau der Anwendung beschäftigen können. Um sich mit dem Thema zu beschäftigen, benötigt man mehr informationen darüber wie der Layout-Mechanismus in Vaadin Flow funtioniert.</p>
+<h2 id="die-anforderungen"><a href="#die-anforderungen" id="die-anforderungen" class="anchor"></a>Die Anforderungen</h2>
+<p>Eine Webanwendung die in einem typischen Geschäftsprozess eingesetzt wird, hat meistens eine Grundstruktur in der die verfügbaren Einheiten gegliedert werden. Hier kann man sich Menüs, Toolbars, Statusbalken und Arbeitsbereiche vorstellen. Heute werden wir uns ansehen wie man solch eine Struktur in Vaadin Flow aufbauen kann und wie es sich auf die Definition der Navigation auswirken wird.</p>
+<h2 id="vorbereitungen"><a href="#vorbereitungen" id="vorbereitungen" class="anchor"></a>Vorbereitungen</h2>
+<p>In der letzten Folge dieser Serie haben wir eine Klasse mit dem Namen <strong>MainView</strong> verwendet. Darin enthalten war lediglich ein Label mit dem sinnhaften Inhalt <em>Main View</em>. Hier möchte ich nun ansetzen um dieser Ansicht ein wenig Leben einzuhauchen. Wenn wir nun also eine Menüleiste einbauen wollen, so stellt sich direkt die Frage, an wievielen Stellen der Anwendung man diese zu sehen bekommt.</p>
+<p>Sicher ist, dass es wohl eine der Komponenten sein wird, die immer auf dem Bildschirm sein werden, vorausgesetzt dass die Auflösung an der Stelle bei der Verwendung konstant sein wird. Das Thema <em>responsive Design</em> werden wir an späterer Stelle angehen.</p>
+<p>Der Name der zu erzeugenden Klasse ist <strong>MenuBar</strong>. Um der Menüleiste einige Einträge spendieren zu können, erzeugen wir zusätzlich einige Navigationsziele. Die Namen der Klassen sind <strong>ViewA</strong> und <strong>ViewB</strong>.</p>
+<pre><code class="language-java">@Route(value = ViewA.NAV_VIEW_A)
+public class ViewA extends Composite&lt;Div&gt; {
+  public static final String NAV_VIEW_A = &quot;ViewA&quot;;
+
+  public ViewA() {
+    getContent().add(new Span(&quot;View A&quot;));
+  }
+}
+</code></pre>
+<p>Innerhalb der Menüleiste sollen nun drei Links angezeigt werden. Allerdings beginnt nun oftmals eine indirekte Annahme, die ich hier expliziet ausschließen möchte. Die Menüleiste ist meines Erachtens kein Teil der Layoutstruktur, sondern ein Element das in dem Layout positioniert werden soll.</p>
+<p>Kommen wir aber erst einmal zu dem Menü selbst. Da die Elemente in dem Menü horizintal angeordnet werden sollen, kann als Basis hier ein <strong>Composite<HorizontalLayout></strong> verwendet werden.</p>
+<pre><code class="language-java">public class MenuBar extends Composite&lt;HorizontalLayout&gt; {
+  public MenuBar() {
+    getContent().add(new RouterLink(&quot;Home&quot; , MainView.class));
+    getContent().add(new RouterLink(&quot;ViewA&quot; , ViewA.class));
+    getContent().add(new RouterLink(&quot;ViewB&quot; , ViewB.class));
+  }
+}
+</code></pre>
+<p>Natürlich kann man hier auch schon auf den I18NProvider zugreifen.</p>
+<pre><code class="language-Java">public class MenuBar extends Composite&lt;HorizontalLayout&gt; {
+
+  public static final String MENU_BAR_HOME = &quot;menubar.home&quot;;
+  public static final String MENU_BAR_VIEW_A = &quot;menubar.view-a&quot;;
+  public static final String MENU_BAR_VIEW_B = &quot;menubar.view-b&quot;;
+
+  public MenuBar() {
+    getContent().add(new RouterLink(getTranslation(MENU_BAR_HOME) , MainView.class));
+    getContent().add(new RouterLink(getTranslation(MENU_BAR_VIEW_A) , ViewB.class));
+    getContent().add(new RouterLink(getTranslation(MENU_BAR_VIEW_B) , ViewB.class));
+  }
+}
+</code></pre>
+<p>Die Einträge hierzu habe ich in der Root-ResouceBundle untergebracht, da eine sinnvolle Übersetzung an der Stelle nicht gegeben ist.</p>
+<h2 id="das-grundgerüst"><a href="#das-grundgerüst" id="das-grundgerüst" class="anchor"></a>Das Grundgerüst</h2>
+<p>Kommen wir nun zu dem Grundgerüst selbst. In der Anwendung soll nun immer oben in der Zeile das Menü untergebracht sein. Sicherlich kann man nun mittels Vererbung versuchen eine Basisklasse zu erzeugen die im späteren Verlauf die Definition der Grundstruktur bereitstellt. Hiervon möchte ich allerdings abraten, da man auch an dieser Stelle sehr schön diese Verantwortlichkeiten trennen kann.</p>
+<p>Der prinzipielle Aufbau ist wie der einer gewöhnlichen Komponente. Eingebettet in ein <strong>Composite<VerticalLayout></strong> kann man zum einen die Komponente der Menuleiste als auch den Platzhalter für den Content definieren.</p>
+<blockquote>
+<p>Wer nochmals nachlesen möchte was es mit dem Composite auf sich hat, der sollte einen Blick in die Dokumentation werfen. <a href="https://vaadin.com/docs/flow/creating-components/tutorial-component-composite.html">https://vaadin.com/docs/flow/creating-components/tutorial-component-composite.html</a>[<a href="https://vaadin.com/docs/flow/creating-components/tutorial-component-composite.html">https://vaadin.com/docs/flow/creating-components/tutorial-component-composite.html</a>]</p>
+</blockquote>
+<p>Beides wird natürlich mit einer ID versehen, damit später einfach mittels Selenium darauf zugegriffen werden kann. Das Testen der Anwendung werden wir ausführlich zu einem späteren Zeitpunkt behandeln.</p>
+<pre><code class="language-java">public class LayoutWithMenuBar extends Composite&lt;VerticalLayout&gt; {
+
+  public static final String LAYOUT_CONTENT_ID = &quot;layout-content&quot;;
+  public static final String LAYOUT_MENUBAR_ID = &quot;layout-menubar&quot;;
+
+  private final MenuBar menuBar = new MenuBar();
+  private final Div content = new Div();
+
+  public LayoutWithMenuBar() {
+    menuBar.setId(LAYOUT_MENUBAR_ID);
+    content.setId(LAYOUT_CONTENT_ID);
+    getContent().add(menuBar, content);
+  }
+}
+</code></pre>
+<p>Wenn dieser Zustand erreicht worden ist, beginnt der süezifische Teil bei der Erstellung von einem Layout. Gemeint ist der Teil, der es später ermöglicht das Routing innerhalb dieser Teilkomponenten abzubilden. Was auf jeden Fall schon aufgefallen sein kann, ist die Tatsache das keine Möglichkeit vorgesehen worden ist den Inhalt der Komponente <strong>content</strong> zu setzen. Wie soll nun dort etwas eingebracht werden?</p>
+<p>Die Lösung liegt in der Abbildung des Lebenszyklus selbst. Hierzu muss man die Klasse <strong>LayoutWithMenuBar</strong> mit einem **implements RouterLayout ** versehen werden.</p>
+<p>Um nun auf den Zeitpunkt reagieren zu können zu dem das Element für den Inhalt gesetzt werden kann ist die Methode <strong>showRouterLayoutContent</strong> zu überschreiben. Als erstes wird der aktuelle Inhalt von dem Attribut <strong>content</strong> entfernt. Nachfolgend kann der Inhalt mit denneuen Elementen gesetzt werden, falls vorhanden.</p>
+<pre><code class="language-java">@Override
+public void showRouterLayoutContent(HasElement hasElement) {
+  logger().info(&quot;showRouterLayoutContent - LayoutWithMenuBar&quot;);
+  content.removeAll();
+  if(hasElement != null){
+    requireNonNull(hasElement.getElement());
+    content.getElement().appendChild(hasElement.getElement());
+  }
+}
+</code></pre>
+<h2 id="aktivieren-des-layouts"><a href="#aktivieren-des-layouts" id="aktivieren-des-layouts" class="anchor"></a>Aktivieren des Layouts</h2>
+<p>Die Implementierung ist nun verwendbar, muss allerdings noch aktiviert werden. Die Verbindung zwischen Route und dem Layout findet in der Annotation <strong>@Route</strong> statt. Nachfolgend zu dem Attribut <strong>value</strong> kommt nun noch die Definition welches Layout der Bezugspunkt sein wird. In der Annotation <em>Route</em> befindet sich für diesen Zweck das Attribut <em>layout</em> das als Parameter eine Klasse erwartet die das Interface <strong>RouterLayout</strong> implementiert. In unserem Beispiel ist es somit: <strong>layout = LayoutWithMenuBar.class</strong></p>
+<pre><code class="language-java">@Route(value = ViewA.NAV_VIEW_A,layout = LayoutWithMenuBar.class)
+public class ViewA extends Composite&lt;Div&gt; {
+  public static final String NAV_VIEW_A = &quot;ViewA&quot;;
+
+  public ViewA() {
+    getContent().add(new Span(&quot;View A&quot;));
+  }
+}
+</code></pre>
+<p>Wichtig ist es hierbei zu wissen, dass die Angabe eines Themes nun an dem Layout zu erfolgen hat und nicht mehr an den Views selber. Sollte man das nicht beachtet haben wird man mit einer Exception vom Typ <strong>InvalidRouteLayoutConfigurationException</strong> belohnt.</p>
+<h2 id="nested-layout"><a href="#nested-layout" id="nested-layout" class="anchor"></a>Nested Layout</h2>
+<p>Nicht immer reicht eine so einfache Struktur aus. Wie kann man nun ein Layout in ein anderes einbetten? Auch hier gilt es wieder zu erreichen, dass jedes Layout so weit wie möglich unabhängig ist. Um nun beispielhaft ein geschachteltes Layout aufzubauen, wollen wir um das vorhandene Layout nun noch ein weiteres legen, das lediglich ein <strong>Span</strong> über und unter dem bisher vorhandenen anbringt.</p>
+<p>Als Ausgangspunkt wird nun eine Klasse mit dem Namen <strong>MainLayout</strong> erzeugt. Auch hier wieder als <strong>Composite<VerticalLayout></strong> und als Implementierung des Interfaces <strong>RouterLayout</strong></p>
+<pre><code class="language-java">@Theme(value = Lumo.class, variant = Lumo.DARK)
+public class MainLayout
+    extends Composite&lt;VerticalLayout&gt;
+    implements RouterLayout, HasLogger {
+    
+  public static final String LAYOUT_CONTENT_ID = &quot;main-layout-content&quot;;
+  //Component to delegate content through.
+  private Div content = new Div();
+
+  public MainLayout() {
+    content.setId(LAYOUT_CONTENT_ID);
+    getContent().add(
+        new Span(&quot;TOP&quot;),
+        content,
+        new Span(&quot;Bottom&quot;));
+  }
+
+  @Override
+  public void showRouterLayoutContent(HasElement hasElement) {
+    logger().info(&quot;showRouterLayoutContent - MainLayout&quot;);
+    content.removeAll();
+    if(hasElement != null){
+      requireNonNull(hasElement.getElement());
+      content.getElement().appendChild(hasElement.getElement());
+    }
+  }
+}
+</code></pre>
+<p>Um die Layouts zu verschachteln, werden die einzelnen Teillayouts and ihren jeweiligen Vater gebunden. Das passiert mittels der Annotation <strong>@ParentLayout</strong>. In unserem Beispiel ist die folgende Annotation an der Klasse <strong>LayoutWithMenuBar</strong>  zu verwenden: <strong>@ParentLayout(value = MainLayout.class)</strong></p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Hiermit haben wir nun die Möglichkeit beliebig komplex verschachtelte Layouts zu kontruieren. Selbstverständlich gilt auch hier wieder, dass es nicht übertrieben werden sollte. Wo da die Grenze liegt ist allerdings, wie immer, eine recht individuelle Metrik. In dem nachfolgenden Teil werden wir uns damit beschäftigen wie man einen Anwendungsrahmen basierend auf dem <strong>Vaadin AppLayout</strong> aufbauen kann.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden.
+<a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-006">https://github.com/Java-Publications/backend-meets-frontend-reloaded-006</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/vaadin/2019/5/20/v10_backend_meets_frontend_reloaded_part_005">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 05
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007">
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 07
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

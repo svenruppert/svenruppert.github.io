@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 01</title>
+
+
+<meta name="description" content="Vaadin 10 ist nun schon einige Zeit verfügbar und immer mehr Projekte beginnen mit dieser Version oder beginnen mit der Migration. In diesem Tutorial werden wir uns mit Vaadin 10 beschäftigen mit dem Fokus auf langlebige Projekte.">
+
+
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-01-20-V10_Backend_Meets_Frontend_Reloaded_Part_001.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/1/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_001","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001"},"next":{"path":"blog/vaadin/2019/2/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002"},"description":"Vaadin 10 ist nun schon einige Zeit verfügbar und immer mehr Projekte beginnen mit dieser Version oder beginnen mit der Migration. In diesem Tutorial werden wir uns mit Vaadin 10 beschäftigen mit dem Fokus auf langlebige Projekte.","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 01"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/1/20/v10_backend_meets_frontend_reloaded_part_001" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 01</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 01</h2>
+        <p class="subtitle is-4">Vaadin 10 ist nun schon einige Zeit verfügbar und immer mehr Projekte beginnen mit dieser Version oder beginnen mit der Migration. In diesem Tutorial werden wir uns mit Vaadin 10 beschäftigen mit dem Fokus auf langlebige Projekte.</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 01</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-01-20">Januar 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>Vaadin 10 ist nun schon einige Zeit verfügbar und immer mehr Projekte beginnen mit dieser Version oder beginnen mit der Migration.
+In diesem Tutorial werden wir uns mit Vaadin 10 beschäftigen mit dem Fokus auf
+langlebige Projekte.</p>
+<h2 id="die-projektgrundlage"><a href="#die-projektgrundlage" id="die-projektgrundlage" class="anchor"></a>Die Projektgrundlage</h2>
+<p>Beginnen wir hier kurz mit der Projektgrundlage. Aufgrund der neuen Releasezyklen von Oracle werden wir uns hier auch immer mit dem gerade aktuellen JDK auseinandersetzen. Das hat für lange laufende Projekte auf der einen Seite seinen Reiz,
+wenn man auch manchmal eher von Brechreiz sprechen kann, auf der anderen Seite<br />
+sollte die Struktur darauf ausgelegt sein.</p>
+<h2 id="der-projektbeginn"><a href="#der-projektbeginn" id="der-projektbeginn" class="anchor"></a>Der Projektbeginn</h2>
+<p>Derzeitig ist das JDK 10 aktuell, JDK11 steht kurz vor der Tür. Ein perfekter Zeitpunkt um zu erfahren wie die Auswirkungen eines JDK-Wechsels zu handhaben sind.</p>
+<p>Das Projekt selbst wird mittels Maven <a href="https://maven.apache.org/">https://maven.apache.org/</a> verwaltet. Hierzu wird die grundlegende Struktur angelegt und wir beginnen in der <strong>pom.xml</strong> mit der notwendigen Definition zur Verwendung des JDK10.
+Als aller erstes stellen wir sicher, das auf keinen Fall eine Version in einem maven Repository abgelegt wird.
+Statt dessen wird als Ziel ein lokales Verzeichnis angegeben.</p>
+<pre><code class="language-xml">  &lt;!-- Just to disable any accidential deployment to maven.central --&gt;
+  &lt;distributionManagement&gt;
+    &lt;repository&gt;
+      &lt;id&gt;localhost&lt;/id&gt;
+      &lt;url&gt;file://${basedir}/target/repo/&lt;/url&gt;
+    &lt;/repository&gt;
+    &lt;snapshotRepository&gt;
+      &lt;id&gt;localhost&lt;/id&gt;
+      &lt;url&gt;file://${basedir}/target/snapshot-repo/&lt;/url&gt;
+    &lt;/snapshotRepository&gt;
+  &lt;/distributionManagement&gt;
+</code></pre>
+<p>Wir werden zu Beginn keine Vaadin Add Ons verwenden, demnach kann die nachfolgende Definition in der <strong>pom.xml</strong>
+zu Beginn auch entfallen was ein *<em>mvn clean install</em> beschleunigt.</p>
+<pre><code class="language-xml">  &lt;repositories&gt;
+    &lt;repository&gt;
+      &lt;id&gt;vaadin-addons&lt;/id&gt;
+      &lt;url&gt;http://maven.vaadin.com/vaadin-addons&lt;/url&gt;
+      &lt;!--&lt;url&gt;http://maven.vaadin.com/&lt;/url&gt;--&gt;
+    &lt;/repository&gt;
+  &lt;/repositories&gt;
+</code></pre>
+<p>Um nun die grundlegenden Versionsdefinitionen der Vaadin - Plattform zu verwenden, wird die Vaadin10 BOM importiert.</p>
+<pre><code class="language-xml">  &lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+      &lt;!--Vaadin --&gt;
+      &lt;dependency&gt;
+        &lt;groupId&gt;com.vaadin&lt;/groupId&gt;
+        &lt;artifactId&gt;vaadin-bom&lt;/artifactId&gt;
+        &lt;version&gt;${vaadin.version}&lt;/version&gt;
+        &lt;type&gt;pom&lt;/type&gt;
+        &lt;scope&gt;import&lt;/scope&gt;
+      &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+  &lt;/dependencyManagement&gt;
+</code></pre>
+<p>Kommen wir zu den Properties. Um das JDK auch in der Sprachversion 10 zu verwenden setzen wir noch die nachfolgenden Konstanten die für das
+Maven Compiler-Plugin notwendig sind.</p>
+<pre><code class="language-xml">    &lt;maven.compiler.release&gt;10&lt;/maven.compiler.release&gt;
+    &lt;maven.compiler.target&gt;10&lt;/maven.compiler.target&gt;
+    &lt;maven.compiler.source&gt;10&lt;/maven.compiler.source&gt;
+</code></pre>
+<p>Ebenfalls setzen wir den Zeichensatz auf UTF-8.</p>
+<pre><code class="language-xml">    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+</code></pre>
+<p>Dazu kommen noch die Versionen für die Vaadin Platform und den verwendeten Servlet-Container.</p>
+<pre><code class="language-xml">    &lt;vaadin.version&gt;10.0.5&lt;/vaadin.version&gt;
+    &lt;meecrowave.version&gt;1.2.3&lt;/meecrowave.version&gt;
+</code></pre>
+<p>Was nun noch fehlt sind die Abhängigkeiten selbst.
+Zuerst einmal das minimal notwendige um mit Java eine Vaadin 10 Anwendung zu schreiben.</p>
+<pre><code class="language-xml">    &lt;!--Vaadin --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.vaadin&lt;/groupId&gt;
+      &lt;artifactId&gt;vaadin&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.vaadin&lt;/groupId&gt;
+      &lt;artifactId&gt;vaadin-lumo-theme&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+</code></pre>
+<p>Und als Servlet-Container bzw Ablaufumgebung kommt der Apache Meecrowave zum Einsatz.
+Wer hier ein wenig mehr lesen möchte der kann hier auf JaxEnter den Artikel <a href="https://jaxenter.de/apache-meecrowave-vaadin-72875">Anwendungsbau mit Apache Meecrowave</a> als Anfang verwenden.</p>
+<pre><code class="language-xml">    &lt;!--Infrastructure--&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.apache.meecrowave&lt;/groupId&gt;
+      &lt;artifactId&gt;meecrowave-core&lt;/artifactId&gt;
+      &lt;version&gt;${meecrowave.version}&lt;/version&gt;
+      &lt;scope&gt;compile&lt;/scope&gt;
+    &lt;/dependency&gt;
+</code></pre>
+<p>Nun sind die notwendigen Abhängigkeiten definiert und wir können mit der Programmierung beginnen.</p>
+<h2 id="web-app-mit-vaadin-10---der-einstieg"><a href="#web-app-mit-vaadin-10---der-einstieg" id="web-app-mit-vaadin-10---der-einstieg" class="anchor"></a>Web-App mit Vaadin 10 - der Einstieg</h2>
+<p>Als erstes erzeugen wir uns eine Klasse mit einer <strong>main</strong> - Methode um den initialen Einstiegspunkt zu definieren.
+In unserem Fall bekommt die Klasse den Namen <strong>BasicTestUIRunner</strong>. Sie diehnt lediglich dazu den Meecrowave zu starten
+und ein paar Parameter zu setzen. In diesem Fall zum Beispiel, das <strong>http2</strong> aktiviert wird und der Port <strong>8080</strong> verwendet werden soll.</p>
+<pre><code class="language-java">public class BasicTestUIRunner {
+  private BasicTestUIRunner() {
+  }
+
+  public static void main(String[] args) {
+    new Meecrowave(new Meecrowave.Builder() {
+      {
+//        randomHttpPort();
+        setHttpPort(8080);
+        setTomcatScanning(true);
+        setTomcatAutoSetup(true);
+        setHttp2(true);
+      }
+    })
+        .bake()
+        .await();
+  }
+}
+</code></pre>
+<h3 id="der-grafische-einstiegspunkt"><a href="#der-grafische-einstiegspunkt" id="der-grafische-einstiegspunkt" class="anchor"></a>Der grafische Einstiegspunkt</h3>
+<p>In Vaadin 8 ist es noch notwendig gewesen ein Servlet zu definieren, das den logischen Einstiegspunkt
+darstellte. Das hat sich mit Vaadin 10 geändert. Das Servlet ist optional, da eine Implementierung
+standartmäßig mitgeliefert wird, die in den meisten Fällen mehr als ausreichend ist.
+Bei dem Start des Servletcontainers, registriert sich das Servlet selbständig und übernimmt die initialen Schritte.</p>
+<p>Basierend darauf kann die Definition der ersten grafischen Elemente erfolgen.
+Hierfür erzeugen wir eine Klasse <code>VaadinApp extends Composite&lt;Div&gt;</code>.
+Diese soll uns als logischer Einstieg in die App diehnen. Anhand der Definition kann man erkennen
+das es sich hier schon um eine Klasse mit Vaadin spezifischen Elementen handelt. In diesem Fall um ein
+<strong>Composite</strong>. Bei einem <strong>Composite</strong> handelt es sich um einen Wrapper der die darin enthaltenen
+grafischen Elemente in der Zielseite enthält ohne Teil des DOM-Baumes zu sein.
+Ok, hört sich ert einmal kompliziert an. Allerdings kann man sich das nun so vorstellen, das
+hier ein Rahmen für die zun hinzuzufügenden Elemente geschaffen wird. In diesem Fall handelt es sich um ein Basiselement
+vom Typ <strong>Div</strong>. In dieses <strong>Div</strong> werden wir nun unsere eigenen Elemente hineinlegen.</p>
+<p>Die Klasse bekommt noch die Annotation <code>@Route(&quot;&quot;)</code>. Hiermit wird die Komposition in der Klasse <code>VaadinApp</code>
+mit der logischen URL <strong>/</strong> verknüpft. Damit stehen initial alle notwendigen Informationen zum Starten der Vaadin App
+zur Verfügung. Das Servlet wird initialisiert und ein Request auf die Root Ebene der Anwendung wird mit dem Inhalt
+der in der Klasse <code>VaadinApp</code> gesetzten grafischen Elemente bediehnt.</p>
+<pre><code class="language-java">@Route(&quot;&quot;)
+public class VaadinApp extends Composite&lt;Div&gt; {
+  public VaadinApp() {
+    getContent().add(new LoginView());
+  }
+}
+</code></pre>
+<h3 id="und-am-anfang-steht-der-login"><a href="#und-am-anfang-steht-der-login" id="und-am-anfang-steht-der-login" class="anchor"></a>und am Anfang steht der Login</h3>
+<p>Die erste UseCase der in diesem Beispiel implementiert wird, ist der Anmeldeprozess.
+![_images/Login Screen.png](_images/Login Screen.png)
+Die Funktion ist schnell erklärt. Der Benutzer soll bei dem ersten Besuch auf diese Anmeldeseite
+weitergeleitet werden. Dort wird die Angabe von Username und Passwort erfordert.
+Bei Bedarf kann der User noch die Checlbox &quot;remember me&quot; aktivieren. Sind die Eingaben getätigt,
+werden diese durch die Verwendung des <strong>Login</strong> Buttons zum Server gesendet, dort verifizert und
+wenn es sich um eine gültige Kombination handelt, den Zugriff auf die restliche Applikation ermöglichen.
+Der <strong>Cancel</strong> Button bricht diesen Vorgang ab. Auf jeden Fall werden die beiden Eingabefelder
+bei der Verwendung von einer der beiden Buttons, geleert.</p>
+<h4 id="aufbau-und-aktivierung-der-loginview"><a href="#aufbau-und-aktivierung-der-loginview" id="aufbau-und-aktivierung-der-loginview" class="anchor"></a>Aufbau und Aktivierung der LoginView</h4>
+<p>Die Elemente die für diesen UseCase benötigt werden, werden in der Klasse mit dem Namen <code>LoginView</code>
+definiert.</p>
+<p>Um nun die <code>LoginView</code> zu verwenden erzeugen wir eine Instanz in der Klasse <code>VaadinApp</code>und fügen diese dann dem
+Objektbaum hinzu. Mit der Methode <code>getContent()</code> erhält man die Instanz der Komponente die durch das Composite bereitgestellt wird.
+Dieser Instanz fügt man dann die gewünschten Elemente hinzu. In unserem Fall die Instanz der <code>LoginView</code>.</p>
+<pre><code class="language-java">@Route(&quot;&quot;)
+public class VaadinApp extends Composite&lt;Div&gt; {
+  public VaadinApp() {
+    getContent().add(new LoginView());
+  }
+}
+</code></pre>
+<p>Natürlich kann man auch alle Elemente die wir nun in der Klasse <code>LoginView</code>definieren gleich der Instanz der Klasse <code>VaadinApp</code> hinzufügen. Allerdings sollte man schon bei Beginn der Implementierung die wesentlichen Blöcke voneinander trennen.</p>
+<p>Benötigt werden zwei Texteingabe-Felder, wobei eines davon für die Eingabe von Passwörtern verwendet wird.
+Eine Checkbox für die &quot;Remember Me&quot; Funktion und zwei Buttons. Die Anzahl der Elemente ist demnach sehr überschaubar.
+Allerdings ist dem Mock zu sehen, das die Elemente untereinander ausgerichtet sind und sich dabei in der Mitte
+der zur Verfügung stehenden Fläche innerhalb des Browsers befinden.</p>
+<p>Alles zusammen ergibt schon eine gewisse Komplexität.</p>
+<h4 id="version-01---die-elemente"><a href="#version-01---die-elemente" id="version-01---die-elemente" class="anchor"></a>Version 01 - die Elemente</h4>
+<p>Beginne wir nun die benötigten Elemente erst einmal zu erzeugen. Um einen Überblick über die verfügbaren Komponenten zu erhalten,
+kann man sich unter <a href="https://vaadin.com/components/browse">https://vaadin.com/components/browse</a> eine Liste aller verfügbaren
+Elemente ansehen. Ebenfalls sind dort auch zu jeder Komponente kleine Beispiele als Demo zusammen mit dem
+dazu gehörenden Quelltexten. Zusammen gibt es einen guten Einstieg.</p>
+<p>Wenn man nun einfach alle Elemente in der Klasse <code>LoginView</code> definiert ergibt sich das nachfolgende Ergebnis.</p>
+<pre><code class="language-java">public class LoginViewOO extends Composite&lt;VerticalLayout&gt; {
+
+  private final TextField     username   = new TextField();
+  private final PasswordField password   = new PasswordField();
+  private final Checkbox      rememberMe = new Checkbox();
+  private final Button        btnLogin   = new Button();
+  private final Button        btnCancel  = new Button();
+
+  public LoginViewOO() {
+    getContent().add(username, password, rememberMe, btnLogin, btnCancel);
+  }
+}
+
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_001.png" alt="" /></p>
+<p>Als nächstes gruppieren wir die beiden Eingabefelder und ordenen diese nebeneinander an.
+Dazu werden einfach beide Eingabefelder in ein <code>HorizontalLayout</code> zusammengefasst.</p>
+<pre><code class="language-java">  public LoginViewOO() {
+    HorizontalLayout input = new HorizontalLayout(username, password);
+    getContent().add(input, rememberMe, btnLogin, btnCancel);
+  }
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_002.png" alt="" /></p>
+<p>Ebenso wird mit den beiden Buttons verfahren.</p>
+<pre><code class="language-java">  public LoginViewOO() {
+    HorizontalLayout input = new HorizontalLayout(username, password);
+    HorizontalLayout buttons = new HorizontalLayout(btnLogin, btnCancel);
+    getContent().add(input, rememberMe, buttons);
+  }
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_003.png" alt="" /></p>
+<p>Um nun alle Elemente in der Mitte des verfügbaren Fläche zu positionieren,
+werden alle Elemente in ein gemeinsames Element gruppiert. Auch hier kommt wieder
+ein <code>VerticalLayout</code> zum Einsatz. Innerhalb dieser Komponente werden alle Elemente
+horizontal in der Mitte positioniert.</p>
+<pre><code class="language-java">  public LoginViewOO() {
+    HorizontalLayout input = new HorizontalLayout(username, password);
+    HorizontalLayout buttons = new HorizontalLayout(btnLogin, btnCancel);
+    VerticalLayout group = new VerticalLayout(input, rememberMe, buttons);
+    group.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+    getContent().add(group);
+  }
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_004.png" alt="" /></p>
+<p>Als nächstes werden die Elemente untereinander bündig an der linken Seite ausgerichtet. Dazu wird das <code>VerticalLayout</code> so konfiguriert, dass die enthaltenen Elemente horizontal alle am Beginn der VerticalLayout-Instanz ausgerichtet werden.
+Das VerticalLayout selbst soll nicht über die gesamte Breite des verfügbaren Platzes gehen.
+Das wird erreicht, indem die Größe auf <strong>undefiniert</strong> gesetzt wird. Somit wird die Größe anhand der enthaltenen Elemente berechnet.</p>
+<p>Dieser Block soll dann aber horizontal in der Mitte plaziert werden. Hierfür wird wieder ein <code>HorizontalLayout</code>verwendet.
+Die Ausrichtung der Elemente innerhalb des Layouts erfolgt in diesem Layout mittig.</p>
+<pre><code class="language-java">  public LoginViewOO() {
+    HorizontalLayout input   = new HorizontalLayout(username, password);
+    HorizontalLayout buttons = new HorizontalLayout(btnLogin, btnCancel);
+    VerticalLayout   groupV  = new VerticalLayout(input, rememberMe, buttons);
+    groupV.setDefaultHorizontalComponentAlignment(Alignment.START);
+    groupV.setSizeUndefined();
+
+
+    HorizontalLayout content = getContent();
+    content.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+    content.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+    content.setSizeFull();
+    content.add(groupV);
+  }
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_005.png" alt="" /></p>
+<p>Nun muss dieser Block den wir gerade ausgerichtet haben wieder vertikal in die Mitte verlegt werden.
+Nun stellt sich die Frage warum das nicht schon geschen ist. Um hier eine Antwort zu erhalten lohnt es sich
+mittels Chrome einmal einen Blick auf die Seite zu werfen und die Etwicklertools zu verwenden.</p>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_006.png" alt="" /></p>
+<p>Wie man unschwer erkennen kann, ist das ummantelnde DIV nicht auf die gesamte zur Verfügung stehenden Fläche ausgebreitet.
+Das lässt sich leicht ändern und ist als Grundeinstellung in einer Anwendung oftmals eine solide Grundeinstellung.
+Hierzu wird in der Klasse <code>VaadinApp</code> die Instanz der Klasse <code>Div</code> aus dem Composite geholt und dessen Größe auf maximal gesetzt.</p>
+<pre><code class="language-java">  public VaadinApp() {
+    Div content = getContent();
+    content.setSizeFull();
+    content.add(new LoginViewOO());
+  }
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_007.png" alt="" /></p>
+<p>Fertig sind wir mit dem grundsätzlichen Aufbau der Anmelde-Maske. Nun fehlen noch die Feinheiten der
+einzelnen Elemente und die Funktionen. Eine Kleinigkeit allerdings möchte ich noch
+der Klasse <code>VaadinApp</code> anfügen. <code>@Theme(value = Lumo.class, variant = Lumo.DARK)</code>
+Hiermit die das Theme angegeben, in diesem Fall das default - Theme, und zusätzlich das Attribute
+welche Variante aktiviert werden soll. Und da derzeitig dunkle Varianten überall anzutreffen sind,
+probieren wir es hier ebenfalls aus.</p>
+<pre><code class="language-java">@Route(&quot;&quot;)
+@Theme(value = Lumo.class, variant = Lumo.DARK)
+public class VaadinApp extends Composite&lt;Div&gt; implements HasLogger {
+  public VaadinApp() {
+    Div content = getContent();
+    content.setSizeFull();
+    content.add(new LoginViewOO());
+  }
+}
+</code></pre>
+<p><img src="http://www.sven-ruppert.de/assets/media/posts/vaadin/2019-01-20/LoginScreen_Step_008.png" alt="" /></p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben in diesem Artikel den Grundstein für ein Vaadin10 Projekt gelegt. Hierbei haben wir in maven alle notwendigen Abhängigkeiten definiert. Als JDK ist das Open JDK der Version 10 zu Einsatz gekommen. Alles zusammen läuft im Apache Meecrowave.</p>
+<p>In den nächsten Teilen werden wir uns mit weiteren Dingen beschäftigen wie zum Beispiel Mehrsprachlichkeit,
+Aufbau von Komplexen UI Modulen, Einbindung von Kernfunktionen aus den Bereich Security, TDD und vieles mehr.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden.
+<a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-001">https://github.com/Java-Publications/backend-meets-frontend-reloaded-001</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" disabled>
+    <span class="inner">
+      <span class="icon"><i class="fas fa-chevron-left"></i></span>
+      Previous
+    </span>
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/vaadin/2019/2/20/v10_backend_meets_frontend_reloaded_part_002">
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 02
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

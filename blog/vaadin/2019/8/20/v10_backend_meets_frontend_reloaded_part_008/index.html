@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Vaadin 10 - Backend meets Frontend - Reloaded - Part 08</title>
+
+
+<meta name="description" content="In unserem letzten Teil der Serie haben wir uns mit dem App LAyout von Vaadin beschäftigt. Für einfache Anwendungen ist das ein sehr gute Wahl. Kommen wir aber zu Anforderungen die über die Positionierung einer Menüleiste hinausgehen, gibt es ein paar komfortablere AddOns aus dem vaadin Directory. Das AddOn von Johannes Goebel werden wir uns heute ein wenig genauer ansehen. ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007">
+
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-vaadin, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/vaadin/2019-08-20-V10_Backend_Meets_Frontend_Reloaded_Part_008.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/vaadin/2019/8/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_008","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008"},"previous":{"path":"blog/vaadin/2019/7/20","baseUrl":"http://www.sven-ruppert.de","fileName":"v10_backend_meets_frontend_reloaded_part_007","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007"},"description":"In unserem letzten Teil der Serie haben wir uns mit dem App LAyout von Vaadin beschäftigt. Für einfache Anwendungen ist das ein sehr gute Wahl. Kommen wir aber zu Anforderungen die über die Positionierung einer Menüleiste hinausgehen, gibt es ein paar komfortablere AddOns aus dem vaadin Directory. Das AddOn von Johannes Goebel werden wir uns heute ein wenig genauer ansehen. ","title":"Vaadin 10 - Backend meets Frontend - Reloaded - Part 08"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/vaadin">Vaadin</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/vaadin/2019/8/20/v10_backend_meets_frontend_reloaded_part_008" aria-current="page">Vaadin 10 - Backend meets Frontend - Reloaded - Part 08</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Vaadin 10 - Backend meets Frontend - Reloaded - Part 08</h2>
+        <p class="subtitle is-4">In unserem letzten Teil der Serie haben wir uns mit dem App LAyout von Vaadin beschäftigt. Für einfache Anwendungen ist das ein sehr gute Wahl. Kommen wir aber zu Anforderungen die über die Positionierung einer Menüleiste hinausgehen, gibt es ein paar komfortablere AddOns aus dem vaadin Directory. Das AddOn von Johannes Goebel werden wir uns heute ein wenig genauer ansehen. </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Vaadin 10 - Backend meets Frontend - Reloaded - Part 08</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-08-20">August 20, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/vaadin">#Vaadin</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/serverside-webapps">#serverside webapps</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/web-components">#web components</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <p>In unserem letzten Teil der Serie haben wir uns mit dem App LAyout von Vaadin beschäftigt. Für einfache Anwendungen ist das ein sehr gute Wahl. Kommen wir aber zu Anforderungen die über die Positionierung einer Menüleiste hinausgehen, gibt es ein paar komfortablere AddOns aus dem vaadin Directory. Das AddOn von Johannes Goebel werden wir uns heute ein wenig genauer ansehen.</p>
+<h2 id="vorbereitungen"><a href="#vorbereitungen" id="vorbereitungen" class="anchor"></a>Vorbereitungen</h2>
+<p>Wenn man auf der Suche nach Vaadin AddOns ist, sollte die Suche in dem offiziellen <a href="https://vaadin.com/directory">Vaadin Directory</a> beginnen. Hier findet man allerlei AddOns zu den unterschiedlichsten Fragestellungen und Anforderungen.</p>
+<p>Um Zugriff via Maven auf die dort gehosteten AddOns zu bekommen muss man in der <strong>pom.xml</strong> das spezifische Vaadin Repository angeben.</p>
+<pre><code class="language-xml">&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;vaadin-addons&lt;/id&gt;
+    &lt;url&gt;http://maven.vaadin.com/vaadin-addons&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+</code></pre>
+<p>Nachdem Maven die neuen Koordinaten bekommen hat und die Gelegenheit hatte das Repository zu scannen, stehen einem in der IDE die Informationen zur Verfügung um zum Beispiel das hier besprochene AddOn zu verwenden bzw erst einmal in der <strong>pom.xml</strong> zu deklarieren.</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+   &lt;groupId&gt;com.github.appreciated&lt;/groupId&gt;
+   &lt;artifactId&gt;app-layout-addon&lt;/artifactId&gt;
+   &lt;version&gt;2.1.0.alpha1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Ich beziehe mich hier auf die angegebene Version. Da sich das AddOn unter aktiver Entwicklung befindet lohnt es sich nachzusehen ob es schon ein weiteres Update gibt.</p>
+<h2 id="das-layout"><a href="#das-layout" id="das-layout" class="anchor"></a>Das Layout</h2>
+<p>Das letzte Mal hatten wir die Menüeintrage oben in dem Layout eingebunden. Diesmal werden wir es an dem Rand der linken Seite, von oben nach unten orientiert, positionieren.</p>
+<p>Das Grundgerüst das hier zum Einsatz kommen wird, basiert auf der Komponente App-Layout von Johannes Goebel. Die offizielle Beschreibung zu der Komponente befindet sich übrigens <a href="https://vaadin.com/directory/component/app-layout-add-on">hier</a>.</p>
+<p>Kommen wir nun zu der Implementierung. In dem letzten Teil wurde eine Klasse mit dem Namen <strong>MainLayout</strong> erstellt. In dieser Klasse haben wir die Definitionen des Layouts platziert. Wenn alles sauber implementiert worden ist, sollte auch ausschließlich diese Klasse iweder zu editieren sein um auf das neue Layout zu wechseln.</p>
+<p>Die Klasse <strong>MainLayout</strong> erbt diesmal von der Klasse <strong>AppLayoutRouterLayout</strong>. Wie auch in der vorherigen Version, ist in den Basisklassen das für das jeweilige Layout spezifische, implementiert. Die Initialisierung erfolgt diesmal innerhalb des Konstruktors.</p>
+<h3 id="das-grundgerüst"><a href="#das-grundgerüst" id="das-grundgerüst" class="anchor"></a>Das Grundgerüst</h3>
+<blockquote>
+<p>Der Ansatz in diesem Layout ist auch wieder basierend auf dem RouterLayout-Konzept von Flow. Wer hier ein wenig über die Grundprinzipien nachlesen möchte, verweise ich auf die <a href="https://vaadin.com/tutorials/nested-layouts-in-flow">Dokumentation</a> im Learning Center.</p>
+</blockquote>
+<p>Das Grundgerüst wird in diesem Falle über spezialisierte Builder erzeugt und nach erfolgter Konfiguration mittels der Methode <strong>init(AppLayout applayout)</strong> der Basisimplementierung übergeben.</p>
+<p>Der Hauptbuilder befindet sich in der Klasse <strong>AppLayoutBuilder</strong> und die Methode <strong>get(..)</strong> liefert eine Instanz zurück. Der Parameter der Methode <strong>AppLayoutBuilder.get</strong> legt das grundlegende Verhalten des Layouts fest. Zur Auswahl stehen derzeitig:</p>
+<ul>
+<li>LEFT</li>
+<li>LEFT_RESPONSIVE</li>
+<li>LEFT_HYBRID</li>
+<li>LEFT_HYBRID_SMALL</li>
+<li>LEFT_RESPONSIVE_HYBRID</li>
+<li>LEFT_RESPONSIVE_HYBRID_NO_APP_BAR</li>
+<li>LEFT_RESPONSIVE_HYBRID_OVERLAY_NO_APP_BAR</li>
+<li>LEFT_OVERLAY</li>
+<li>LEFT_RESPONSIVE_OVERLAY</li>
+<li>LEFT_RESPONSIVE_OVERLAY_NO_APP_BAR</li>
+<li>LEFT_RESPONSIVE_SMALL</li>
+<li>LEFT_RESPONSIVE_SMALL_NO_APP_BAR</li>
+<li>TOP</li>
+<li>TOP_LARGE</li>
+</ul>
+<p>Anhand der Namen kann man schon erkennen das es zwei Hauptgruppen gibt. Die eine Gruppe hat das Menü auf der linken Seite, die andere Gruppe hat die Menüpunkte am oberen Rand.</p>
+<p>In diesem Bespiel verwende ich das Verhalten mit dem Namen <strong>LEFT_RESPONSIVE_HYBRID</strong></p>
+<pre><code class="language-java"> public MainLayout() {
+   Image img = new Image(
+     new StreamResource(LOGO_PNG, 
+                        () -&gt; MainLayout.class.getResourceAsStream(&quot;/&quot; + LOGO_PNG)),
+     &quot;Vaadin Logo&quot;
+   );
+ 
+   //app layout specific
+   img.setHeight(&quot;var(--app-layout-menu-button-height)&quot;);
+ 
+   AppLayout appLayout = AppLayoutBuilder
+       .get(Behaviour.LEFT_RESPONSIVE_HYBRID)
+       .withTitle(getTranslation(TITLE))
+       .withIconComponent(img)
+       .withAppMenu(appMenu())
+       .build();
+ 
+   init(appLayout);
+ }
+</code></pre>
+<p>Die restlichen Methoden des Builders sind recht selbst erklärend. Eine Besonderheit gibt es noch, wenn man ein Logo setzen möchte. Verwendet man die Methode mit der Signatur die eine Instanz der Klasse Image akzeptiert, muss man das Attribut <strong>Height</strong> auf den Wert  setzen der durch <strong>var(--app-layout-menu-button-height)</strong> definiert wird.</p>
+<h2 id="das-menü"><a href="#das-menü" id="das-menü" class="anchor"></a>Das Menü</h2>
+<p>Die Definition von einem Menü ist hier noch nicht erkennbar und ist durch den Methodenaufruf <strong>appMenu()</strong> bisher verborgen worden.</p>
+<pre><code class="language-java">private Component appMenu() {
+  return LeftAppMenuBuilder
+      .get()
+      .add(getTranslation(ITM_DASHBOARD), DASHBOARD.create(), DashboardView.class)
+      .add(getTranslation(ITM_PROFILE), USER.create(), ProfileView.class)
+      .add(getTranslation(ITM_TRENDS), TRENDING_UP.create(), TrendsView.class)
+      .add(new LeftClickableItem(getTranslation(ITM_LOGOUT), SIGN_OUT.create(), e -&gt; {
+        UI            ui      = UI.getCurrent();
+        VaadinSession session = ui.getSession();
+        session.setAttribute(SecurityService.User.class, null);
+        session.close();
+        ui.navigate(MainView.class);
+      }))
+      .build();
+}
+</code></pre>
+<p>Auch hier gibt es für das Menü auf der linken Seite einen entsprechenden Builder. Der Klassenname lautet <strong>LeftAppMenuBuilder</strong>. Hier ist bei der ersten Verwendung in der wir ein semantisches Äquivalent zu dem Beispiel aus dem letzten Blog erzeugen wollen lediglich die Methode <strong>add</strong> relevant. Zum Einsatz kommen zwei Versionen der Methode.  Die erste Version erzeugt Navigationsziele die sich aus den selben Elementen erzeugen lassen wie beim letzten Mal. Gemeint ist ein Icon, eine Beschreibung die mittels I18N übersetzt wird und ein Navigationsziel. Letzteres wird durch die Angabe der Klasse vorgenommen, die über eine Annotation vom Typ <strong>Route</strong> verfügt.</p>
+<p>Die zweite Version bekommt einen Instanz der Klasse <strong>LeftClickableItem</strong> übergeben. Die notwendingen Angaben unterscheiden sich lediglich in dem letzten Parameter. Astelle eines Navigationsziels wird hier eine Aktion definiert die ausgeführt werden soll. Hier ist es ein Abmelden des angemeldeten Benutzers und ein damit hergehendes Beenden der Session.</p>
+<p>Um nun das Layout zu verwenden muss man an den beteiligten Views in der <strong>@Route</strong> Annotation das Attribut <strong>layout</strong> mit der Klasse <strong>MainLayout</strong> belegen.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Das hier verwendete App Layout hat noch einge weitere Eigenschaften die hier nicht erwähnt worden sind. Hier lohnt sich ein Blick in die Beispiele des Projektes, die sehr ausführlich sind. Hervorheben möchte ich auch, das es sich um ein responsives Layout handelt, was recht gut mit den verschiedenen Endgeräten wie Desktop, Tablet oder Mobiltelefon funktioniert.</p>
+<p>Das Beispiel zu diesem Teil ist auf github unter der folgenden URL zu finden. <a href="https://github.com/Java-Publications/backend-meets-frontend-reloaded-008">https://github.com/Java-Publications/backend-meets-frontend-reloaded-008</a></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/vaadin/2019/7/20/v10_backend_meets_frontend_reloaded_part_007">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Vaadin 10 - Backend meets Frontend - Reloaded - Part 07
+  </a>
+
+
+
+  <a class="pagination-next" disabled>
+    <span class="inner">
+      Next
+      <span class="icon"><i class="fas fa-chevron-right"></i></span>
+    </span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

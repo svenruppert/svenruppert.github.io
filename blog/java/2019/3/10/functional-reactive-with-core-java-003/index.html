@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 03</title>
+
+
+<meta name="description" content="In unserem letzten Teil haben wir uns mit der seit Java8 vorhandenen Klasse ```Optional&lt;T&gt;``` auseinander gesetzt. Dort haben wir gesehen, das wir einige Kontrollstrukturen ersetzen können durch einen fluent- bzw functional-style. Ebenfalls ermöglicht es uns der allseits bekannten ```NullpointerException``` entgegenzuwirken. Allerdings ist die Klasse ```Optional&lt;T&gt;``` final definiert. Demnach ist eine Erweiterung so nicht möglich, was uns in mancher Hinsicht dann doch im Wege stehen kann. Warum die Klasse ```Optional&lt;T&gt;``` nun genau **final** definiert worden ist konnte ich nicht herausfinden. (Ich mus aber auch zugeben, dass ich nicht lange versucht habe es herauszufinden) ">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-03-10-functional-reactive-with-core-java-003.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/3/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-003","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003"},"next":{"path":"blog/java/2019/4/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-004","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004"},"previous":{"path":"blog/java/2019/2/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-002","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002"},"description":"In unserem letzten Teil haben wir uns mit der seit Java8 vorhandenen Klasse ```Optional<T>``` auseinander gesetzt. Dort haben wir gesehen, das wir einige Kontrollstrukturen ersetzen können durch einen fluent- bzw functional-style. Ebenfalls ermöglicht es uns der allseits bekannten ```NullpointerException``` entgegenzuwirken. Allerdings ist die Klasse ```Optional<T>``` final definiert. Demnach ist eine Erweiterung so nicht möglich, was uns in mancher Hinsicht dann doch im Wege stehen kann. Warum die Klasse ```Optional<T>``` nun genau **final** definiert worden ist konnte ich nicht herausfinden. (Ich mus aber auch zugeben, dass ich nicht lange versucht habe es herauszufinden) ","title":"Functional Reactive mit Core Java 03"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/3/10/functional-reactive-with-core-java-003" aria-current="page">Functional Reactive mit Core Java 03</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 03</h2>
+        <p class="subtitle is-4">In unserem letzten Teil haben wir uns mit der seit Java8 vorhandenen Klasse ```Optional&lt;T&gt;``` auseinander gesetzt. Dort haben wir gesehen, das wir einige Kontrollstrukturen ersetzen können durch einen fluent- bzw functional-style. Ebenfalls ermöglicht es uns der allseits bekannten ```NullpointerException``` entgegenzuwirken. Allerdings ist die Klasse ```Optional&lt;T&gt;``` final definiert. Demnach ist eine Erweiterung so nicht möglich, was uns in mancher Hinsicht dann doch im Wege stehen kann. Warum die Klasse ```Optional&lt;T&gt;``` nun genau **final** definiert worden ist konnte ich nicht herausfinden. (Ich mus aber auch zugeben, dass ich nicht lange versucht habe es herauszufinden) </p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 03</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-03-10">März 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>In unserem letzten Teil haben wir uns mit der seit Java8 vorhandenen Klasse <code>Optional&lt;T&gt;</code> auseinander gesetzt.
+Dort haben wir gesehen, das wir einige Kontrollstrukturen ersetzen können durch einen fluent- bzw functional-style.
+Ebenfalls ermöglicht es uns der allseits bekannten <code>NullpointerException</code> entgegenzuwirken.
+Allerdings ist die Klasse <code>Optional&lt;T&gt;</code> final definiert. Demnach ist eine Erweiterung so nicht möglich, was uns in mancher Hinsicht
+dann doch im Wege stehen kann. Warum die Klasse <code>Optional&lt;T&gt;</code> nun genau <strong>final</strong> definiert worden ist konnte ich nicht herausfinden.
+(Ich mus aber auch zugeben, dass ich nicht lange versucht habe es herauszufinden)</p>
+<blockquote>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+</blockquote>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="feature-backport"><a href="#feature-backport" id="feature-backport" class="anchor"></a>Feature Backport</h2>
+<p>Mit der Verion Java9 wird die Klasse <code>Optional&lt;T&gt;</code> um einige Methoden erweitert. Zum Beispiel um die Methode <code>ifPresentOrElse(..)</code>.
+Hier bekommen wir die Möglichkeit für den Fall das ein Wert vorhanden ist einen Consumer<T> anzugeben, aber ebenfalls auch für den Fall das kein
+Wert vorhanden ist kann ein <code>Runnable</code> angegeben werden. (Dieses <code>Runnable</code> wird übrigens im Common-Fork-And-Join-Pool abgearbeitet)</p>
+<p>Nun gibt es die ein oder andere eher klassische Branche in der eine neue Version eine verfügbaren JDK ein wenig später zum Einsatz kommt.
+Wenn man nun ein wenig mehr Zeit hat, möchte man dennoch nicht auf diese Möglichkeit verzichten. Was also nun?</p>
+<p>Der Weg ist der selbe, wie der um das als <strong>final</strong> deklarierte <code>Optional&lt;T&gt;</code> zu erweitern. Wir erzeugen ein Interface mit dem Namen <code>Result&lt;T&gt;</code>.
+Hier können wir nun unsere Erweiterungen einfügen, egal ob neu oder als Backport. Nur die Interoperabilität zum klassischen <code>Optional&lt;T&gt;</code> sollte möglichst gut sein.</p>
+<h2 id="vom-optional-zum-result"><a href="#vom-optional-zum-result" id="vom-optional-zum-result" class="anchor"></a>Vom Optional zum Result</h2>
+<p>Beginnen wir nun ein wenig das <code>Optional&lt;T&gt;</code> zu erweitern. Was einem als erstes auffallen könnte, ist die unsymmetrische
+Ausprägung an mancher Stelle. Zum Beispiel gibt es ein <code>isPresent()</code>. Das dazu inverse gibt es nicht, was dann doch immer mal wieder zu Konstrukten führt, bei denen in einem <strong>if</strong>-Statement mit Negation gearbeitet werden muss. Das erste was wir also hinzufügen ist in unserem Fall die inverse Methode <code>Boolean isAbsent()</code>.</p>
+<p>Ebenfalls gibt es nur ein <code>void ifPresent(Consumer&lt;T&gt; consumer)</code> was wir ebenfalls erweitern mit <code>void ifAbsent(Runnable action)</code>.</p>
+<p>Da wir die Interoperabilität zu der Verwendung eines <code>Optional&lt;T&gt;</code> möglichst einfach halten wollen, gibt es natürlich auch die
+Signaturen zur Konvertierung in beide Richtungen.</p>
+<pre><code class="language-java">  default Optional&lt;T&gt; toOptional() {
+    return Optional.ofNullable(get());
+  }
+
+  static &lt;T&gt; Result&lt;T&gt; fromOptional(Optional&lt;T&gt; optional) {
+    Objects.requireNonNull(optional);
+    return ofNullable(optional.get(), &quot;Optional hold a null value&quot;);
+  }
+</code></pre>
+<p>Die Konvertierung in einen Stream ist ebefalls schnell dargestellt.</p>
+<pre><code class="language-java">  default Stream&lt;T&gt; stream() {
+    if (!isPresent()) {
+      return Stream.empty();
+    } else {
+      return Stream.of(get());
+    }
+  }
+</code></pre>
+<p>Kommen wir nun zu den Methoden die einem die Fallunterscheidung anbieten. Das Ziel ist hier, die klassischen <strong>if/else</strong> Strukturen
+umzuformen. Was man hier sehen kann, ist dass der Rückgabewert immer <strong>void</strong> ist. Demnach ist hier kein fluent-API Style vorgesehen.
+Die Werte werden demnach terminal konsumiert. Wenn man mit dem Wert nachfolgend weiterarbeiten möchte, muss man sich die später besprochenen
+Methoden wie zum Beispiel <strong>map()</strong> ansehen. Aber bleiben wir erst einmal hier bei den konsumierenden Methoden.</p>
+<pre><code class="language-java">  void ifPresentOrElse(Consumer&lt;? super T&gt; action, Runnable emptyAction);
+
+  void ifPresentOrElse(Consumer&lt;T&gt; success, Consumer&lt;String&gt; failure);
+
+  void ifPresentOrElseAsync(Consumer&lt;? super T&gt; action, Runnable emptyAction);
+
+  void ifPresentOrElseAsync(Consumer&lt;T&gt; success, Consumer&lt;String&gt; failure);
+
+</code></pre>
+<p>Diese MEthoden gibt es in den beiden Ausprägungen synchron und asynchron. Für uns bedeutet das, wenn wir die synchrone Version verwenden, das der Aufruf solange blockiert bis der Wert final konsumiert wurde. Das muss aber nicht immer die Anforderung sein, demnach kann man auch die Aufgabe
+in den Common-Fork-And-Join-Pool auslagern. Wenn wir nun die Implementierung ansehen wollen, so verlassen wir das Interface. Das Interface <code>Result</code> wird zuerst von der abstrakten Klasse <code>AbstractResult&lt;T&gt; implements Result&lt;T&gt;</code> implementiert. Hier kommen alle Details hin, die zum einen zustandsbehaftet sind, der Wert ist als Attribut nun real vorhanden wenn auch immer noch vom Typ <em>T</em>. Die letztendlichen Implementierungen gibt es in zwei Variationen. Zum einen die Klasse <code>Success&lt;T&gt; extends AbstractResult&lt;T&gt;</code> und zum anderen die Klasse <code>Failure&lt;T&gt; extends AbstractResult&lt;T&gt;</code>. Diese Implementierungen sind als nicht - statische innere Klasse realisiert. Die Erzeugung
+von Instanzen wird über die statischen Methoden <code>static &lt;T&gt; Result&lt;T&gt; success(T value)</code> und <code>static &lt;T&gt; Result&lt;T&gt; failure(String errorMessage)</code> im Interface angeboten.</p>
+<pre><code class="language-java">  static &lt;T&gt; Result&lt;T&gt; failure(String errorMessage) {
+    Objects.requireNonNull(errorMessage);
+    return new Result.Failure&lt;&gt;(errorMessage);
+  }
+
+  static &lt;T&gt; Result&lt;T&gt; success(T value) {
+    return new Result.Success&lt;&gt;(value);
+  }
+</code></pre>
+<p>Nun stellt sich die Frage, warum das so aufgeteilt ist.</p>
+<h3 id="abstractresult-implements-result"><a href="#abstractresult-implements-result" id="abstractresult-implements-result" class="anchor"></a>AbstractResult<T> implements Result<T></h3>
+<p>In der abstrakten Klasse können wir alle die Implementierungen unterbringen die zum einen auf dem realen Attribut
+basieren, jedoch nicht die Ausprägung haben das es ein erfolgreiches Ergebnis ist oder nicht.</p>
+<pre><code class="language-java">  abstract class AbstractResult&lt;T&gt; implements Result&lt;T&gt; {
+    protected final T value;
+
+    public AbstractResult(T value) {
+      this.value = value;
+    }
+
+    @Override
+    public void ifPresent(Consumer&lt;T&gt; consumer) {
+      Objects.requireNonNull(consumer);
+      if (value != null) consumer.accept(value);
+    }
+
+    @Override
+    public void ifAbsent(Runnable action) {
+      Objects.requireNonNull(action);
+      if (value == null) action.run();
+    }
+
+
+    public Boolean isPresent() {
+      return (value != null) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    public Boolean isAbsent() {
+      return (value == null) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    @Override
+    public T get() {
+      return Objects.requireNonNull(value);
+    }
+
+    @Override
+    public T getOrElse(Supplier&lt;T&gt; supplier) {
+      Objects.requireNonNull(supplier);
+      return (value != null) ? value : Objects.requireNonNull(supplier.get());
+    }
+  }
+</code></pre>
+<h3 id="success-extends-abstractresult"><a href="#success-extends-abstractresult" id="success-extends-abstractresult" class="anchor"></a>Success<T> extends AbstractResult<T></h3>
+<p>Bei der Klasse <code>Sucess</code>handelt es ich um den Erfolgsfall, es ist also ein Wert vorhanden.
+Hier kann also direkt auf die angebotenen Consumer zugegriffen werden und der Aufruf mit dem intern vorhandenen Wert
+durchgeführt werden. Hier gibt es nun die synchrone und asynchrone Implementierung.</p>
+<pre><code class="language-java">  class Success&lt;T&gt; extends AbstractResult&lt;T&gt; {
+
+    public Success(T value) {
+      super(value);
+    }
+
+    @Override
+    public void ifPresentOrElse(Consumer&lt;? super T&gt; action , Runnable emptyAction) {
+      action.accept(value);
+    }
+
+    @Override
+    public void ifPresentOrElse(final Consumer&lt;T&gt; success, final Consumer&lt;String&gt; failure) {
+      // TODO check if usefull -&gt; Objects.requireNonNull(value);
+      success.accept(value);
+    }
+
+    @Override
+    public void ifPresentOrElseAsync(Consumer&lt;? super T&gt; action , Runnable emptyAction) {
+      CompletableFuture.runAsync(()-&gt; action.accept(value));
+    }
+
+    @Override
+    public void ifPresentOrElseAsync(Consumer&lt;T&gt; success , Consumer&lt;String&gt; failure) {
+      CompletableFuture.runAsync(()-&gt; success.accept(value));
+    }
+
+  }
+</code></pre>
+<h3 id="failure-extends-abstractresult"><a href="#failure-extends-abstractresult" id="failure-extends-abstractresult" class="anchor"></a>Failure<T> extends AbstractResult<T></h3>
+<p>Wie der Name schon andeutet handelt es sich hier um die Abbildung des Fehlerfalles, oder besser gesagt der Fall in dem es keinen Wert gibt.
+Da kein Wert vorhanden ist, der Typ aber erhalten bleibt, wird ein anderes Attribut verwendet um eine aussagekräftige Nachricht zu repäsentieren.
+In diesem Fall ein Attribut vom Typ String um die Nachricht zu transportieren. Bei dem Aufruf der Methoden kann immer auf die angebotene
+Alternative zugegriffen werden.</p>
+<pre><code class="language-java">class Failure&lt;T&gt; extends AbstractResult&lt;T&gt; {
+
+    private final String errorMessage;
+
+    public Failure(final String errorMessage) {
+      super(null);
+      this.errorMessage = errorMessage;
+    }
+
+    @Override
+    public void ifPresentOrElse(Consumer&lt;? super T&gt; action , Runnable emptyAction) {
+      emptyAction.run();
+    }
+
+    @Override
+    public void ifPresentOrElse(final Consumer&lt;T&gt; success, final Consumer&lt;String&gt; failure) {
+      failure.accept(errorMessage);
+    }
+
+    @Override
+    public void ifPresentOrElseAsync(Consumer&lt;? super T&gt; action , Runnable emptyAction) {
+      CompletableFuture.runAsync(emptyAction);
+    }
+
+    @Override
+    public void ifPresentOrElseAsync(Consumer&lt;T&gt; success , Consumer&lt;String&gt; failure) {
+      CompletableFuture.runAsync(() -&gt; failure.accept(errorMessage));
+    }
+  }
+</code></pre>
+<h2 id="combine-und-combineasync"><a href="#combine-und-combineasync" id="combine-und-combineasync" class="anchor"></a>combine und combineAsync</h2>
+<p>Nun gibt es hin und wieder die Anforderung, das ein Ergebnis weiter verarbeitet werden muss. Dazu wird zum Beispiel
+ein weiterer Wert benötigt um dann mit dem Ergebnis zusammen zu einem weiteren Zustand verarbeitet zu werden.
+Um zwei Werte miteinander zu verarbeiten haben wir bisher die <code>BiFunction&lt;A,B, R&gt;</code> kennengelernt.
+Der erste Wert ist das Ergebnis, der Wert des Result und der zweite Parameter der Funktion ist der neu dazugekommene
+Wert der mit dem Ergebnis zusammen verarbeitet werden soll. Das sieht in der Signatur und Implementierung dann wie folgt aus und ist schon auf der Interfaceebene
+als <strong>default</strong> Implementierung verankert.</p>
+<pre><code class="language-java">  default &lt;V, R&gt; Result&lt;R&gt; thenCombine(V value , BiFunction&lt;T, V, Result&lt;R&gt;&gt; func) {
+    return func.apply(get() , value);
+  }
+</code></pre>
+<p>Natürlich kann man das auch nicht-blockierend anbieten, nur ist hier der Rückgabewert nun ein <code>CompletableFuture&lt;Result&lt;R&gt;&gt;</code></p>
+<pre><code class="language-java">  default &lt;V, R&gt; CompletableFuture&lt;Result&lt;R&gt;&gt; thenCombineAsync(V value , BiFunction&lt;T, V, Result&lt;R&gt;&gt; func) {
+    return CompletableFuture.supplyAsync(() -&gt; func.apply(get() , value));
+  }
+</code></pre>
+<p>Hieraus ergeben sich nun recht interessante Einsatzgebiete. Sehen wir uns dazu folgendes Beispiel an.</p>
+<h2 id="praktischer-einsatz-von-result"><a href="#praktischer-einsatz-von-result" id="praktischer-einsatz-von-result" class="anchor"></a>praktischer Einsatz von Result<T></h2>
+<p>Der erste Versuch ist ein statischer, derart dass der zweite Wert schon fest steht.</p>
+<pre><code class="language-java">    final Result&lt;String&gt; stringResult = Result.success(&quot;value&quot;);
+
+    stringResult
+        .thenCombine(100 , (s , integer) -&gt; Result.ofNullable(s + integer))
+        .ifPresent(System.out::println);
+</code></pre>
+<p>Das Beispiel ist sicherlich nicht komplex und auch wenig sinnvoll von dem Ergebnis das hier
+erzeugt wird. Jedoch zeigt es wie ein weiterer Wert mit dem Inhalt des <code>Result&lt;String&gt;</code> verarbietet werden
+kann.</p>
+<p>Nun soll uns das eigentlich mehr Flexibilität ermöglichen. Deswegen wird in unserem Beispiel der statische Wert vom Typ Integer
+nun durch einen <code>Supplier&lt;T&gt;</code> ersetzt. Nun wird der Wert der zur Verarbeitung benötigt wird erst zur Laufzeit
+ermittelt bzw erzeugt. Nun können wir dynamisch auf den derzeitigen Zustand reagieren.</p>
+<p>Für unser Beispiel definieren wir nun ein Interface mit dem Namen <code>Service</code> und der Methode <code>doWork(..)</code></p>
+<pre><code class="language-java">  public interface Service {
+    Result&lt;String&gt; doWork(String input);
+  }
+</code></pre>
+<p>Die Implementierung für dieses FunctionalInterface halten wir sehr überschaubar.</p>
+<pre><code class="language-java">    final Service service = input -&gt; (Objects.nonNull(input))
+                                            ? Result.success(input.toUpperCase())
+                                            : Result.failure(&quot;Value was null&quot;);
+</code></pre>
+<p>Nun wollen wir einfach die aktuelle Systemzeot der JVM mit dem Ergebnis in dem Result zusammen weiter verarbeiten und haben zum Ziel beide Werte zusammen in einer INstanz vom Typ <code>Pair</code> zu halten.</p>
+<pre><code class="language-java">    final Service service = input -&gt; (Objects.nonNull(input))
+                                            ? Result.success(input.toUpperCase())
+                                            : Result.failure(&quot;Value was null&quot;);
+    service
+        .doWork(&quot;Hello World&quot;)
+        .thenCombine(System::nanoTime ,
+                     (BiFunction&lt;String, Supplier&lt;Long&gt;, Result&lt;Pair&lt;String, Long&gt;&gt;&gt;)
+                         (s , longSupplier) -&gt; Result.success(new Pair&lt;&gt;(s , longSupplier.get())))
+        .ifPresentOrElse(
+            value -&gt; System.out.println(&quot; value present = &quot; + value) ,
+            errormessage -&gt; System.out.println(&quot; value not present error message is = &quot; + errormessage)
+        );
+</code></pre>
+<p>In diesem Einfachen Fall kann man auch die Methode <code>&lt;U&gt; Result&lt;U&gt; map(Function&lt;? super T, ? extends U&gt; mapper)</code> verwenden. Wir müssen ja keinen Service oder einen Wert von extern bekommen.
+<code>nanoTime()</code> kann demnach natürlich direkt addressiert werden.</p>
+<p>Wird unser Beispiel damit implementiert sieht es dann wie folgt aus.</p>
+<pre><code class="language-java">    helloWorld
+        .map(s -&gt; new Pair&lt;&gt;(s , System.nanoTime()))
+        .ifPresentOrElse(
+            value -&gt; System.out.println(&quot; value present = &quot; + value) ,
+            errormessage -&gt; System.out.println(&quot; value not present error message is = &quot; + errormessage)
+        );
+</code></pre>
+<p>Nun haben wir zweimal die Methode <code>ifPresentOrElse(..)</code> verwendet. Dieses kann man natürlich auch wieder extrahieren.</p>
+<pre><code class="language-java">    final Consumer&lt;Result&lt;Pair&lt;String, Long&gt;&gt;&gt; resultConsumer = (result) -&gt;
+        result
+            .ifPresentOrElse(
+                value -&gt; System.out.println(&quot; value present = &quot; + value) ,
+                errormessage -&gt; System.out.println(&quot; value not present error message is = &quot; + errormessage));
+
+    resultConsumer.accept(helloWorld.map(s -&gt; new Pair&lt;&gt;(s , System.nanoTime())));
+</code></pre>
+<p>Was kann das aber für ein Projekt bedeuten?
+Hierzu schreiben wir uns ein Beispiel in dem drei frei gewählte Transformationen für ein Ergebnis vorgesehen sind. Jeder Schritt bekommt als weiteren Wert
+eine weitere Instanz der Klasse <code>LocalDateTime.now()</code>. So können wir zum Ende sehen in welcher Reihenfolge und wann die jeweiligen Instanzen erzeugt worden sind.
+Ich habe hier absichtlich auf irgendwelche Berechnungen verzichtet, das es nur sinbildlich für Werte aus verschiedenen Quellen stehen soll.
+Der jeweilige Berechnungsschritt wird als Funktion zur Verfügung gestellt.</p>
+<pre><code class="language-java">  public static interface Service {
+    Result&lt;String&gt; doWork(String input);
+  }
+
+  //Demo for some Services to call
+  public static Supplier&lt;Step001&gt; serviceA() { return () -&gt; new Step001(now());}
+
+  public static Function&lt;Step001, Step002&gt; serviceB() { 
+      return (step001) -&gt; new Step002(step001.timestamp01 , 
+                                      now());
+  }
+
+  public static Function&lt;Step002, Step003&gt; serviceC() { 
+      return (step002) -&gt; new Step003(step002.timestamp01 , 
+                                      step002.timestamp02 , 
+                                      now());
+  }
+
+  //Demo for some classes
+  public static class Step001 {
+    private final LocalDateTime timestamp01;
+
+    public Step001(LocalDateTime timestamp01) {this.timestamp01 = timestamp01;}
+  }
+
+  public static class Step002 {
+    private final LocalDateTime timestamp01;
+    private final LocalDateTime timestamp02;
+
+    public Step002(LocalDateTime timestamp01 , 
+                   LocalDateTime timestamp02) {
+      this.timestamp01 = timestamp01;
+      this.timestamp02 = timestamp02;
+    }
+  }
+
+  public static class Step003 {
+    private final LocalDateTime timestamp01;
+    private final LocalDateTime timestamp02;
+    private final LocalDateTime timestamp03;
+
+    public Step003(LocalDateTime timestamp01 , 
+                   LocalDateTime timestamp02 , 
+                   LocalDateTime timestamp03) {
+      this.timestamp01 = timestamp01;
+      this.timestamp02 = timestamp02;
+      this.timestamp03 = timestamp03;
+    }
+
+    @Override
+    public String toString() {
+      return &quot;Step003{&quot; +
+             &quot;timestamp01=&quot; + timestamp01 +
+             &quot;, timestamp02=&quot; + timestamp02 +
+             &quot;, timestamp03=&quot; + timestamp03 +
+             '}';
+    }
+  }
+
+</code></pre>
+<p>Teilen wir die einzelnen Dinge mal in zeitlich unabhängige Teile auf. Der Service wird zur Verfügung gestellt und berechnet initial seinen Wert den er als <code>Result&lt;String&gt;</code>
+zurückliefert.</p>
+<pre><code class="language-java">    // some Service....
+    final Service service = input -&gt; (Objects.nonNull(input))
+                                     ? Result.success(input.toUpperCase())
+                                     : Result.failure(&quot;Value was null&quot;);
+</code></pre>
+<p>Nun rufen wir den Service auf und geben diesen Rückgabewert einem Workflow.</p>
+<pre><code class="language-java">    // service will be invoked
+    modifiedWorkflow.apply(service.doWork(&quot;Hello World&quot;));
+</code></pre>
+<p>Dieser Workflow wurde zu einem anderem Zeitpunkt erstellt und dann auch nochmals nachfolgend modifiziert.</p>
+<pre><code class="language-java">  public static Function&lt;Result&lt;String&gt;, Result&lt;Step003&gt;&gt; workflow = (input) -&gt;
+      input
+          .or(() -&gt; Result.success(&quot;nooop&quot;)) // default per demo definition here -&gt; convert failure´s
+          .thenCombine(
+              serviceA() ,
+              (value , supplier) -&gt; Result.success(supplier.get()) // not working with value, to make it simple
+          )
+          .thenCombine(
+              serviceB() ,
+              (step001 , fkt) -&gt; Result.success(fkt.apply(step001))
+          )
+          .thenCombine(
+              serviceC() ,
+              (step002 , fkt) -&gt; Result.success(fkt.apply(step002))
+          );
+
+    final Function&lt;Result&lt;String&gt;, Result&lt;Step003&gt;&gt; modifiedWorkflow = workflow
+        .andThen(result -&gt; {
+          result.ifPresentOrElse(
+              value -&gt; System.out.println(&quot; value present = &quot; + value) ,
+              errormessage -&gt; System.out.println(&quot; value not present error message is = &quot; + errormessage)
+          );
+          return result;
+        });
+</code></pre>
+<p>Was man hier schön sehen kann, ist die Möglichkeit Teile der Funktionen zu vorherigen Zeitpunkten zu definieren, bzw auch bei Bedarf
+dann noch zu verändern.
+Hier arbeiten wir wieder mit Funktionen die wir kombinieren. Die Funktionen selbst sind zustandslos und können bei Bedarf erzeugt werden.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Wir haben uns in diesem Teil angesehen wie wir mit der Klasse <code>Optional&lt;T&gt;</code>die seit dem Java8 verfügbar ist und in Java9 erweitert wurde,
+funktioale Aspekte in unsere tägliche Arbeit mit aufnehmen können. Wir haben gesehen wie wir damit Kontrollstrukturen vermeiden können und uns
+gegen den klassischen Fall einer NPE rüsten können.</p>
+<p>Da die Klasse <code>Optional&lt;T&gt;</code> <strong>final</strong> definiert ist, können wir diese mittels Ableitung nicht unseren Bedürfnissen anpassen. Deswegen haben wir
+das Interface <code>Result&lt;T&gt;</code> eingeführt und damit einige Unzulänglichkeiten der Klasse <code>Optional&lt;T&gt;</code> behoben.</p>
+<p>Nicht nur symmetrische Methoden wie <code>ifAbsent()</code> haben wir eingefügt. Ebenfalls haben wir gesehen wie wir einfach einen Backport von Java9 auf Java8
+realiesieren können wenn wir noch nicht auf das neue JDK umsteigen können.</p>
+<p>Die Zusammenarbeit mit der Klasse <code>Optional&lt;T&gt;</code> haben wir durch Koverter-Methoden realisiert, die eine Transformation zwischen beiden Welten
+zu jeden Zeitpunkt zulässt und damit die Integration bestehender API´s kein Problem darstellen.</p>
+<p>Der ganz große Unterschied jedoch liegt in der Möglichkeit mit dem Wert weiter zu arbeiten indem wir die Instant <code>Result&lt;T&gt;</code>
+nicht nur mit der Methode <strong>map(..)</strong> weiterverarbeiten können sondern auch die Einbindung weiterer Werte zur Laufzeit
+mittels <code>BiFunction</code> ist synchron (<strong>combine(..)</strong>) und asynchron (<strong>combineAssync(..)</strong>) möglich.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-003.git">https://github.com/Java-Publications/functional-reactive-with-core-java-003.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/2/10/functional-reactive-with-core-java-002">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 02
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/4/10/functional-reactive-with-core-java-004">
+    Functional Reactive mit Core Java 04
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>

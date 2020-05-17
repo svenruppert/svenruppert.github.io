@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<html class="">
+<head>
+
+
+
+
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+<meta name="generator" content="Orchid 0.20.0-SNAPSHOT"/>
+<link rel="icon" href="http://www.sven-ruppert.de/favicon.ico">
+
+
+<meta name="robots" content="index, follow">
+
+
+
+<title>Functional Reactive mit Core Java 06</title>
+
+
+<meta name="description" content="Im letzten Teil haben wir uns damit beschäftigt wie wir mit den Exceptions umgehen können. Das hat dazu geführt, das wir auch immer einer Fallunterscheidung hatten. Zum einen den Glattläufer und zum anderen den Fehlerfall. Hier konnten wir es elegant mit einem ```Optional&lt;T&gt;``` oder noch funktionaler mit einem ```Result&lt;T&gt;``` formulieren. Wie aber gehen wir noch allgemeiner mit solchen Fallunterscheidungen um? Was ist, wenn es mehr als nur zwei Wege gibt?">
+
+
+
+<link rel="prev" href="http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005">
+
+
+<link rel="next" href="http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007">
+
+
+<script>
+    window.site = {"orchidVersion":"0.20.0-SNAPSHOT","baseUrl":"http://www.sven-ruppert.de","environment":"debug","version":"unspecified"};
+</script>
+
+
+
+
+
+<!-- start:debug info -->
+
+<!-- THEME -->
+<!-- Type: Copper -->
+<!-- Class: com.eden.orchid.copper.CopperTheme -->
+
+<!-- PAGE -->
+<!-- Type: post -->
+<!-- Class: com.eden.orchid.posts.pages.PostPage -->
+<!-- Layout: gallery, index -->
+<!-- Resolved Layout: templates/layouts/index.peb -->
+<!-- Page Template: post-java, post, page -->
+<!-- Resolved Page Template: templates/pages/post.peb -->
+
+<!-- RESOURCE -->
+<!-- Class: com.eden.orchid.api.resources.resource.FileResource -->
+<!-- Source Filename: posts/java/2019-06-10-functional-reactive-with-core-java-006.md -->
+
+<!-- COMPLETE PAGE CONFIGURATION -->
+<script>
+    window.allData = {"reference":{"path":"blog/java/2019/6/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-006","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006"},"next":{"path":"blog/java/2019/7/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-007","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007"},"previous":{"path":"blog/java/2019/5/10","baseUrl":"http://www.sven-ruppert.de","fileName":"functional-reactive-with-core-java-005","extension":"html","usePrettyUrl":true,"link":"http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005"},"description":"Im letzten Teil haben wir uns damit beschäftigt wie wir mit den Exceptions umgehen können. Das hat dazu geführt, das wir auch immer einer Fallunterscheidung hatten. Zum einen den Glattläufer und zum anderen den Fehlerfall. Hier konnten wir es elegant mit einem ```Optional<T>``` oder noch funktionaler mit einem ```Result<T>``` formulieren. Wie aber gehen wir noch allgemeiner mit solchen Fallunterscheidungen um? Was ist, wenn es mehr als nur zwei Wege gibt?","title":"Functional Reactive mit Core Java 06"};
+</script>
+
+<!-- end:debug info -->
+
+
+
+
+    <!-- start:inject meta-components -->
+    
+    <!-- end:inject meta-components -->
+
+
+
+    <!-- start:inject meta-components -->
+    
+        
+            
+        
+    
+    <!-- end:inject meta-components -->
+
+
+
+
+
+<!-- start:inject styles -->
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/extraCss.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-tooltip.css"  />
+<link rel="stylesheet" type="text/css" href="http://www.sven-ruppert.de/Copper/435ede31/assets/css/bulma-accordion.min.css"  />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css"  />
+<!-- end:inject styles -->
+
+</head>
+<body class="">
+
+
+<div class="columns is-marginless is-desktop">
+
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-mobile is-hidden-touch">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png is-fullheight">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+  <div class="column is-one-third-desktop is-one-quarter-widescreen is-one-fifth-fullhd is-paddingless column-main-left is-hidden-desktop">
+  
+
+
+    
+
+
+<section class="hero is-assets/media/bg-texture.png ">
+<div class="hero-head" style="padding: 0 1.5rem">
+  <div class="columns is-mobile has-text-centered">
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="/" title="Home">
+        <i class="fas fa-home large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://github.com/svenruppert" title="Github">
+        <i class="fab fa-github large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://dev.to/svenruppert" title="DEV.to">
+        <i class="fab fa-dev large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://twitter.com/SvenRuppert" title="Twitter">
+        <i class="fab fa-twitter large-social-icon"></i>
+      </a>
+    </div>
+  
+    <div class="column">
+      <a class="icon is-inline-block" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+        <i class="fab fa-linkedin large-social-icon"></i>
+      </a>
+    </div>
+  
+  </div>
+</div>
+<div class="hero-body">
+  <div class="container has-text-centered">
+    <figure class="image is-128x128">
+      <img src="http://www.sven-ruppert.de/assets/media/logo.jpg" alt="Sven Ruppert">
+    </figure>
+    <h1 class="title is-1 is-spaced">Sven Ruppert</h1>
+    <p class="subtitle is-4">Code, Coffee, and an outdoor nerd</p>
+  </div>
+</div>
+
+
+
+
+
+</section>
+
+  </div>
+
+  <div class="column is-two-thirds-desktop is-three-quarters-widescreen is-four-fifths-fullhd is-paddingless column-main-right">
+  
+
+<nav
+  class="navbar is-white border-bottom"
+  role="navigation"
+  aria-label="main navigation"
+>
+  <div class="container">
+    <div class="navbar-brand is-marginless">
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu is-marginless" id="navbarMain">
+      <div class="navbar-start">
+      
+<div class="navbar-item">
+  <form id="search-input" data-orchid-search>
+    <div class="field is-marginless" id="search">
+      <div class="control has-icons-left input-control">
+        <input class="input" type="text" name="query" placeholder="Search Sven Ruppert">
+
+        <span class="icon is-small is-left">
+          <i class="fas fa-search"></i>
+        </span>
+
+        <div id="search-progress" data-orchid-search-progress style="display: none;">
+          <div class="loader">Loading...</div>
+        </div>
+      </div>
+    </div>
+    <div id="search-results" data-orchid-search-results style="display: none;">
+      <div class="carat"></div>
+      <b>
+        Search Results
+        <i class="fa fa-times" aria-hidden="true" onclick="$('[data-orchid-search-results]').hide()"></i>
+      </b>
+      <ul></ul>
+    </div>
+  </form>
+</div>
+
+      
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de">
+Home
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/books">
+Books
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/publications">
+Publications
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/events">
+Events
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/opensource">
+Open Source
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/authors/sven-ruppert">
+About
+</a>
+
+
+  
+
+  
+  
+    
+
+<a class="navbar-item " href="http://www.sven-ruppert.de/impressum">
+Impressum
+</a>
+
+
+  
+
+
+      </div>
+
+      <div class="navbar-end">
+      
+
+<div class="navbar-item social-item">
+  <a class="icon" href="/" title="Home">
+    <i class="fas fa-home"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://github.com/svenruppert" title="Github">
+    <i class="fab fa-github"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://dev.to/svenruppert" title="DEV.to">
+    <i class="fab fa-dev"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://twitter.com/SvenRuppert" title="Twitter">
+    <i class="fab fa-twitter"></i>
+  </a>
+</div>
+
+<div class="navbar-item social-item">
+  <a class="icon" href="https://www.linkedin.com/in/svenruppert/" title="LinkedIn">
+    <i class="fab fa-linkedin"></i>
+  </a>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="textured container" style="width: 100%;">
+    
+    
+    
+      <div class="box">
+      
+<nav class="breadcrumb" aria-label="breadcrumbs">
+<ul>
+
+
+    <li><a href="http://www.sven-ruppert.de">Home</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/categories">Categories</a></li>
+
+
+
+    <li><a href="http://www.sven-ruppert.de/blog/java">Java</a></li>
+
+
+
+    <li class="is-active"><a href="http://www.sven-ruppert.de/blog/java/2019/6/10/functional-reactive-with-core-java-006" aria-current="page">Functional Reactive mit Core Java 06</a></li>
+
+
+</ul>
+</nav>
+
+
+      </div>
+    
+    
+    
+    
+    
+    
+      <div class="box" style="position: relative;">
+        <h2 class="title is-1 is-spaced">Functional Reactive mit Core Java 06</h2>
+        <p class="subtitle is-4">Im letzten Teil haben wir uns damit beschäftigt wie wir mit den Exceptions umgehen können. Das hat dazu geführt, das wir auch immer einer Fallunterscheidung hatten. Zum einen den Glattläufer und zum anderen den Fehlerfall. Hier konnten wir es elegant mit einem ```Optional&lt;T&gt;``` oder noch funktionaler mit einem ```Result&lt;T&gt;``` formulieren. Wie aber gehen wir noch allgemeiner mit solchen Fallunterscheidungen um? Was ist, wenn es mehr als nur zwei Wege gibt?</p>
+        
+    <!-- start:inject components -->
+    
+        
+            
+                
+                    
+                        <div class="columns">
+    <div class="column" style="width: 100%;">
+        <div class="card">
+            <div class="card-content">
+            
+                <div class="" style="margin-bottom: 1rem">
+                    <div class="media">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                            
+                            
+                                <a href="http://www.sven-ruppert.de/authors/sven-ruppert">
+                                    <img src="https://www.gravatar.com/avatar/15915533c1b5be64d0d2847851759b9c"
+                                         alt="Sven Ruppert Avatar"
+                                         style="border-radius: 50%"></a>
+                            
+                            
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <h1 class="title is-3">Functional Reactive mit Core Java 06</h1>
+                            <div class="subtitle is-5">
+                                <time datetime="2019-06-10">Juni 10, 2019</time>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="content is-large is-clearfix" style="margin-bottom: 2rem">
+                    <div class="field is-grouped is-grouped-multiline">
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/java">#Java</a>
+                            </div>
+                        </div>
+                    
+                        <div class="control">
+                            <div class="tags">
+                                <a class="tag is-link" href="http://www.sven-ruppert.de/tags/functional-programming">#Functional Programming</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <!-- null -->
+                
+                <div class="content is-large">
+                <h2 id="was-wollen-wir-erreichen"><a href="#was-wollen-wir-erreichen" id="was-wollen-wir-erreichen" class="anchor"></a>Was wollen wir erreichen?</h2>
+<p>Im letzten Teil haben wir uns damit beschäftigt wie wir mit den Exceptions umgehen können. Das hat dazu geführt, das wir auch immer einer Fallunterscheidung hatten. Zum einen den Glattläufer und zum anderen den Fehlerfall. Hier konnten wir es elegant mit einem <code>Optional&lt;T&gt;</code> oder noch funktionaler mit einem <code>Result&lt;T&gt;</code>
+formulieren.</p>
+<p>Wie aber gehen wir noch allgemeiner mit solchen Fallunterscheidungen um?
+Was ist, wenn es mehr als nur zwei Wege gibt?</p>
+<blockquote>
+<p>Wir werden für diese Artikelreihe von Beginn an mit dem JDK9 arbeiten, auch wenn dieses zum Zeitpunkt als ich dieses hier geschrieben habe
+noch nicht final verfügbar ist. Das OpenJDK kann unter der folgenden Adresse gefunden und heruntergeladen werden. <a href="http://jdk.java.net/9/">http://jdk.java.net/9/</a></p>
+</blockquote>
+<blockquote>
+<p>Zuzüglich zu den Quelltextbeispielen zu diesem Artikel verwende ich auch die Sourcen von dem Open Source Projekt
+Functional-Reactive <a href="http://www.functional-reactive.org/">http://www.functional-reactive.org/</a>. Die Sourcen befinden sich unter
+<a href="https://github.com/functional-reactive/functional-reactive-lib">https://github.com/functional-reactive/functional-reactive-lib</a></p>
+</blockquote>
+<h2 id="klassische-konstrukte"><a href="#klassische-konstrukte" id="klassische-konstrukte" class="anchor"></a>klassische Konstrukte</h2>
+<h3 id="if-else-konstrukte"><a href="#if-else-konstrukte" id="if-else-konstrukte" class="anchor"></a>if else Konstrukte</h3>
+<p>In der Sprache Java gibt es auch die Möglichkeit eine Fallunterscheidung mittels <code>if(..)</code>  und <code>else</code>
+zu formulieren. Im einfachsten Fall bekommen wir etwas wie folgt.</p>
+<pre><code class="language-java">if(value == null) { /* do something */}
+else              { /* do something*/ }
+</code></pre>
+<p>Nun kann man ebenfalls die <code>if</code> Konstrukte miteinander kombinieren um so n - Fälle abzufangen.</p>
+<pre><code class="language-java">    if      (value.equals(&quot;a&quot;)) { /* do something */}
+    else if (value.equals(&quot;b&quot;)) { /* do something */}
+    else if (value.equals(&quot;c&quot;)) { /* do something */};
+</code></pre>
+<h3 id="--konstrukte"><a href="#--konstrukte" id="--konstrukte" class="anchor"></a>? : Konstrukte</h3>
+<p>Es gibt auch noch eine andere Schreibweise die man verwenden kann, wenn man einen Rückgabewert erwartet. Den Ausdruck selbst kann man auch wieder kombinieren um mehr als zwei Fälle zu berücksichtigen.</p>
+<pre><code class="language-java">    String x = /* something */;
+    
+    String valueA = (x == null) ? &quot;&quot; : x ;
+    
+    String valueB = (x == null) ? &quot;&quot; : (x.equals(&quot;a&quot;) ? &quot;A&quot; : &quot;xx&quot;);
+    
+    String valueC = (x == null) ? &quot;&quot; 
+                                : (x.equals(&quot;a&quot;)) ? &quot;A&quot; 
+                                : (x.equals(&quot;b&quot;)) ? &quot;B&quot; 
+                                : &quot;xx&quot;;
+</code></pre>
+<p>Der prinzipielle Aufbau ist recht einfach. Innerhalb der Klammern wird ein Ausdruck fomruliert, der ein boolean als Ergebnis haben muss. Ist der Wert <strong>true</strong>
+wird der Ausdruck hinter dem <strong>?</strong> ausgeführt und wenn der Wert <strong>false</strong> ist
+wird der Ausdruck hinter dem <strong>:</strong> verwendet. Nun kann der Ausdruck hinter dem <strong>:</strong>
+ebenfalls wieder eine Fallunterscheidung sein. So können wir hintereinander beliebig
+viele Fälle abfangen. Wichtig zu wissen ist hier, das der Ausdruck immer aus zwei
+Werten bestehen muss. Also einmal ein Ergebnis für <strong>true</strong> und ein explizites Ergebnis für den Fall <strong>false</strong>. Somit kann kein Fall &quot;vergessen&quot; werden, wie das der Fall sein kann wenn man dem <code>if</code> nicht zwanghaft ein <code>else</code> folgen lässt.</p>
+<h3 id="switch-konstrukte"><a href="#switch-konstrukte" id="switch-konstrukte" class="anchor"></a>switch Konstrukte</h3>
+<p>Und zu guter Letzt noch die gute alte <code>switch</code>- Anweisung.
+Auch hier kann man multiple Fälle behandeln, inclusive einer <strong>default</strong> Lösung, wenn keiner der explizit angegebenen Werte zutreffend ist.</p>
+<pre><code class="language-java">    final String x = &quot;A&quot;;
+
+    switch (x) {
+      case &quot;A&quot;: break;
+      case &quot;B&quot;: break;
+      case &quot;C&quot;: break;
+      default : break;
+    }
+</code></pre>
+<h3 id="überlegungen"><a href="#überlegungen" id="überlegungen" class="anchor"></a>Überlegungen</h3>
+<p>Alle Ansätz beruhen darauf, das ein Zustand ausgewertet wird. Die Formulierung ist imperativ und damit auch abhängig von der Reihenfolge in der die Überprüfungen stattfinden.</p>
+<p>Zum einen sind diese Konstrukte alle daraufhin ausgelegt, das alle Kombinationen schon zur Zeit der Quelltexterstellung bekannt sind und wir haben immer den zustand ausserhalb der auswertenden Konstrukte. Teilweise können diese Werte auf denen die Endscheidungen getroffen werden dann auch noch verändert werden.</p>
+<h3 id="case"><a href="#case" id="case" class="anchor"></a>Case</h3>
+<p>Ziel ist es, das wir alle Fälle unabhängig voneinander definieren können. Das Paar besteht immer aus einer Kombination einer Bedingung und dem dazugehörigen Ergebnis. Das Ergebnis kann wahlweise positiv oder negativ sein. Es sollen keine Kontrollstrukturen vorhanden sein, oder besser gesagt; es soll ausschließlich
+beschrieben werden was passiert und nicht wie. Als Ergebnis bekommen wir ein <code>Result&lt;T&gt;</code> zurück geliefert.</p>
+<p>Sehen wir uns als erstes die Formulierung von einem solchen Paar an.
+Hierzu definieren wir uns eine Methode die zwei Parameter erwartet.
+Der erste Parameter ist ein <code>Supplier&lt;Boolean&gt;</code> mit dem signalisiert wird
+ob der gerade vorhandene Fall positiv oder negativ ist. Der zweite Parameter
+ist dann das Ergebnis, besser gesagt ein <code>Supplier&lt;Result&lt;T&gt;&gt;</code>.</p>
+<pre><code class="language-java">public static &lt;T&gt; Case&lt;T&gt; matchCase(Supplier&lt;Boolean&gt; condition ,
+                                    Supplier&lt;Result&lt;T&gt;&gt; value) {
+    return new Case&lt;&gt;(condition , value);
+  }
+</code></pre>
+<p>Der Rückgabewert dieser Methode ein eine Instanz vom Typ <code>Case&lt;T&gt;</code>.</p>
+<pre><code class="language-java">Case&lt;T&gt; extends Pair&lt;Supplier&lt;Boolean&gt;, Supplier&lt;Result&lt;T&gt;&gt;&gt;
+</code></pre>
+<p>Allerdings gibt es die Methode <code>matchCase(..)</code> in zwei Versionen.
+Die zweite Version ist für die Definition der <strong>default</strong> Antwort.
+Hier wird kein <code>Supplier&lt;Boolean&gt;</code> mehr benötigt, da dieser ja indirekt mit <strong>true</strong> eine feste Antwort liefert. Die Antwort dieser Methode
+ist demnach eine Instanz vom Typ <code>DefaultCase&lt;T&gt;</code></p>
+<pre><code class="language-java">  public static &lt;T&gt; DefaultCase&lt;T&gt; matchCase(Supplier&lt;Result&lt;T&gt;&gt; value) {
+    return new DefaultCase&lt;&gt;(() -&gt; true , value);
+  }
+</code></pre>
+<pre><code class="language-java">  public static class DefaultCase&lt;T&gt; extends Case&lt;T&gt; {
+    public DefaultCase(final Supplier&lt;Boolean&gt; booleanSupplier , 
+                       final Supplier&lt;Result&lt;T&gt;&gt; resultSupplier) {
+      super(booleanSupplier , resultSupplier);
+    }
+  }
+</code></pre>
+<p>Kommen wir nur zu der Verwendung, besser gesagt zu der Angabe aller Fälle aus der Sicht eines Entwicklers der diesen Konstrukt verwendet.</p>
+<pre><code class="language-java">
+    Integer x = 1;
+
+    Result&lt;String&gt; result = Case
+        .match(
+            Case.matchCase(() -&gt; Result.success(&quot;OK&quot;)) ,
+            Case.matchCase(() -&gt; x == 1 , () -&gt; Result.success(&quot;Result 1&quot;)) ,
+            Case.matchCase(() -&gt; x == 2 , () -&gt; Result.success(&quot;Result 2&quot;)) ,
+            Case.matchCase(() -&gt; x &gt; 2 , () -&gt; Result.success(&quot;Result 3&quot;)) ,
+            Case.matchCase(() -&gt; x &lt; -2 , () -&gt; Result.success(&quot;Result 4&quot;)) ,
+            Case.matchCase(() -&gt; false , () -&gt; Result.failure(&quot;error message&quot;))
+        );
+    result.ifPresentOrElse(
+        sucess -&gt; { System.out.println(&quot;sucess = &quot; + sucess);} ,
+        failed -&gt; { System.out.println(&quot;failed = &quot; + failed);}
+    );
+</code></pre>
+<p>Das kann mit <strong>static</strong> Imports ein wenig kompakter formuliert werden.</p>
+<pre><code class="language-java">    match(
+            matchCase(() -&gt; success(&quot;OK&quot;)) ,
+            matchCase(() -&gt; x == 1 , () -&gt; success(&quot;Result 1&quot;)) ,
+            matchCase(() -&gt; x == 2 , () -&gt; success(&quot;Result 2&quot;)) ,
+            matchCase(() -&gt; x &gt; 2 , () -&gt; success(&quot;Result 3&quot;)) ,
+            matchCase(() -&gt; x &lt; -2 , () -&gt; success(&quot;Result 4&quot;)) ,
+            matchCase(() -&gt; false , () -&gt; failure(&quot;error message&quot;))
+    )
+    .ifPresentOrElse(
+        sucess -&gt; { System.out.println(&quot;sucess = &quot; + sucess);} ,
+        failed -&gt; { System.out.println(&quot;failed = &quot; + failed);}
+    );
+</code></pre>
+<p>Wie findet nun intern die Verarbeitung statt? Dazu werden wir uns nun die MEthode <code>match(..)</code>ansehen. Auch diese ist wieder <strong>static</strong> definiert und erwartet
+zwei Parameter. Der erste ist der <strong>default</strong> <code>Case&lt;T&gt;</code>und der zweite ist eine
+beliebig lange Liste von Elementen mit weitere Instanzen vom Typ <code>Case&lt;T&gt;</code>.</p>
+<pre><code class="language-java">  public static &lt;T&gt; Result&lt;T&gt; match(DefaultCase&lt;T&gt; defaultCase , 
+                                    Case&lt;T&gt;... matchers) {
+    return Arrays.stream(matchers)
+        .filter(m -&gt; m.getT1().get())
+        .map(m -&gt; m.getT2().get())
+        .findFirst()
+        .orElseGet(defaultCase::result);
+  }
+</code></pre>
+<p>Hier wird erst die Liste der Fälle durchgegangen und bei dem ersten der eine positive Rückmeldung gibt das dazugehörige Ergebnis geholt. Sollte keiner der Fälle
+zutreffen, so wird der <strong>default</strong> Fall verwendet.</p>
+<h2 id="fazit"><a href="#fazit" id="fazit" class="anchor"></a>Fazit</h2>
+<p>Nun kann man sich an der Stelle überlegen, das man nicht nur finale Werte als
+Rückgabewert formuliert. Vielmehr kann man an der Stelle auch eine
+Funktion als Ergebnis akzeptieren. Hiermit kann man nun
+beginnen, dem jeweiligen Umstand entsprechend eine Funktion aus verschiedenen Blöcken zusammen zu bauen. Beispielhaft ist nachfolgend ein Beispiel, das basierend auf dem Eingangswert ein Paar, basierend auf dem Eingangswert und einer Funktion vom Typ <code>Function&lt;Integer, Integer&gt;</code> als Ergebnis zu liefern.</p>
+<pre><code class="language-java">    Result&lt;Pair&lt;Integer, Function&lt;Integer, Integer&gt;&gt;&gt; result =
+        match(
+            matchCase(() -&gt; success(new Pair&lt;&gt;(x , (v) -&gt; v + 1))) ,
+            matchCase(() -&gt; x == 1 , () -&gt; success(new Pair&lt;&gt;(x , (v) -&gt; v + 1))) ,
+            matchCase(() -&gt; x == 2 , () -&gt; success(new Pair&lt;&gt;(x , (v) -&gt; v + 2))) ,
+            matchCase(() -&gt; x &gt; 2 , () -&gt; success(new Pair&lt;&gt;(x , (v) -&gt; v + 3))) ,
+            matchCase(() -&gt; x &lt; - 2 , () -&gt; success(new Pair&lt;&gt;(x , (v) -&gt; v + 4))) ,
+            matchCase(() -&gt; false , () -&gt; Result.failure(&quot;error message&quot;))
+        );
+    result.ifPresentOrElse(
+        sucess -&gt; { System.out.println(&quot;sucess = &quot; + sucess);} ,
+        failed -&gt; { System.out.println(&quot;failed = &quot; + failed);}
+    );
+</code></pre>
+<p>Ebenfalls kann man so auch beginnen Streams zu konstruieren. Der Kreativität sind da kaum Grenzen gesetzt.</p>
+<p>Den Quelltext findet ihr unter</p>
+<p><a href="https://github.com/Java-Publications/functional-reactive-with-core-java-006.git">https://github.com/Java-Publications/functional-reactive-with-core-java-006.git</a></p>
+<p>Screencasts findet ihr unter <img src="********" alt="Youtube - Functional Reactive with Core Java" /></p>
+<p>Bei Fragen und/oder Anregungen einfach melden unter
+<a href="mailto:sven.ruppert@gmail.com">sven.ruppert@gmail.com</a> oder per Twitter <a href="https://twitter.com/SvenRuppert">@SvenRuppert</a>.</p>
+<pre><code>Happy Coding
+</code></pre>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+                    
+                
+            
+        
+    
+    <!-- end:inject components -->
+
+
+      </div>
+    
+    
+    
+      <div class="grow"></div>
+      <div class="page-footer">
+      
+        <nav class="pagination is-rounded footer-pagination" role="navigation" aria-label="pagination">
+
+  <a class="pagination-previous" href="http://www.sven-ruppert.de/blog/java/2019/5/10/functional-reactive-with-core-java-005">
+    <span class="icon"><i class="fas fa-chevron-left"></i></span>
+    Functional Reactive mit Core Java 05
+  </a>
+
+
+
+  <a class="pagination-next" href="http://www.sven-ruppert.de/blog/java/2019/7/10/functional-reactive-with-core-java-007">
+    Functional Reactive mit Core Java 07
+    <span class="icon"><i class="fas fa-chevron-right"></i></span>
+  </a>
+
+</nav>
+
+<footer class="footer border-top">
+  <div class="content is-small">
+  <p>
+  (c) by Sven Ruppert - sven.rupper@gmail.com
+</p>
+
+  </div>
+</footer>
+
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- start:inject scripts -->
+<script defer  src="https://use.fontawesome.com/releases/v5.4.0/js/all.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-accordion.min.js"></script>
+<script  src="http://www.sven-ruppert.de/Copper/435ede31/assets/js/bulma-tabs.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/prism.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-java.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-kotlin.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-xml.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-bash.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-yaml.min.js"></script>
+<!-- end:inject scripts -->
+
+</body>
+</html>
